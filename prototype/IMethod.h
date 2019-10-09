@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "IAdaptor.h"
-#include "IReflectable.h"
+
+class IAdaptor;
+class IReflectable;
 
 class IMethod {
 public:

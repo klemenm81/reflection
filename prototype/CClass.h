@@ -1,10 +1,11 @@
 #pragma once
 
 #include "IClass.h"
-#include "IField.h"
-#include "IMethod.h"
 #include <string>
 #include <map>
+
+#include "IField.h"
+#include "IMethod.h"
 
 template<typename Class>
 class CClass : public IClass {

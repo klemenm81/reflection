@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string>
-#include "IField.h"
-#include "IMethod.h"
+
+class IField;
+class IMethod;
 
 class IClass {
 public:

@@ -1,7 +1,9 @@
 #pragma once
 
-#include "IReflectable.h"
+#include "IField.h"
 #include "CAdaptor.h"
+
+class IReflectable;
 
 template<typename Class, typename Type>
 class CField : public IField {

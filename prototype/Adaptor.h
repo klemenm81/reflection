@@ -1,7 +1,8 @@
 #pragma once
 
 #include "CAdaptor.h"
-#include "IAdaptor.h"
+
+class IAdaptor;
 
 class Adaptor {
 private:
