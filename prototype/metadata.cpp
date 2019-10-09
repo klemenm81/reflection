@@ -13,8 +13,8 @@ CClass<Test>::CClass() {
 }
 */
 DEFINE_CLASS_START(Test)
-	DEFINE_METHOD(Foo, std::wstring&, float)
 	DEFINE_FIELD(int, a)
 	DEFINE_FIELD(std::string, myString)
 	DEFINE_FIELD(const wchar_t *, ptrString)
+	DEFINE_METHOD(Foo, std::wstring&, float)
 DEFINE_CLASS_END
