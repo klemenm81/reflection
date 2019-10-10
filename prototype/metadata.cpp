@@ -18,3 +18,17 @@ DEFINE_CLASS_START(Test)
 	DEFINE_FIELD(const wchar_t *, ptrString)
 	DEFINE_METHOD(Foo, std::wstring&, float)
 DEFINE_CLASS_END
+/*
+extern "C" __declspec(dllexport) IReflectable &AbstractFactory(const char* name) {
+	static CAbstractFactory abstractFactory;
+	return abstractFactory.CreateInstance(name);
+}
+std::map<std::string, IInstantiator*> CAbstractFactory::m_instantiators;
+CAbstractFactory::CAbstractFactory() {
+	m_instantiators["Test"] = new CInstantiator<Test>();
+}
+*/
+
+DEFINE_FACTORY_START
+	DEFINE_CLASS(Test)
+DEFINE_FACTORY_END

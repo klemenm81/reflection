@@ -1,7 +1,7 @@
 #pragma once
 
-#include "IAdaptor.h"
-#include "IReflectable.h"
+class IAdaptor;
+class IReflectable;
 
 class IField
 {

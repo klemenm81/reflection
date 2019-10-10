@@ -70,10 +70,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CAbstractFactory.h" />
     <ClInclude Include="CAdaptor.h" />
     <ClInclude Include="Adaptor.h" />
     <ClInclude Include="CField.h" />
+    <ClInclude Include="CInstantiator.h" />
     <ClInclude Include="CMethod2.h" />
+    <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IMethod.h" />
     <ClInclude Include="IClass.h" />
     <ClInclude Include="metadata.h" />

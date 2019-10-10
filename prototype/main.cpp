@@ -1,7 +1,17 @@
-#include "test.h"
+#include <Windows.h>
+
+#include "IReflectable.h"
+#include "IField.h"
+#include "IMethod.h"
+#include "IClass.h"
+#include "Adaptor.h"
 
 int main() {
-	Test test;
+	HMODULE hModule = GetModuleHandle(NULL);
+	IReflectable& (*AbstractFactory)(const char* ) = 
+		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
+
+	IReflectable &test = AbstractFactory("Test");
 	IField& field1 = test.GetClass().GetField("a");
 	IField& field2 = test.GetClass().GetField("myString");
 	IField& field3 = test.GetClass().GetField("ptrString");
@@ -25,6 +35,5 @@ int main() {
 	adaptor1.Set(13);
 	field1.SetValue(test, adaptor1);
 
-	wprintf(L"Main(): a = %d\n", test.GetA());
 	wprintf(L"Main(): str = %s\n", str.c_str());
 }

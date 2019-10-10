@@ -1,5 +1,8 @@
 #pragma once
 
+#include "CAbstractFactory.h"
+#include "CInstantiator.h"
+#include "CClass.h"
 #include "CField.h"
 #include "CMethod2.h"
 
@@ -16,4 +19,18 @@ m_methods[#Method] = new CMethod2<ReflectedClass, __VA_ARGS__>(&ReflectedClass::
 m_fields[#Field] = new CField<ReflectedClass, Type>(&ReflectedClass::Field);
 
 #define DEFINE_CLASS_END																	\
+}
+
+#define DEFINE_FACTORY_START																\
+extern "C" __declspec(dllexport) IReflectable& AbstractFactory(const char* name) {			\
+	static CAbstractFactory abstractFactory;												\
+	return abstractFactory.CreateInstance(name);											\
+}																							\
+std::map<std::string, IInstantiator*> CAbstractFactory::m_instantiators;					\
+CAbstractFactory::CAbstractFactory() {
+
+#define DEFINE_CLASS(Class)																	\
+m_instantiators[#Class] = new CInstantiator<Class>();
+
+#define DEFINE_FACTORY_END																	\
 }
