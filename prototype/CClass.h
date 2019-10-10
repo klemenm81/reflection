@@ -12,10 +12,9 @@ class CClass : public IClass {
 private:
 	static std::map<std::string, IField*> m_fields;
 	static std::map<std::string, IMethod*> m_methods;
-
-public:
 	typedef Class ReflectedClass;
 
+public:
 	IField& GetField(std::string name) {
 		return *m_fields[name];
 	}

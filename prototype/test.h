@@ -6,7 +6,7 @@
 #include <vector>
 
 class Test : public Reflectable<Test> {
-	friend class CClass<Test>;		// if we want to have access to private and protected members via reflection, we need this friend
+	FULL_ACCESS;		// enables access to private and protected members via reflection
 
 private:
 	int a;
