@@ -18,6 +18,7 @@ DEFINE_CLASS_START(Test)
 	DEFINE_FIELD(const wchar_t *, ptrString)
 	DEFINE_METHOD(void, Foo1, std::wstring&, float)
 	DEFINE_METHOD(int, Foo2, const wchar_t *)
+	DEFINE_METHOD(std::string, FooConst)
 DEFINE_CLASS_END
 /*
 extern "C" __declspec(dllexport) IReflectable &AbstractFactory(const char* name) {

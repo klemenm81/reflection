@@ -21,6 +21,7 @@ int main() {
 	IField& field3 = test.GetClass().GetField("ptrString");
 	IMethod& method1 = test.GetClass().GetMethod("Foo1");
 	IMethod& method2 = test.GetClass().GetMethod("Foo2");
+	IMethod& constMethod = test.GetClass().GetMethod("FooConst");
 
 	Adaptor adaptor1 = field1.GetValue(test);
 	Adaptor adaptor2 = field2.GetValue(test);
@@ -40,7 +41,10 @@ int main() {
 
 	Adaptor retVal1 = method1.Invoke(test, args1);
 	Adaptor retVal2 = method2.Invoke(test, args2);
-	printf("Main(): Return from Foo2 = %d\n", retVal2.Get<int>());
+	wprintf(L"Main(): Return from Foo2 = %d\n", retVal2.Get<int>());
+
+	Adaptor retVal3 = constMethod.Invoke(test, std::vector<IAdaptor*>());
+	printf("Main(): Return from FooConst = %s\n", retVal3.Get<std::string>().c_str());
 
 	adaptor1.Set(13);
 	field1.SetValue(test, adaptor1);

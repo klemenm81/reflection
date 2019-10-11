@@ -17,4 +17,5 @@ public:
 	Test();
 	void Foo1(std::wstring& str, float val);
 	int Foo2(const wchar_t* str);
+	std::string FooConst() const;
 };

@@ -13,3 +13,7 @@ int Test::Foo2(const wchar_t* str) {
 	return 13;
 }
 
+std::string Test::FooConst() const {
+	return "From FooConst()";
+}
+
