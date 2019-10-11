@@ -12,8 +12,8 @@ std::map<std::string, IMethod*> CClass<Class>::m_methods;									\
 template<>																					\
 CClass<Class>::CClass() {
 
-#define DEFINE_METHOD(Method, ...)															\
-m_methods[#Method] = new CMethod<ReflectedClass, __VA_ARGS__>(&ReflectedClass::Method);	
+#define DEFINE_METHOD(Return, Method, ...)															\
+m_methods[#Method] = new CMethod<ReflectedClass, Return, __VA_ARGS__>(&ReflectedClass::Method);	
 
 #define DEFINE_FIELD(Type, Field)															\
 m_fields[#Field] = new CField<ReflectedClass, Type>(&ReflectedClass::Field);

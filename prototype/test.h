@@ -15,6 +15,6 @@ private:
 
 public:
 	Test();
-	void Foo(std::wstring& str, float val);
-	int GetA();
+	void Foo1(std::wstring& str, float val);
+	int Foo2(const wchar_t* str);
 };
