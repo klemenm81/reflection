@@ -13,7 +13,7 @@ template<>																					\
 CClass<Class>::CClass() {
 
 #define DEFINE_METHOD(Method, ...)															\
-m_methods[#Method] = new CMethod2<ReflectedClass, __VA_ARGS__>(&ReflectedClass::Method);	
+m_methods[#Method] = new CMethod<ReflectedClass, __VA_ARGS__>(&ReflectedClass::Method);	
 
 #define DEFINE_FIELD(Type, Field)															\
 m_fields[#Field] = new CField<ReflectedClass, Type>(&ReflectedClass::Field);
