@@ -4,7 +4,7 @@
 #include "CInstantiator.h"
 #include "CClass.h"
 #include "CField.h"
-#include "CMethod2.h"
+#include "CMethod.h"
 
 #define DEFINE_CLASS_START(Class)															\
 std::map<std::string, IField*> CClass<Class>::m_fields;										\
