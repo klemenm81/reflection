@@ -1,36 +1,15 @@
 #include "metadata.h"
 #include "test.h"
 
-/*
-std::map<std::string, IField*> CClass<Test>::m_fields;
-std::map<std::string, IMethod*> CClass<Test>::m_methods;
-template<>
-CClass<Test>::CClass() {
-	m_fields["a"] = new CField<Test, int>(&Test::a);
-	m_fields["myString"] = new CField<Test, std::string>(&Test::myString);
-	m_fields["ptrString"] = new CField<Test, const wchar_t *>(&Test::ptrString);
-	m_methods["Foo"] = new CMethod2<Test, std::wstring&, float>(&Test::Foo);
-}
-*/
-DEFINE_CLASS_START(Test)
-	DEFINE_FIELD(int, a)
-	DEFINE_FIELD(std::string, myString)
-	DEFINE_FIELD(const wchar_t *, ptrString)
-	DEFINE_METHOD(void, Foo1, std::wstring&, float)
-	DEFINE_METHOD(int, Foo2, const wchar_t *)
-	DEFINE_METHOD(std::string, FooConst)
-DEFINE_CLASS_END
-/*
-extern "C" __declspec(dllexport) IReflectable &AbstractFactory(const char* name) {
-	static CAbstractFactory abstractFactory;
-	return abstractFactory.CreateInstance(name);
-}
-std::map<std::string, IInstantiator*> CAbstractFactory::m_instantiators;
-CAbstractFactory::CAbstractFactory() {
-	m_instantiators["Test"] = new CInstantiator<Test>();
-}
-*/
+REFLECT_CLASS_START(Test)
+	REFLECT_FIELD(int, a)
+	REFLECT_FIELD(std::string, myString)
+	REFLECT_FIELD(const wchar_t *, ptrString)
+	REFLECT_METHOD(void, Foo1, std::wstring&, float)
+	REFLECT_METHOD(int, Foo2, const wchar_t *)
+	REFLECT_METHOD(std::string, FooConst)
+REFLECT_CLASS_END
 
-DEFINE_FACTORY_START
-	DEFINE_CLASS(Test)
-DEFINE_FACTORY_END
+REFLECT_FACTORY_START
+	REFLECT_CLASS(Test)
+REFLECT_FACTORY_END

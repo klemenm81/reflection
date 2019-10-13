@@ -6,7 +6,7 @@
 #include <vector>
 
 class Test : public Reflectable<Test> {
-	FULL_ACCESS;		// enables access to private and protected members via reflection
+	REFLECT_ALL_ACCESS;		// enables access to private and protected members via reflection
 
 private:
 	int a;

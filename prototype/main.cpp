@@ -1,13 +1,12 @@
 #include <Windows.h>
 
 #include "IReflectable.h"
-#include "IField.h"
-#include "IMethod.h"
+#include "Field.h"
+#include "Method.h"
 #include "IClass.h"
-#include "Adaptor.h"
 
 IReflectable& CreateInstance(const char* name) {
-	HMODULE hModule = GetModuleHandle(NULL);
+	static HMODULE hModule = GetModuleHandle(NULL);
 	IReflectable& (*AbstractFactory)(const char*) =
 		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
 	return AbstractFactory("Test");
@@ -16,38 +15,30 @@ IReflectable& CreateInstance(const char* name) {
 int main() {
 	IReflectable &test = CreateInstance("Test");
 
-	IField& field1 = test.GetClass().GetField("a");
-	IField& field2 = test.GetClass().GetField("myString");
-	IField& field3 = test.GetClass().GetField("ptrString");
-	IMethod& method1 = test.GetClass().GetMethod("Foo1");
-	IMethod& method2 = test.GetClass().GetMethod("Foo2");
-	IMethod& constMethod = test.GetClass().GetMethod("FooConst");
+	Field field1 = test.GetClass().GetField("a");
+	Field field2 = test.GetClass().GetField("myString");
+	Field field3 = test.GetClass().GetField("ptrString");
+	Method method1 = test.GetClass().GetMethod("Foo1");
+	Method method2 = test.GetClass().GetMethod("Foo2");
+	Method constMethod = test.GetClass().GetMethod("FooConst");
 
-	Adaptor adaptor1 = field1.GetValue(test);
-	Adaptor adaptor2 = field2.GetValue(test);
-	Adaptor adaptor3 = field3.GetValue(test);
-
-	int see1 = adaptor1.Get<int>();
-	std::string see2 = adaptor2.Get<std::string>();
-	const wchar_t* see3 = adaptor3.Get<const wchar_t*>();
+	int see1 = field1.Get<int>(test);
+	std::string see2 = field2.Get<std::string>(test);
+	const wchar_t* see3 = field3.Get<const wchar_t*>(test);
 
 	std::wstring str = L"PI = ";
-	std::vector<IAdaptor*> args1;
-	args1.push_back(new CAdaptor<std::wstring&>(str));
-	args1.push_back(new CAdaptor<float>(3.14f));
 
-	std::vector<IAdaptor*> args2;
-	args2.push_back(new CAdaptor<const wchar_t*>(L"Hello Reflected"));
+	method1.PushArg<std::wstring&>(str);
+	method1.PushArg<float>(3.14f);
+	method2.PushArg<const wchar_t*>(L"Hello Reflected");
+	
+	method1.Invoke(test);
+	method2.Invoke(test);
+	wprintf(L"Main(): Return from Foo2 = %d\n", method2.GetRetVal<int>());
 
-	Adaptor retVal1 = method1.Invoke(test, args1);
-	Adaptor retVal2 = method2.Invoke(test, args2);
-	wprintf(L"Main(): Return from Foo2 = %d\n", retVal2.Get<int>());
+	constMethod.Invoke(test);
+	printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
 
-	Adaptor retVal3 = constMethod.Invoke(test, std::vector<IAdaptor*>());
-	printf("Main(): Return from FooConst = %s\n", retVal3.Get<std::string>().c_str());
-
-	adaptor1.Set(13);
-	field1.SetValue(test, adaptor1);
-
+	field1.Set(test, 13);
 	wprintf(L"Main(): str = %s\n", str.c_str());
 }

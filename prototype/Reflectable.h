@@ -3,8 +3,8 @@
 #include "IReflectable.h"
 #include "CClass.h"
 
-#define FULL_ACCESS friend class CClass<ReflectedClass>;
-#define PUBLIC_ACCESS
+#define REFLECT_ALL_ACCESS friend class CClass<ReflectedClass>;
+#define REFLECT_PUBLIC_ACCESS
 
 template <typename Class>
 class Reflectable : public IReflectable {
