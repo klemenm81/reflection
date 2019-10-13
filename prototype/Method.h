@@ -13,6 +13,10 @@ public:
 	Method(IMethod& method) : m_method(method) {
 	}
 
+	~Method() {
+		ClearArgs();
+	}
+
 	template<typename Type>
 	void PushArg(Type arg) {
 		m_args.push_back(new CAdaptor<Type>(arg));
@@ -31,5 +35,12 @@ public:
 
 	void Invoke(IReflectable& obj) {
 		m_retVal = m_method.Invoke(obj, m_args);
+	}
+
+	void ClearArgs() {
+		for (auto it = m_args.begin(); it != m_args.end(); it++) {
+			delete* it;
+		}
+		m_args.clear();
 	}
 };
