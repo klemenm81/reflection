@@ -16,9 +16,24 @@ IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const) {
 	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const)method)>(method);
 }
 
+template <typename ReflectedClass, typename Return, typename... Args>
+IMethod* newMethod(Return(ReflectedClass::* method)(Args...) noexcept) {
+	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) noexcept)method)>(method);
+}
+
+template <typename ReflectedClass, typename Return, typename... Args>
+IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const noexcept) {
+	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const noexcept)method)>(method);
+}
+
 template <typename ReflectedClass, typename Method>
 IMethod* newMethod(Method method) {
 	return new CMethod<ReflectedClass, decltype(method)>(method);
+}
+
+template <typename ReflectedClass, typename Field>
+IField* newField(Field field) {
+	return new CField<ReflectedClass, decltype(field)>(field);
 }
 
 #define REFLECT_CLASS_START(Class)																		\
@@ -27,13 +42,11 @@ std::map<std::string, IMethod*> CClass<Class>::m_methods;												\
 template<>																								\
 CClass<Class>::CClass() {
 
-#define REFLECT_METHOD(Method, ...)  \
+#define REFLECT_METHOD(Method, ...)																		\
 m_methods[#Method] = newMethod<ReflectedClass, ##__VA_ARGS__>(&ReflectedClass::Method);
 
 #define REFLECT_FIELD(Field)																			\
-m_fields[#Field] = new CField<ReflectedClass, decltype(&ReflectedClass::Field)>(						\
-	&ReflectedClass::Field																				\
-);
+m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
 #define REFLECT_CLASS_END																				\
 }

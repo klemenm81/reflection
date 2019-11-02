@@ -7,7 +7,9 @@ class IReflectable;
 
 class IMethod {
 public:
-	virtual IAdaptor& Invoke(IReflectable &obj, std::vector<IAdaptor*> args) = 0;
+	virtual IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
+		throw;
+	}
 	virtual ~IMethod() {
 	}
 };

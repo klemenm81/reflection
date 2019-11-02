@@ -29,3 +29,75 @@ std::string Test::FooConst() const {
 	return "From FooConst()";
 }
 
+
+void Test::Bar1() {
+}
+
+void Test::Bar2() const {
+}
+
+void Test::Bar3() noexcept {
+}
+
+void Test::Bar4() const noexcept {
+}
+
+void Test::Bar5() volatile {
+}
+
+void Test::Bar6() volatile const {
+}
+
+void Test::Bar7() volatile noexcept{
+}
+
+void Test::Bar8() volatile const noexcept {
+}
+
+void Test::Bar9() & {
+}
+
+void Test::Bar10() const & {
+}
+
+void Test::Bar11() & noexcept {
+}
+
+void Test::Bar12() const & noexcept {
+}
+
+void Test::Bar13() volatile & {
+}
+
+void Test::Bar14() volatile const & {
+}
+
+void Test::Bar15() volatile & noexcept {
+}
+
+void Test::Bar16() volatile const & noexcept {
+}
+
+void Test::Bar17() && {
+}
+
+void Test::Bar18() const && {
+}
+
+void Test::Bar19() && noexcept {
+}
+
+void Test::Bar20() const && noexcept {
+}
+
+void Test::Bar21() volatile && {
+}
+
+void Test::Bar22() volatile const && {
+}
+
+void Test::Bar23() volatile && noexcept {
+}
+
+void Test::Bar24() volatile const && noexcept {
+}

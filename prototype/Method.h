@@ -27,14 +27,28 @@ public:
 		Adaptor adaptor = *m_args[iArg];
 		return adaptor.Get<Type>();
 	}
-
+	
 	template<typename Type>
 	Type GetRetVal() {
 		return m_retVal.Get<Type>();
 	}
 
-	void Invoke(IReflectable& obj) {
-		m_retVal = m_method.Invoke(obj, m_args);
+	template <typename Class>
+	void Invoke(Class obj) {
+		Adaptor adaptor = *new CAdaptor<Class>(obj);
+		m_retVal = m_method.Invoke(adaptor, m_args);
+	}
+
+	template <typename Class>
+	void Invoke(Class& obj) {
+		Adaptor adaptor = *new CAdaptor<Class&>(obj);
+		m_retVal = m_method.Invoke(adaptor, m_args);
+	}
+
+	template <typename Class>
+	void Invoke(Class&& obj) {
+		Adaptor adaptor = *new CAdaptor<Class&&>(obj);
+		m_retVal = m_method.Invoke(adaptor, m_args);
 	}
 
 	void ClearArgs() {
