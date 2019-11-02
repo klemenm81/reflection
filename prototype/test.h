@@ -17,5 +17,8 @@ public:
 	Test();
 	void Foo1(std::wstring& str, float val);
 	int Foo2(const wchar_t* str);
+	int FooOverloaded(int i);
+	int FooOverloaded(float i);
+	int FooOverloaded(std::vector<int> i) const;
 	std::string FooConst() const;
 };

@@ -13,6 +13,18 @@ int Test::Foo2(const wchar_t* str) {
 	return 13;
 }
 
+int Test::FooOverloaded(int i) {
+	return 0;
+}
+
+int Test::FooOverloaded(float i) {
+	return 1;
+}
+
+int Test::FooOverloaded(std::vector<int> i) const {
+	return -1;
+}
+
 std::string Test::FooConst() const {
 	return "From FooConst()";
 }

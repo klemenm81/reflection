@@ -12,6 +12,7 @@ IReflectable& CreateInstance(const char* name) {
 	return AbstractFactory("Test");
 }
 
+
 int main() {
 	IReflectable &test = CreateInstance("Test");
 

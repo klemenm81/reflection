@@ -2,12 +2,15 @@
 #include "test.h"
 
 REFLECT_CLASS_START(Test)
-	REFLECT_FIELD(int, a)
-	REFLECT_FIELD(std::string, myString)
-	REFLECT_FIELD(const wchar_t *, ptrString)
-	REFLECT_METHOD(void, Foo1, std::wstring&, float)
-	REFLECT_METHOD(int, Foo2, const wchar_t *)
-	REFLECT_METHOD(std::string, FooConst)
+	REFLECT_FIELD(a)
+	REFLECT_FIELD(myString)
+	REFLECT_FIELD(ptrString)
+	REFLECT_METHOD(Foo1)
+	REFLECT_METHOD(Foo2)
+	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, int)
+	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, float)
+	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, std::vector<int>)
+	REFLECT_METHOD(FooConst)
 REFLECT_CLASS_END
 
 REFLECT_FACTORY_START
