@@ -7,12 +7,12 @@
 #include "CMethod.h"
 
 template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newOverloadedMethod(Return(ReflectedClass::* method)(Args...)) {
+IMethod* newMethod(Return(ReflectedClass::* method)(Args...)) {
 	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...))method)>(method);
 }
 
 template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newOverloadedMethod(Return(ReflectedClass::* method)(Args...) const) {
+IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const) {
 	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const)method)>(method);
 }
 
@@ -27,11 +27,8 @@ std::map<std::string, IMethod*> CClass<Class>::m_methods;												\
 template<>																								\
 CClass<Class>::CClass() {
 
-#define REFLECT_METHOD(Method) \
-m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
-
-#define REFLECT_METHOD_OVERLOAD(Method, Return, ...)  \
-m_methods[#Method] = newOverloadedMethod<ReflectedClass, Return, __VA_ARGS__>(&ReflectedClass::Method);
+#define REFLECT_METHOD(Method, ...)  \
+m_methods[#Method] = newMethod<ReflectedClass, ##__VA_ARGS__>(&ReflectedClass::Method);
 
 #define REFLECT_FIELD(Field)																			\
 m_fields[#Field] = new CField<ReflectedClass, decltype(&ReflectedClass::Field)>(						\

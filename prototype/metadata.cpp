@@ -7,9 +7,9 @@ REFLECT_CLASS_START(Test)
 	REFLECT_FIELD(ptrString)
 	REFLECT_METHOD(Foo1)
 	REFLECT_METHOD(Foo2)
-	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, int)
-	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, float)
-	REFLECT_METHOD_OVERLOAD(FooOverloaded, int, std::vector<int>)
+	REFLECT_METHOD(FooOverloaded, int, int)
+	REFLECT_METHOD(FooOverloaded, int, float)
+	REFLECT_METHOD(FooOverloaded, int, std::vector<int>)
 	REFLECT_METHOD(FooConst)
 REFLECT_CLASS_END
 
