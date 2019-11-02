@@ -34,12 +34,6 @@ public:
 	}
 
 	template <typename Class>
-	void Invoke(Class obj) {
-		Adaptor adaptor = *new CAdaptor<Class>(obj);
-		m_retVal = m_method.Invoke(adaptor, m_args);
-	}
-
-	template <typename Class>
 	void Invoke(Class& obj) {
 		Adaptor adaptor = *new CAdaptor<Class&>(obj);
 		m_retVal = m_method.Invoke(adaptor, m_args);
@@ -47,12 +41,6 @@ public:
 
 	template <typename Class>
 	void Invoke(Class&& obj) {
-		Adaptor adaptor = *new CAdaptor<Class&&>(obj);
-		m_retVal = m_method.Invoke(adaptor, m_args);
-	}
-
-	template <typename Class>
-	void InvokeRf(Class&& obj) {
 		Adaptor adaptor = *new CAdaptor<Class&&>(std::forward<Class>(obj));
 		m_retVal = m_method.Invoke(adaptor, m_args);
 	}

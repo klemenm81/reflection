@@ -45,5 +45,5 @@ int main() {
 	field1.Set(test, 13);
 	wprintf(L"Main(): str = %s\n", str.c_str());
 
-	rvalMethod.InvokeRf(Test());
+	rvalMethod.Invoke(Test());
 }
