@@ -6,40 +6,32 @@
 #include "CField.h"
 #include "CMethod.h"
 
+template <typename ReflectedClass, typename Return, typename... Args>
+IMethod* newOverloadedMethod(Return(ReflectedClass::* method)(Args...)) {
+	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...))method)>(method);
+}
+
+template <typename ReflectedClass, typename Return, typename... Args>
+IMethod* newOverloadedMethod(Return(ReflectedClass::* method)(Args...) const) {
+	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const)method)>(method);
+}
+
+template <typename ReflectedClass, typename Method>
+IMethod* newMethod(Method method) {
+	return new CMethod<ReflectedClass, decltype(method)>(method);
+}
+
 #define REFLECT_CLASS_START(Class)																		\
 std::map<std::string, IField*> CClass<Class>::m_fields;													\
 std::map<std::string, IMethod*> CClass<Class>::m_methods;												\
 template<>																								\
 CClass<Class>::CClass() {
 
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...)) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...))method), Args...>(method);
-}
-
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const)method), Args...>(method);
-}
-
-#define REFLECT_METHOD(Method)																			\
-m_methods[#Method] = new CMethod<																		\
-	ReflectedClass,																						\
-	decltype(&ReflectedClass::Method)>(																	\
-	&ReflectedClass::Method																				\
-);	
-/*
-#define REFLECT_METHOD_OVERLOAD(Method, Return, ...)				    								\
-m_methods[#Method] = new CMethod<																		\
-	ReflectedClass,																						\
-	decltype((Return(ReflectedClass::*)(__VA_ARGS__))&ReflectedClass::Method),							\
-	__VA_ARGS__>(																						\
-	&ReflectedClass::Method																				\
-);
-*/
+#define REFLECT_METHOD(Method) \
+m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
 
 #define REFLECT_METHOD_OVERLOAD(Method, Return, ...)  \
-m_methods[#Method] = newMethod<ReflectedClass, Return, __VA_ARGS__>(&ReflectedClass::Method);
+m_methods[#Method] = newOverloadedMethod<ReflectedClass, Return, __VA_ARGS__>(&ReflectedClass::Method);
 
 #define REFLECT_FIELD(Field)																			\
 m_fields[#Field] = new CField<ReflectedClass, decltype(&ReflectedClass::Field)>(						\
