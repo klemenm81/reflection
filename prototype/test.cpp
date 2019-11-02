@@ -79,6 +79,7 @@ void Test::Bar16() volatile const & noexcept {
 }
 
 void Test::Bar17() && {
+	printf("From Bar17\n");
 }
 
 void Test::Bar18() const && {

@@ -51,6 +51,12 @@ public:
 		m_retVal = m_method.Invoke(adaptor, m_args);
 	}
 
+	template <typename Class>
+	void InvokeRf(Class&& obj) {
+		Adaptor adaptor = *new CAdaptor<Class&&>(std::forward<Class>(obj));
+		m_retVal = m_method.Invoke(adaptor, m_args);
+	}
+
 	void ClearArgs() {
 		for (auto it = m_args.begin(); it != m_args.end(); it++) {
 			delete* it;

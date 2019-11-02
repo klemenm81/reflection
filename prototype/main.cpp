@@ -4,6 +4,7 @@
 #include "Field.h"
 #include "Method.h"
 #include "IClass.h"
+#include "test.h"
 
 IReflectable& CreateInstance(const char* name) {
 	static HMODULE hModule = GetModuleHandle(NULL);
@@ -22,6 +23,7 @@ int main() {
 	Method method1 = test.GetClass().GetMethod("Foo1");
 	Method method2 = test.GetClass().GetMethod("Foo2");
 	Method constMethod = test.GetClass().GetMethod("FooConst");
+	Method rvalMethod = test.GetClass().GetMethod("Bar17");
 
 	int see1 = field1.Get<int>(test);
 	std::string see2 = field2.Get<std::string>(test);
@@ -42,4 +44,6 @@ int main() {
 
 	field1.Set(test, 13);
 	wprintf(L"Main(): str = %s\n", str.c_str());
+
+	rvalMethod.InvokeRf(Test());
 }
