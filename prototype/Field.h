@@ -12,15 +12,17 @@ public:
 	Field(IField& field) : m_field(field) {
 	}
 
-	template<typename Type>
-	Type Get(IReflectable& obj) {
-		Adaptor adaptor = m_field.GetValue(obj);
+	template<typename Type, typename Class>
+	Type Get(Class &obj) {
+		Adaptor objectAdaptor = *new CAdaptor<Class &>(obj);
+		Adaptor adaptor = m_field.GetValue(objectAdaptor);
 		return adaptor.Get<Type>();
 	}
 
-	template<typename Type>
-	void Set(IReflectable& obj, Type value) {
+	template<typename Type, typename Class>
+	void Set(Class &obj, Type value) {
+		Adaptor objectAdaptor = *new CAdaptor<Class &>(obj);
 		Adaptor adaptor = *new CAdaptor<Type>(value);
-		m_field.SetValue(obj, adaptor);
+		m_field.SetValue(objectAdaptor, adaptor);
 	}
 };

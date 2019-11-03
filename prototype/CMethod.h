@@ -50,7 +50,7 @@ private:
 	Return(Class::* m_method)(Args...);
 
 public:
-	CMethod(Return(Class::* method)(Args...)) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...)) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -64,7 +64,7 @@ private:
 	Return(Class::* m_method)(Args...) const;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -78,7 +78,7 @@ private:
 	Return(Class::* m_method)(Args...) noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -92,7 +92,7 @@ private:
 	Return(Class::* m_method)(Args...) const noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -106,7 +106,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -120,7 +120,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -134,7 +134,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -148,7 +148,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -162,7 +162,7 @@ private:
 	Return(Class::* m_method)(Args...) &;
 
 public:
-	CMethod(Return(Class::* method)(Args...) &) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) &) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -176,7 +176,7 @@ private:
 	Return(Class::* m_method)(Args...) const &;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const &) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const &) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -190,7 +190,7 @@ private:
 	Return(Class::* m_method)(Args...) & noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) & noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) & noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -204,7 +204,7 @@ private:
 	Return(Class::* m_method)(Args...) const & noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const & noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const & noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -218,7 +218,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile &;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile &) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile &) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -232,7 +232,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const &;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const &) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const &) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -246,7 +246,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile & noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile & noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile & noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -260,7 +260,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const & noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const & noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const & noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -274,7 +274,7 @@ private:
 	Return(Class::* m_method)(Args...) &&;
 
 public:
-	CMethod(Return(Class::* method)(Args...) &&) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) &&) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -288,7 +288,7 @@ private:
 	Return(Class::* m_method)(Args...) const &&;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const &&) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const &&) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -302,7 +302,7 @@ private:
 	Return(Class::* m_method)(Args...) && noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) && noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) && noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -316,7 +316,7 @@ private:
 	Return(Class::* m_method)(Args...) const && noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) const && noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) const && noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -330,7 +330,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile &&;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile &&) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile &&) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -344,7 +344,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const &&;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const &&) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const &&) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -358,7 +358,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile && noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile && noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile && noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
@@ -372,7 +372,7 @@ private:
 	Return(Class::* m_method)(Args...) volatile const && noexcept;
 
 public:
-	CMethod(Return(Class::* method)(Args...) volatile const && noexcept) : m_method(method) {
+	constexpr CMethod(Return(Class::* method)(Args...) volatile const && noexcept) : m_method(method) {
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {

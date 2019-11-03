@@ -11,17 +11,17 @@ private:
 	Type Class::*m_ptr;
 
 public:
-	CFieldBase(Type Class::* ptr) : m_ptr(ptr) {
+	constexpr CFieldBase(Type Class::* ptr) : m_ptr(ptr) {
 	}
 
-	IAdaptor &GetValue(IReflectable &obj) {
-		CAdaptor<Type>* adaptor = new CAdaptor<Type>(static_cast<Class&>(obj).*m_ptr);
+	IAdaptor& GetValue(IAdaptor& obj) {
+		CAdaptor<Type>* adaptor = new CAdaptor<Type>(static_cast<CAdaptor<Class&>&>(obj).GetValue().*m_ptr);
 		return *adaptor;
 	}
 
-	void SetValue(IReflectable &obj, IAdaptor &value) {
-		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type> &>(value);
-		static_cast<Class &>(obj).*m_ptr = adaptor.GetValue();
+	void SetValue(IAdaptor& obj, IAdaptor& value) {
+		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(value);
+		static_cast<CAdaptor<Class&>&>(obj).GetValue().*m_ptr = adaptor.GetValue();
 	}
 };
 
