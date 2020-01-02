@@ -3,7 +3,11 @@
 #include "IReflectable.h"
 #include "CClass.h"
 
-#define REFLECT_ALL_ACCESS friend class CClass<ReflectedClass>;
+#define REFLECT_FULL_ACCESS											\
+	friend void CClass<ReflectedClass>::Register<ReflectedClass>(	\
+		std::map<std::string, IField*>&,							\
+		std::map<std::string, IMethod*>&);
+
 #define REFLECT_PUBLIC_ACCESS
 
 template <typename Class>

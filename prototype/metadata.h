@@ -6,50 +6,82 @@
 #include "CField.h"
 #include "CMethod.h"
 
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...)) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...))method)>(method);
+template<typename I>
+struct nothing {};
+
+template <class... Ts>
+constexpr bool inline_sfinae(Ts&&...) {
+	return false;
 }
 
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const)method)>(method);
-}
-
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...) noexcept) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) noexcept)method)>(method);
-}
-
-template <typename ReflectedClass, typename Return, typename... Args>
-IMethod* newMethod(Return(ReflectedClass::* method)(Args...) const noexcept) {
-	return new CMethod<ReflectedClass, decltype((Return(ReflectedClass::*)(Args...) const noexcept)method)>(method);
+template <class Ts, class Lambda>
+constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(std::declval<Ts>()), bool{}) {
+	return true;
 }
 
 template <typename ReflectedClass, typename Method>
 IMethod* newMethod(Method method) {
-	return new CMethod<ReflectedClass, decltype(method)>(method);
+	return new CMethod<ReflectedClass, Method>(method);
 }
 
 template <typename ReflectedClass, typename Field>
 IField* newField(Field field) {
-	return new CField<ReflectedClass, decltype(field)>(field);
+	return new CField<ReflectedClass, Field>(field);
 }
 
-#define REFLECT_CLASS_START(Class)																		\
-std::map<std::string, IField*> CClass<Class>::m_fields;													\
-std::map<std::string, IMethod*> CClass<Class>::m_methods;												\
-template<>																								\
-CClass<Class>::CClass() {
+#define REFLECT_CLASS_START(Class)												\
+template<>																		\
+template <typename ReflectedClass>												\
+void CClass<Class>::Register(													\
+	std::map<std::string, IField*>& m_fields,									\
+	std::map<std::string, IMethod*>& m_methods)									\
+{																				
 
-#define REFLECT_METHOD(Method, ...)																		\
-m_methods[#Method] = newMethod<ReflectedClass, ##__VA_ARGS__>(&ReflectedClass::Method);
+#define REFLECT_CLASS_END(Class)												\
+}																				\
+std::map<std::string, IField*> CClass<Class>::m_fields;							\
+std::map<std::string, IMethod*> CClass<Class>::m_methods;						\
+template<>																		\
+CClass<Class>::CClass() {														\
+	Register<Class>(m_fields, m_methods);										\
+}	
+
+
+#define REFLECT_METHOD(Method)																			\
+m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
 
 #define REFLECT_FIELD(Field)																			\
 m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
-#define REFLECT_CLASS_END																				\
-}
+#define REFLECT_METHOD_OVERLOAD_NOCVREF(Method, Return, ...)											\
+	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->								\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method)) {})) {				\
+		m_methods[#Return ## " " ## #Method ## "(" ## #__VA_ARGS__ ## ")"] =							\
+			newMethod<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
+				&ReflectedClass::Method));																\
+	}
+
+#define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)										\
+if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method)) {})) {		\
+		m_methods[#Return ## " " ## #Method ## "(" ## #__VA_ARGS__ ## ") " ## #CvRef] =					\
+			newMethod<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(		\
+				&ReflectedClass::Method));																\
+	}
+
+#define REFLECT_METHOD_OVERLOAD(Method, Return, ...)									\
+	REFLECT_METHOD_OVERLOAD_NOCVREF(Method, Return, __VA_ARGS__)						\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const, Return, __VA_ARGS__)					\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile, Return, __VA_ARGS__)			\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile, Return, __VA_ARGS__)				\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, &, Return, __VA_ARGS__)						\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const &, Return, __VA_ARGS__)					\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile &, Return, __VA_ARGS__)		\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &, Return, __VA_ARGS__)				\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, &&, Return, __VA_ARGS__)						\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const &&, Return, __VA_ARGS__)				\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile &&, Return, __VA_ARGS__)		\
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &&, Return, __VA_ARGS__)
 
 #define REFLECT_FACTORY_START																			\
 extern "C" __declspec(dllexport) IReflectable& AbstractFactory(const char* name) {						\

@@ -6,7 +6,7 @@
 #include <vector>
 
 class Test : public Reflectable<Test> {
-	REFLECT_ALL_ACCESS;		// enables access to private and protected members via reflection
+	REFLECT_FULL_ACCESS;		// enables access to private and protected members via reflection
 
 private:
 	int a;
@@ -49,8 +49,53 @@ public:
 	void Bar23() volatile && noexcept;
 	void Bar24() volatile const && noexcept;
 
+	
+	void Overload(int) 
+	{
+	}
+	void Overload(int) const 
+	{
+	}
+	
+	void Overload(int) const volatile 
+	{
+	}
+	void Overload(int) volatile
+	{
+	}
+	
 
-	//void Bar9() &&;
-	//void Bar9();
-	//void Bar5();
+	void OverloadEx(int) & 
+	{
+	}
+	void OverloadEx(int) const &
+	{
+	}
+	void OverloadEx(int) const volatile &
+	{
+	}
+	void OverloadEx(int) volatile &
+	{
+	}
+
+
+	void OverloadEx(int)&&
+	{
+	}
+	void OverloadEx(int) const&&
+	{
+	}
+	void OverloadEx(int) const volatile&&
+	{
+	}
+	void OverloadEx(int) volatile&&
+	{
+	}
+
+
+};
+
+class TestDerived : public Test, public Reflectable<TestDerived> {
+public:
+	int FooOverloaded(int i);
 };

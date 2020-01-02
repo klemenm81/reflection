@@ -102,3 +102,7 @@ void Test::Bar23() volatile && noexcept {
 
 void Test::Bar24() volatile const && noexcept {
 }
+
+int TestDerived::FooOverloaded(int i) {
+	return 0;
+}
