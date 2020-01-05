@@ -86,7 +86,7 @@ if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
 #define REFLECT_METHOD(Method, ...)	CAT_FCN(REFLECT_METHOD_, ISEMPTY(__VA_ARGS__), Method, ##__VA_ARGS__)
 
 #define REFLECT_FACTORY_START																			\
-extern "C" IReflectable& AbstractFactory(const char* name) {						\
+extern "C" _declspec(dllexport) IReflectable& AbstractFactory(const char* name) {						\
 	static CAbstractFactory abstractFactory;															\
 	return abstractFactory.CreateInstance(name);														\
 }																										\

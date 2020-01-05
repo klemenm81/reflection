@@ -1,4 +1,4 @@
-//#include <Windows.h>
+#include <Windows.h>
 
 #include "IReflectable.h"
 #include "Field.h"
@@ -6,16 +6,15 @@
 #include "IClass.h"
 #include "test.h"
 
-/*IReflectable& CreateInstance(const char* name) {
+IReflectable& CreateInstance(const char* name) {
 	static HMODULE hModule = GetModuleHandle(NULL);
 	IReflectable& (*AbstractFactory)(const char*) =
 		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
 	return AbstractFactory("Test");
-}*/
+}
 
 int main() {
-	//IReflectable &test = CreateInstance("Test");
-        IReflectable &test = *new Test();
+	IReflectable &test = CreateInstance("Test");
 
 	Field field1(test.GetClass().GetField("a"));
 	Field field2(test.GetClass().GetField("myString"));
@@ -23,7 +22,7 @@ int main() {
 	Method method1(test.GetClass().GetMethod("Foo1"));
 	Method method2(test.GetClass().GetMethod("Foo2"));
 	Method constMethod(test.GetClass().GetMethod("FooConst"));
-	Method rvalMethod(test.GetClass().GetMethod("void Bar17() &&"));
+	//Method rvalMethod(test.GetClass().GetMethod("void Bar17() &&"));
 
 	int see1 = field1.Get<int>(test);
 	std::string see2 = field2.Get<std::string>(test);
@@ -45,5 +44,5 @@ int main() {
 	field1.Set(test, 13);
 	wprintf(L"Main(): str = %s\n", str.c_str());
 
-	rvalMethod.Invoke(Test());
+	//rvalMethod.Invoke(Test());
 }

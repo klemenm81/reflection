@@ -51,7 +51,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>5103;5105</DisableSpecificWarnings>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
