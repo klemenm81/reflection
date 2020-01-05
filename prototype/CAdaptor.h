@@ -1,5 +1,5 @@
 #pragma once
-
+#include <forward_list>
 #include "IAdaptor.h"
 
 template <typename Type>

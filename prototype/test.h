@@ -41,6 +41,7 @@ public:
 	void Bar16() volatile const & noexcept;
 
 	void Bar17() &&;
+	void Bar17() &;
 	void Bar18() const &&;
 	void Bar19() && noexcept;
 	void Bar20() const && noexcept;

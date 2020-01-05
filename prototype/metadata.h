@@ -5,6 +5,7 @@
 #include "CClass.h"
 #include "CField.h"
 #include "CMethod.h"
+#include "macros.h"
 
 template<typename I>
 struct nothing {};
@@ -46,14 +47,13 @@ CClass<Class>::CClass() {														\
 	Register<Class>(m_fields, m_methods);										\
 }	
 
-
-#define REFLECT_METHOD(Method)																			\
-m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
-
 #define REFLECT_FIELD(Field)																			\
 m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
-#define REFLECT_METHOD_OVERLOAD_NOCVREF(Method, Return, ...)											\
+#define REFLECT_METHOD_NO_OVERLOAD(Method)																\
+m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
+
+#define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)											\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->								\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method)) {})) {				\
 		m_methods[#Return ## " " ## #Method ## "(" ## #__VA_ARGS__ ## ")"] =							\
@@ -70,7 +70,7 @@ if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
 	}
 
 #define REFLECT_METHOD_OVERLOAD(Method, Return, ...)									\
-	REFLECT_METHOD_OVERLOAD_NOCVREF(Method, Return, __VA_ARGS__)						\
+	REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, __VA_ARGS__)						\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const, Return, __VA_ARGS__)					\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile, Return, __VA_ARGS__)			\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile, Return, __VA_ARGS__)				\
@@ -82,6 +82,10 @@ if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const &&, Return, __VA_ARGS__)				\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile &&, Return, __VA_ARGS__)		\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &&, Return, __VA_ARGS__)
+
+#define REFLECT_METHOD(Method, ...)	CAT3(REFLECT_METHOD_, ISEMPTY(__VA_ARGS__), (Method, ##__VA_ARGS__))
+#define REFLECT_METHOD_0(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)	
+#define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
 
 #define REFLECT_FACTORY_START																			\
 extern "C" __declspec(dllexport) IReflectable& AbstractFactory(const char* name) {						\

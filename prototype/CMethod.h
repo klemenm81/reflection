@@ -7,7 +7,7 @@ template <typename Class, typename Return, typename... Args>
 class CMethodBase : public IMethod {
 protected:
 	template<typename Method, std::size_t... Index>
-	IAdaptor& Invoke(Method method, IAdaptor& adaptor, std::vector<IAdaptor*> args, std::index_sequence<Index...>) {
+	IAdaptor& InvokeLValue(Method method, IAdaptor& adaptor, std::vector<IAdaptor*> args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<CAdaptor<Class&>&>(adaptor).GetValue().*method)(
 				(static_cast<CAdaptor<Args>&>(*args[Index])).GetValue()...
@@ -24,8 +24,8 @@ protected:
 	}
 
 	template<typename Method>
-	IAdaptor& Invoke(Method method, IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return(Invoke(method, adaptor, args, std::index_sequence_for<Args...>{}));
+	IAdaptor& InvokeLValue(Method method, IAdaptor& adaptor, std::vector<IAdaptor*> args) {
+		return(InvokeLValue(method, adaptor, args, std::index_sequence_for<Args...>{}));
 	}
 
 	template<typename Method, std::size_t... Index>
@@ -64,7 +64,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -78,7 +78,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -92,7 +92,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -106,7 +106,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -120,7 +120,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -134,7 +134,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -148,7 +148,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -162,7 +162,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -176,7 +176,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -190,7 +190,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -204,7 +204,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -218,7 +218,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -232,7 +232,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -246,7 +246,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -260,7 +260,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 
@@ -274,7 +274,7 @@ public:
 	}
 
 	IAdaptor& Invoke(IAdaptor& adaptor, std::vector<IAdaptor*> args) {
-		return CMethodBase<Class, Return, Args...>::Invoke(m_method, adaptor, args);
+		return CMethodBase<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
 	}
 };
 

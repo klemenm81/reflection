@@ -78,8 +78,12 @@ void Test::Bar15() volatile & noexcept {
 void Test::Bar16() volatile const & noexcept {
 }
 
-void Test::Bar17() && {
+void Test::Bar17() & {
 	printf("From Bar17\n");
+}
+
+void Test::Bar17() && {
+	printf("From Bar17 &&\n");
 }
 
 void Test::Bar18() const && {

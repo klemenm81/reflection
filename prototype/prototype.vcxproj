@@ -50,6 +50,8 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>5103;5105</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -64,6 +66,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,6 +85,7 @@
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IMethod.h" />
     <ClInclude Include="IClass.h" />
+    <ClInclude Include="macros.h" />
     <ClInclude Include="metadata.h" />
     <ClInclude Include="Method.h" />
     <ClInclude Include="Reflectable.h" />
