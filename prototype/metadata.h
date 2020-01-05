@@ -40,8 +40,6 @@ void CClass<Class>::Register(													\
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
-std::map<std::string, IField*> CClass<Class>::m_fields;							\
-std::map<std::string, IMethod*> CClass<Class>::m_methods;						\
 template<>																		\
 CClass<Class>::CClass() {														\
 	Register<Class>(m_fields, m_methods);										\
@@ -55,16 +53,16 @@ m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)											\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->								\
-	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method)) {})) {				\
-		m_methods[#Return ## " " ## #Method ## "(" ## #__VA_ARGS__ ## ")"] =							\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {				\
+		m_methods[#Method] =							\
 			newMethod<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
 				&ReflectedClass::Method));																\
 	}
 
 #define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)										\
 if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
-	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method)) {})) {		\
-		m_methods[#Return ## " " ## #Method ## "(" ## #__VA_ARGS__ ## ") " ## #CvRef] =					\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {		\
+		m_methods[#Method] =					\
 			newMethod<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(		\
 				&ReflectedClass::Method));																\
 	}
@@ -83,12 +81,12 @@ if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->									\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile &&, Return, __VA_ARGS__)		\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &&, Return, __VA_ARGS__)
 
-#define REFLECT_METHOD(Method, ...)	CAT3(REFLECT_METHOD_, ISEMPTY(__VA_ARGS__), (Method, ##__VA_ARGS__))
 #define REFLECT_METHOD_0(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)	
 #define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
+#define REFLECT_METHOD(Method, ...)	CAT_FCN(REFLECT_METHOD_, ISEMPTY(__VA_ARGS__), Method, ##__VA_ARGS__)
 
 #define REFLECT_FACTORY_START																			\
-extern "C" __declspec(dllexport) IReflectable& AbstractFactory(const char* name) {						\
+extern "C" IReflectable& AbstractFactory(const char* name) {						\
 	static CAbstractFactory abstractFactory;															\
 	return abstractFactory.CreateInstance(name);														\
 }																										\
@@ -100,3 +98,4 @@ m_instantiators[#Class] = new CInstantiator<Class>();
 
 #define REFLECT_FACTORY_END																				\
 }
+

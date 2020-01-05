@@ -10,8 +10,8 @@
 template<typename Class>
 class CClass : public IClass {
 private:
-	static std::map<std::string, IField*> m_fields;
-	static std::map<std::string, IMethod*> m_methods;
+	std::map<std::string, IField*> m_fields;
+	std::map<std::string, IMethod*> m_methods;
 	typedef Class ReflectedClass;
 
 public:

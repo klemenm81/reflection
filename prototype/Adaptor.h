@@ -51,5 +51,6 @@ private:
 	}
 
 	Adaptor &operator=(const Adaptor& other) {
+		return *this;
 	}
 };

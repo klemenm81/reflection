@@ -1,4 +1,4 @@
-#include <Windows.h>
+//#include <Windows.h>
 
 #include "IReflectable.h"
 #include "Field.h"
@@ -6,23 +6,24 @@
 #include "IClass.h"
 #include "test.h"
 
-IReflectable& CreateInstance(const char* name) {
+/*IReflectable& CreateInstance(const char* name) {
 	static HMODULE hModule = GetModuleHandle(NULL);
 	IReflectable& (*AbstractFactory)(const char*) =
 		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
 	return AbstractFactory("Test");
-}
+}*/
 
 int main() {
-	IReflectable &test = CreateInstance("Test");
+	//IReflectable &test = CreateInstance("Test");
+        IReflectable &test = *new Test();
 
-	Field field1 = test.GetClass().GetField("a");
-	Field field2 = test.GetClass().GetField("myString");
-	Field field3 = test.GetClass().GetField("ptrString");
-	Method method1 = test.GetClass().GetMethod("Foo1");
-	Method method2 = test.GetClass().GetMethod("Foo2");
-	Method constMethod = test.GetClass().GetMethod("FooConst");
-	Method rvalMethod = test.GetClass().GetMethod("void Bar17() &&");
+	Field field1(test.GetClass().GetField("a"));
+	Field field2(test.GetClass().GetField("myString"));
+	Field field3(test.GetClass().GetField("ptrString"));
+	Method method1(test.GetClass().GetMethod("Foo1"));
+	Method method2(test.GetClass().GetMethod("Foo2"));
+	Method constMethod(test.GetClass().GetMethod("FooConst"));
+	Method rvalMethod(test.GetClass().GetMethod("void Bar17() &&"));
 
 	int see1 = field1.Get<int>(test);
 	std::string see2 = field2.Get<std::string>(test);

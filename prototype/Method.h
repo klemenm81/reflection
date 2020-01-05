@@ -10,7 +10,7 @@ private:
 	Adaptor m_retVal;
 
 public:
-	Method(IMethod& method) : m_method(method) {
+	explicit Method(IMethod& method) : m_method(method) {
 	}
 
 	~Method() {

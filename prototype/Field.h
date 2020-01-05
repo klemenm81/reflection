@@ -9,7 +9,7 @@ private:
 	IField& m_field;
 
 public:
-	Field(IField& field) : m_field(field) {
+	explicit Field(IField& field) : m_field(field) {
 	}
 
 	template<typename Type, typename Class>

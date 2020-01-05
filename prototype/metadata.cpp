@@ -1,6 +1,8 @@
 #include "metadata.h"
 #include "test.h"
 
+
+
 REFLECT_CLASS_START(Test)
 	REFLECT_FIELD(a)
 	REFLECT_FIELD(myString)
@@ -36,7 +38,7 @@ REFLECT_CLASS_START(Test)
 	REFLECT_METHOD(Bar23)
 	REFLECT_METHOD(Bar24)
 	REFLECT_METHOD(Overload, void, int)
-	REFLECT_METHOD(OverloadEx, void, int)
+	REFLECT_METHOD(OverloadEx, void, int) 
 REFLECT_CLASS_END(Test)
 
 REFLECT_CLASS_START(TestDerived)

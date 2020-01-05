@@ -21,5 +21,5 @@ _ISEMPTY(HAS_COMMA(__VA_ARGS__), HAS_COMMA(_TRIGGER_PARENTHESIS_ __VA_ARGS__),		
 #define _ISEMPTY(_0, _1, _2, _3) HAS_COMMA(PASTE5(_IS_EMPTY_CASE_, _0, _1, _2, _3))
 #define _IS_EMPTY_CASE_0001 ,
 #endif
-#define CAT3_IMPL(_1, _2, _3) _1 ## _2 ## _3
-#define CAT3(_1, _2, _3) CAT3_IMPL(_1, _2, _3)
+#define CAT_FCN_IMPL(_1, _2, _3, ...) _1 ## _2( _3, ##__VA_ARGS__)
+#define CAT_FCN(_1, _2, _3, ...) CAT_FCN_IMPL(_1, _2, _3, ##__VA_ARGS__)
