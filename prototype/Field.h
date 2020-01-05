@@ -9,8 +9,14 @@ private:
 	IField& m_field;
 
 public:
-	explicit Field(IField& field) : m_field(field) {
+	Field(IField& field) : m_field(field) {
 	}
+
+	Field(Field&& other) noexcept : m_field(other.m_field) {
+	}
+
+	Field(const Field &) = delete;
+	Field& operator=(const Field&) = delete;
 
 	template<typename Type, typename Class>
 	Type Get(Class &obj) {

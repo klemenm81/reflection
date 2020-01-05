@@ -10,8 +10,14 @@ private:
 	Adaptor m_retVal;
 
 public:
-	explicit Method(IMethod& method) : m_method(method) {
+	Method(IMethod& method) : m_method(method) {
 	}
+
+	Method(Method&& other) noexcept : m_method(other.m_method) {
+	}
+
+	Method(const Method &) = delete;
+	Method& operator=(const Method &) = delete;
 
 	~Method() {
 		ClearArgs();

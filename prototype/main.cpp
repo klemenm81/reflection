@@ -37,13 +37,13 @@ IReflectable& CreateInstance(const char* name) {
 int main() {
 	IReflectable &test = CreateInstance("Test");
 
-	Field field1(test.GetClass().GetField("a"));
-	Field field2(test.GetClass().GetField("myString"));
-	Field field3(test.GetClass().GetField("ptrString"));
-	Method method1(test.GetClass().GetMethod("Foo1"));
-	Method method2(test.GetClass().GetMethod("Foo2"));
-	Method constMethod(test.GetClass().GetMethod("FooConst"));
-	//Method rvalMethod(test.GetClass().GetMethod("void Bar17() &&"));
+	Field field1 = test.GetClass().GetField("a");
+	Field field2 = test.GetClass().GetField("myString");
+	Field field3 = test.GetClass().GetField("ptrString");
+	Method method1 = test.GetClass().GetMethod("Foo1");
+	Method method2 = test.GetClass().GetMethod("Foo2");
+	Method constMethod = test.GetClass().GetMethod("FooConst");
+	//Method rvalMethod = test.GetClass().GetMethod("void Bar17() &&");
 
 	int see1 = field1.Get<int>(test);
 	std::string see2 = field2.Get<std::string>(test);
