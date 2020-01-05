@@ -1,4 +1,11 @@
-#include <Windows.h>
+#ifdef _WIN32
+    #include <Windows.h>
+#else
+    #include <dlfcn.h>
+#endif
+
+#include <stdio.h>
+#include <errno.h>
 
 #include "IReflectable.h"
 #include "Field.h"
@@ -7,9 +14,23 @@
 #include "test.h"
 
 IReflectable& CreateInstance(const char* name) {
+#ifdef _WIN32
 	static HMODULE hModule = GetModuleHandle(NULL);
 	IReflectable& (*AbstractFactory)(const char*) =
 		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
+#else
+	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
+	if (hModule == NULL) {
+		perror("dlopen");
+		exit(1);
+	}
+	IReflectable& (*AbstractFactory)(const char*) =
+                (IReflectable & (*)(const char*))dlsym(hModule, "AbstractFactory");
+	if (AbstractFactory == NULL) {
+		printf("AbstractFactory not found\n");
+		exit(1);
+	}
+#endif
 	return AbstractFactory("Test");
 }
 
