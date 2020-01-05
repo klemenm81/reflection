@@ -8,7 +8,7 @@
 #include "macros.h"
 
 #ifdef _WIN32
-    #define EXPORT_API _declspec(dllimport)
+    #define EXPORT_API _declspec(dllexport)
 #else
     #define EXPORT_API __attribute__ ((visibility("default")))
 #endif
