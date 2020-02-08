@@ -66,7 +66,7 @@ m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
 	}
 
 #define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)															\
-if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->														\
+	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
 		m_methods[#Method] =																								\
 			newMethod<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(							\

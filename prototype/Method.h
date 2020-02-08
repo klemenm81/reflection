@@ -45,10 +45,40 @@ public:
 		m_retVal = m_method.Invoke(adaptor, m_args);
 	}
 
+	template <typename Return, typename Class, typename... Args>
+	Return InvokeEasy(Class& obj, Args... args) {
+		CAdaptor<Class&> adaptor(obj);
+
+		std::vector<IAdaptor*> argsVec = {
+			&CAdaptor<Args>(args)...
+		};
+
+		m_retVal = m_method.Invoke(adaptor, argsVec);
+
+		if constexpr (!std::is_same<Return, void>()) {
+			return m_retVal.Get<Return>();
+		}
+	}
+
 	template <typename Class>
 	void Invoke(Class&& obj) {
 		Adaptor adaptor = *new CAdaptor<Class&&>(std::forward<Class>(obj));
 		m_retVal = m_method.Invoke(adaptor, m_args);
+	}
+
+	template <typename Return, typename Class, typename... Args>
+	Return InvokeEasy(Class&& obj, Args... args) {
+		CAdaptor<Class&&> adaptor(std::forward<Class>(obj));
+
+		std::vector<IAdaptor*> argsVec = {
+			&CAdaptor<Args>(args)...
+		};
+
+		m_retVal = m_method.Invoke(adaptor, argsVec);
+
+		if constexpr (!std::is_same<Return, void>()) {
+			return m_retVal.Get<Return>();
+		}
 	}
 
 	void ClearArgs() {

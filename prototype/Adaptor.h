@@ -19,7 +19,7 @@ public:
 		other.m_adaptor = nullptr;
 	}
 
-	Adaptor& operator=(Adaptor&& other) {
+	Adaptor& operator=(Adaptor&& other) noexcept {
 		if (m_adaptor != nullptr) {
 			delete m_adaptor;
 		}

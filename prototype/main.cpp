@@ -51,13 +51,9 @@ int main() {
 
 	std::wstring str = L"PI = ";
 
-	method1.PushArg<std::wstring&>(str);
-	method1.PushArg<float>(3.14f);
-	method2.PushArg<const wchar_t*>(L"Hello Reflected");
-	
-	method1.Invoke(test);
-	method2.Invoke(test);
-	wprintf(L"Main(): Return from Foo2 = %d\n", method2.GetRetVal<int>());
+	method1.InvokeEasy<void, IReflectable &, std::wstring &, float>(test, str, 3.14f);
+	int ret = method2.InvokeEasy<int, IReflectable &, const wchar_t *>(test, L"Hello Reflected");
+	wprintf(L"Main(): Return from Foo2 = %d\n", ret);
 
 	constMethod.Invoke(test);
 	printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
