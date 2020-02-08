@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Adaptor.h"
+#include "Adaptor2.h"
 #include "IMethod.h"
+#include "IMethod2.h"
+
 
 class Method {
 private:
@@ -49,14 +52,14 @@ public:
 	Return InvokeEasy(Class& obj, Args... args) {
 		CAdaptor<Class&> adaptor(obj);
 
-		std::vector<IAdaptor*> argsVec = {
-			&CAdaptor<Args>(args)...
-		};
+		std::vector<Adaptor2> argsVec;
+		int dummy[] = { (argsVec.push_back(CAdaptor<Args>(args)), 0)... };
 
-		m_retVal = m_method.Invoke(adaptor, argsVec);
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		Adaptor2 retVal = method2.Invoke(adaptor, argsVec);
 
 		if constexpr (!std::is_same<Return, void>()) {
-			return m_retVal.Get<Return>();
+			return retVal.Get<Return>();
 		}
 	}
 
@@ -68,14 +71,10 @@ public:
 
 	template <typename Return, typename Class, typename... Args>
 	Return InvokeEasy(Class&& obj, Args... args) {
-		CAdaptor<Class&&> adaptor(std::forward<Class>(obj));
-
-		std::vector<IAdaptor*> argsVec = {
-			&CAdaptor<Args>(args)...
-		};
-
-		m_retVal = m_method.Invoke(adaptor, argsVec);
-
+		ClearArgs();
+		Adaptor adaptor = *new CAdaptor<Class&&>(std::forward<Class>(obj));
+		PushArg<Args...>(args...);
+		m_retVal = m_method.Invoke(adaptor, m_args);
 		if constexpr (!std::is_same<Return, void>()) {
 			return m_retVal.Get<Return>();
 		}

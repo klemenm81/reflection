@@ -5,6 +5,7 @@
 #include "CClass.h"
 #include "CField.h"
 #include "CMethod.h"
+#include "CMethod2.h"
 #include "macros.h"
 
 #ifdef _WIN32
@@ -29,6 +30,11 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 template <typename ReflectedClass, typename Method>
 IMethod* newMethod(Method method) {
 	return new CMethod<ReflectedClass, Method>(method);
+}
+
+template <typename ReflectedClass, typename Method>
+IMethod2* newMethod2(Method method) {
+	return new CMethod2<ReflectedClass, Method>(method);
 }
 
 template <typename ReflectedClass, typename Field>
@@ -56,6 +62,9 @@ m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
 m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
+
+#define REFLECT_METHOD2(Method)																\
+m_methods[#Method] = newMethod2<ReflectedClass>(&ReflectedClass::Method);
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\

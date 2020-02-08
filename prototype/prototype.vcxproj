@@ -82,13 +82,16 @@
     <ClInclude Include="CField.h" />
     <ClInclude Include="CInstantiator.h" />
     <ClInclude Include="CMethod.h" />
+    <ClInclude Include="CMethod2.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IMethod.h" />
     <ClInclude Include="IClass.h" />
+    <ClInclude Include="IMethod2.h" />
     <ClInclude Include="macros.h" />
     <ClInclude Include="metadata.h" />
     <ClInclude Include="Method.h" />
+    <ClInclude Include="Adaptor2.h" />
     <ClInclude Include="Reflectable.h" />
     <ClInclude Include="CClass.h" />
     <ClInclude Include="IAdaptor.h" />
