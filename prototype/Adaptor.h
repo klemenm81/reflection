@@ -9,12 +9,12 @@ private:
 	IAdaptor *m_adaptor;
 
 public:
-	Adaptor() : m_adaptor(nullptr) {
+	Adaptor(IAdaptor& adaptor) : m_adaptor(&adaptor) {
 	}
 
-	Adaptor(IAdaptor &adaptor) : m_adaptor(&adaptor) {
+	Adaptor(IAdaptor&& adaptor) : m_adaptor(&adaptor) {
 	}
-
+	
 	Adaptor(Adaptor&& other) noexcept : m_adaptor(other.m_adaptor) {
 		other.m_adaptor = nullptr;
 	}

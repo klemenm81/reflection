@@ -20,8 +20,7 @@ public:
 
 	template<typename Type, typename Class>
 	Type Get(Class &obj) {
-		Adaptor objectAdaptor = *new CAdaptor<Class &>(obj);
-
+		CAdaptor<Class&> objectAdaptor(obj);
 		std::byte retValBuffer[sizeof(CAdaptor<Type>)];
 		Adaptor adaptor = m_field.GetValue(retValBuffer, objectAdaptor);
 		return adaptor.Get<Type>();
@@ -29,8 +28,8 @@ public:
 
 	template<typename Type, typename Class>
 	void Set(Class &obj, Type value) {
-		Adaptor objectAdaptor = *new CAdaptor<Class &>(obj);
-		Adaptor adaptor = *new CAdaptor<Type>(value);
+		CAdaptor<Class&> objectAdaptor(obj);
+		CAdaptor<Type> adaptor(value);
 		m_field.SetValue(objectAdaptor, adaptor);
 	}
 };

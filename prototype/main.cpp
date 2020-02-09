@@ -55,8 +55,8 @@ int main() {
 	int ret = method2.InvokeEasy<int, IReflectable, const char *>(test, "Hello Reflected");
 	printf("Main(): Return from Foo2 = %d\n", ret);
 
-	constMethod.Invoke(test);
-	printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
+	std::vector<IAdaptor *> args;
+	printf("Main(): Return from FooConst = %s\n", constMethod.Invoke(test, args).Get<std::string>().c_str());
 
 	field1.Set(test, 13);
 	printf("Main(): str = %s\n", str.c_str());
