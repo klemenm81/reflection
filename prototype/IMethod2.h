@@ -6,7 +6,7 @@
 
 class IMethod2 : public IMethod {
 public:
-	virtual IAdaptor& Invoke(std::byte *retValBuffer, IAdaptor& object, std::vector<Adaptor2> &&args) { throw; };
+	virtual IAdaptor& Invoke(std::byte *retValBuffer, IAdaptor& object, std::vector<IAdaptor*> &&args) { throw; };
 	virtual ~IMethod2() {
 	}
 };

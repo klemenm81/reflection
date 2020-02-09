@@ -70,7 +70,7 @@ public:
 		std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Class&> adaptor(obj);
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		IAdaptor &retVal = method2.Invoke(retValBuffer, adaptor, make_vector<Adaptor2> (CAdaptor<Args>(args)... ));
+		IAdaptor& retVal = method2.Invoke(retValBuffer, adaptor, std::vector<IAdaptor*> ( { &CAdaptor<Args>(args)... }));
 
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(retVal).GetValue());
