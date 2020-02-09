@@ -51,8 +51,8 @@ int main() {
 
 	std::string str = "PI = ";
 
-	method1.InvokeEasy<void, IReflectable &, std::string &, float>(test, str, 3.14f);
-	int ret = method2.InvokeEasy<int, IReflectable &, const char *>(test, "Hello Reflected");
+	method1.InvokeEasy<void, IReflectable, std::string &, float>(test, str, 3.14f);
+	int ret = method2.InvokeEasy<int, IReflectable, const char *>(test, "Hello Reflected");
 	printf("Main(): Return from Foo2 = %d\n", ret);
 
 	constMethod.Invoke(test);

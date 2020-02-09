@@ -5,10 +5,6 @@
 #include "IMethod.h"
 #include "IMethod2.h"
 
-#include <deque>
-
-
-
 template <typename T>
 void add_to_vector(std::vector<T>* vec) {}
 
@@ -71,14 +67,13 @@ public:
 
 	template <typename Return, typename Class, typename... Args>
 	Return InvokeEasy(Class& obj, Args... args) {
+		std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Class&> adaptor(obj);
-		CAdaptor<Return> retVal;
-
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		method2.Invoke(retVal, adaptor, make_vector<Adaptor2> (CAdaptor<Args>(args)... ));
+		IAdaptor &retVal = method2.Invoke(retValBuffer, adaptor, make_vector<Adaptor2> (CAdaptor<Args>(args)... ));
 
 		if constexpr (!std::is_same<Return, void>()) {
-			return(retVal.GetValue());
+			return(static_cast<CAdaptor<Return> &>(retVal).GetValue());
 		}
 	}
 
