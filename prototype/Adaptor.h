@@ -20,9 +20,6 @@ public:
 	}
 
 	Adaptor& operator=(Adaptor&& other) noexcept {
-		if (m_adaptor != nullptr) {
-			delete m_adaptor;
-		}
 		m_adaptor = other.m_adaptor;
 		other.m_adaptor = nullptr;
 		return *this;
@@ -30,12 +27,6 @@ public:
 
 	Adaptor(const Adaptor& other) = delete;
 	Adaptor& operator=(const Adaptor& other) = delete;
-
-	~Adaptor() {
-		if (m_adaptor != nullptr) {
-			delete m_adaptor;
-		}
-	}
 
 	template<typename Type>
 	Type Get() {

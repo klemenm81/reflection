@@ -21,7 +21,9 @@ public:
 	template<typename Type, typename Class>
 	Type Get(Class &obj) {
 		Adaptor objectAdaptor = *new CAdaptor<Class &>(obj);
-		Adaptor adaptor = m_field.GetValue(objectAdaptor);
+
+		std::byte retValBuffer[sizeof(CAdaptor<Type>)];
+		Adaptor adaptor = m_field.GetValue(retValBuffer, objectAdaptor);
 		return adaptor.Get<Type>();
 	}
 

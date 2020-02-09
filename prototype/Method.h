@@ -5,22 +5,12 @@
 #include "IMethod.h"
 #include "IMethod2.h"
 
-template <typename T>
-void add_to_vector(std::vector<T>* vec) {}
-
-template <typename T, typename... Args>
-void add_to_vector(std::vector<T>* vec, T&& car, Args&&... cdr) {
-	vec->push_back(std::forward<T>(car));
-	add_to_vector<T>(vec, std::forward<Args>(cdr)...);
-}
-
 template <typename T, typename... Args>
 std::vector<T> make_vector(Args&&... args) {
 	std::vector<T> result;
-	add_to_vector<T>(&result, std::forward<Args>(args)...);
+	int dummy[] = { (result.push_back(std::forward<Args>(args)), 0)... };
 	return result;
 }
-
 
 
 class Method {
@@ -70,7 +60,7 @@ public:
 		std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Class&> adaptor(obj);
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		IAdaptor& retVal = method2.Invoke(retValBuffer, adaptor, std::vector<IAdaptor*> ( { &CAdaptor<Args>(args)... }));
+		IAdaptor &retVal = method2.Invoke(retValBuffer, adaptor, make_vector<Adaptor2> (CAdaptor<Args>(args)... ));
 
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(retVal).GetValue());
