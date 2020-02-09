@@ -28,11 +28,11 @@ public:
 
 	template<typename Type>
 	Type Get() {
-		return(static_cast<CAdaptor<Type>&>(m_adaptor).GetValue());
+		return(static_cast<CAdaptor<Type>&&>(m_adaptor).GetValue());
 	}
 
 	template<typename Type>
 	void Set(Type value) {
-		static_cast<CAdaptor<Type>&>(m_adaptor).SetValue(value);
+		static_cast<CAdaptor<Type>&&>(m_adaptor).SetValue(value);
 	}
 };

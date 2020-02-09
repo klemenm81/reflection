@@ -5,6 +5,27 @@
 #include "IMethod.h"
 #include "IMethod2.h"
 
+#include <deque>
+
+
+
+template <typename T>
+void add_to_vector(std::vector<T>* vec) {}
+
+template <typename T, typename... Args>
+void add_to_vector(std::vector<T>* vec, T&& car, Args&&... cdr) {
+	vec->push_back(std::forward<T>(car));
+	add_to_vector<T>(vec, std::forward<Args>(cdr)...);
+}
+
+template <typename T, typename... Args>
+std::vector<T> make_vector(Args&&... args) {
+	std::vector<T> result;
+	add_to_vector<T>(&result, std::forward<Args>(args)...);
+	return result;
+}
+
+
 
 class Method {
 private:
@@ -51,15 +72,13 @@ public:
 	template <typename Return, typename Class, typename... Args>
 	Return InvokeEasy(Class& obj, Args... args) {
 		CAdaptor<Class&> adaptor(obj);
-
-		std::vector<Adaptor2> argsVec;
-		int dummy[] = { (argsVec.push_back(CAdaptor<Args>(args)), 0)... };
+		CAdaptor<Return> retVal;
 
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		Adaptor2 retVal = method2.Invoke(adaptor, argsVec);
+		method2.Invoke(retVal, adaptor, make_vector<Adaptor2> (CAdaptor<Args>(args)... ));
 
 		if constexpr (!std::is_same<Return, void>()) {
-			return retVal.Get<Return>();
+			return(retVal.GetValue());
 		}
 	}
 

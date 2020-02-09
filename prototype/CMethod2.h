@@ -7,38 +7,36 @@ template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
 	template<typename Method, std::size_t... Index>
-	IAdaptor&& InvokeLValue(Method method, IAdaptor& adaptor, std::vector<Adaptor2> &args, std::index_sequence<Index...>) {
+	void InvokeLValue(Method method, IAdaptor& retVal, IAdaptor& object, std::vector<Adaptor2> &&args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
-			(static_cast<CAdaptor<Class&>&>(adaptor).GetValue().*method)(
+			(static_cast<CAdaptor<Class&>&>(object).GetValue().*method)(
 				args[Index].Get<Args>()...
 			);
-			return std::move(CAdaptor<Return>());
 		}
 		else {
-			return std::move(CAdaptor<Return>(
-				(static_cast<CAdaptor<Class&>&>(adaptor).GetValue().*method)(
+			static_cast<CAdaptor<Return>&>(retVal).SetValue(
+				(static_cast<CAdaptor<Class&>&>(object).GetValue().*method)(
 					args[Index].Get<Args>()...
 				)
-			));
+			);
 		}
 	}
 
 	template<typename Method>
-	IAdaptor&& InvokeLValue(Method method, IAdaptor& adaptor, std::vector<Adaptor2> &args) {
-		return(InvokeLValue(method, adaptor, args, std::index_sequence_for<Args...>{}));
+	void InvokeLValue(Method method, IAdaptor& retVal, IAdaptor& object, std::vector<Adaptor2> &&args) {
+		return(InvokeLValue(method, retVal, object, std::move(args), std::index_sequence_for<Args...>{}));
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor&& InvokeRValue(Method method, IAdaptor& adaptor, std::vector<Adaptor2> &args, std::index_sequence<Index...>) {
+	void InvokeRValue(Method method, IAdaptor& retVal, IAdaptor& object, std::vector<Adaptor2> &&args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
-			(static_cast<CAdaptor<Class&&>&>(adaptor).GetValue().*method)(
+			(static_cast<CAdaptor<Class&&>&>(object).GetValue().*method)(
 				args[Index].Get<Args>()...
 			);
-			return CAdaptor<Return>();
 		}
 		else {
-			return CAdaptor<Return>(
-				(static_cast<CAdaptor<Class&&>&>(adaptor).GetValue().*method)(
+			static_cast<CAdaptor<Return>&>(retVal).SetValue(
+				(static_cast<CAdaptor<Class&&>&>(object).GetValue().*method)(
 					args[Index].Get<Args>()...
 				)
 			);
@@ -46,8 +44,8 @@ protected:
 	}
 
 	template<typename Method>
-	IAdaptor&& InvokeRValue(Method method, IAdaptor& adaptor, std::vector<Adaptor2> &args) {
-		return(InvokeRValue(method, adaptor, args, std::index_sequence_for<Args...>{}));
+	void InvokeRValue(Method method, IAdaptor& retVal, IAdaptor& object, std::vector<Adaptor2> &&args) {
+		return(InvokeRValue(method, retVal, object, args, std::index_sequence_for<Args...>{}));
 	}
 };
 
@@ -63,8 +61,8 @@ public:
 	constexpr CMethod2(Return(Class::* method)(Args...)) : m_method(method) {
 	}
 
-	IAdaptor&& Invoke(IAdaptor& adaptor, std::vector<Adaptor2> &args) {
-		return CMethodBase2<Class, Return, Args...>::InvokeLValue(m_method, adaptor, args);
+	void Invoke(IAdaptor& retVal, IAdaptor& object, std::vector<Adaptor2> &&args) {
+		return CMethodBase2<Class, Return, Args...>::InvokeLValue(m_method, retVal, object, std::move(args));
 	}
 };
 
