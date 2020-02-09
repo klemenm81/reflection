@@ -11,12 +11,12 @@ class Test : public Reflectable<Test> {
 private:
 	int a;
 	std::string myString;
-	const wchar_t* ptrString;
+	const char* ptrString;
 
 public:
 	Test();
-	void Foo1(std::wstring& str, float val);
-	int Foo2(const wchar_t* str);
+	void Foo1(std::string& str, float val);
+	int Foo2(const char* str);
 	int FooOverloaded(int i);
 	int FooOverloaded(float i);
 	int FooOverloaded(std::vector<int> i) const;

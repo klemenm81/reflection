@@ -1,15 +1,15 @@
 #include "test.h"
 
-Test::Test() : a(5), myString("Reflection"), ptrString(L"Hello") {
+Test::Test() : a(5), myString("Reflection"), ptrString("Hello") {
 }
 
-void Test::Foo1(std::wstring& str, float val) {
-	str += std::to_wstring(val);
-	wprintf(L"Foo(): str = %s\n", str.c_str());
+void Test::Foo1(std::string& str, float val) {
+	str += std::to_string(val);
+	printf("Foo(): str = %s\n", str.c_str());
 }
 
-int Test::Foo2(const wchar_t* str) {
-	wprintf(L"Foo2(): str = %s\n", str);
+int Test::Foo2(const char* str) {
+	printf("Foo2(): str = %s\n", str);
 	return 13;
 }
 

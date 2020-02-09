@@ -47,19 +47,19 @@ int main() {
 
 	int see1 = field1.Get<int>(test);
 	std::string see2 = field2.Get<std::string>(test);
-	const wchar_t* see3 = field3.Get<const wchar_t*>(test);
+	const char* see3 = field3.Get<const char*>(test);
 
-	std::wstring str = L"PI = ";
+	std::string str = "PI = ";
 
-	method1.InvokeEasy<void, IReflectable &, std::wstring &, float>(test, str, 3.14f);
-	int ret = method2.InvokeEasy<int, IReflectable &, const wchar_t *>(test, L"Hello Reflected");
-	wprintf(L"Main(): Return from Foo2 = %d\n", ret);
+	method1.InvokeEasy<void, IReflectable &, std::string &, float>(test, str, 3.14f);
+	int ret = method2.InvokeEasy<int, IReflectable &, const char *>(test, "Hello Reflected");
+	printf("Main(): Return from Foo2 = %d\n", ret);
 
 	constMethod.Invoke(test);
 	printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
 
 	field1.Set(test, 13);
-	wprintf(L"Main(): str = %s\n", str.c_str());
+	printf("Main(): str = %s\n", str.c_str());
 
 	//rvalMethod.Invoke(Test());
 }
