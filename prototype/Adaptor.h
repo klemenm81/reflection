@@ -25,8 +25,13 @@ public:
 		return *this;
 	}
 
-	Adaptor(const Adaptor& other) = delete;
-	Adaptor& operator=(const Adaptor& other) = delete;
+	Adaptor(const Adaptor& other) : m_adaptor(other.m_adaptor) {
+	}
+
+	Adaptor& operator=(const Adaptor& other) {
+		m_adaptor = other.m_adaptor;
+		return *this;
+	}
 
 	template<typename Type>
 	Type Get() {
