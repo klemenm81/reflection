@@ -14,7 +14,8 @@ public:
 	constexpr CFieldBase(Type Class::* ptr) : m_ptr(ptr) {
 	}
 
-	IAdaptor& GetValue(std::byte *retValBuffer, IAdaptor& obj) {
+	IAdaptor& GetValue(IAdaptor& obj) {
+		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Type>)];
 		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(static_cast<CAdaptor<Class&>&>(obj).GetValue().*m_ptr);
 		return *adaptor;
 	}

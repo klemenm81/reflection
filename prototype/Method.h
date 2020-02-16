@@ -43,11 +43,9 @@ public:
 
 	template <typename Return, typename Class, typename... Args>
 	Return InvokeNewInline(Class& obj, Args... args) {
-		std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Class&> adaptor(obj);
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		IAdaptor &retVal = method2.Invoke(retValBuffer, adaptor, make_vector<Adaptor>(CAdaptor<Args>(args)...));
-
+		IAdaptor &retVal = method2.Invoke(adaptor, make_vector<Adaptor>(CAdaptor<Args>(args)...));
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(retVal).GetValue());
 		}
