@@ -51,9 +51,11 @@ int main() {
 
 	std::string str = "PI = ";
 
-	method1.InvokeNewInline<void, IReflectable, std::string &, float>(test, str, 3.14f);
-	int ret = method2.InvokeNewInline<int, IReflectable, const char *>(test, "Hello Reflected");
+	method1.InvokeNewInline<void, std::string &, float>(test, str, 3.14f);
+	int ret = method2.InvokeNewInline<int, const char *>(test, "Hello Reflected");
 	printf("Main(): Return from Foo2 = %d\n", ret);
+
+	std::vector<DynamicAdaptor> argAdaptors;
 
 	std::vector<IAdaptor *> args;
 	printf("Main(): Return from FooConst = %s\n", constMethod.Invoke(test, args).Get<std::string>().c_str());

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Adaptor.h"
+#include "StaticAdaptor.h"
 #include "IReflectable.h"
 #include "IField.h"
 
@@ -21,7 +21,7 @@ public:
 	template<typename Type, typename Class>
 	Type Get(Class &obj) {
 		CAdaptor<Class&> objectAdaptor(obj);
-		Adaptor adaptor = m_field.GetValue(objectAdaptor);
+		StaticAdaptor adaptor = m_field.GetValue(objectAdaptor);
 		return adaptor.Get<Type>();
 	}
 

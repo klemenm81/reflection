@@ -2,12 +2,11 @@
 
 
 #include "IMethod.h"
-#include "Adaptor.h"
+#include "IAdaptor.h"
 
 class IMethod2 : public IMethod {
 public:
-	virtual IAdaptor& Invoke(IAdaptor& object, std::vector<Adaptor>& args) { throw; };
-	virtual IAdaptor& Invoke(IAdaptor& object, std::vector<Adaptor> &&args) { throw; };
+	virtual IAdaptor& Invoke(IAdaptor& object, IAdaptor **args) { throw; };
 	virtual ~IMethod2() {
 	}
 };

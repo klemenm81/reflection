@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Reflectable.h"
-#include "Adaptor.h"
+//#include "Adaptor.h"
 
 #include <vector>
 

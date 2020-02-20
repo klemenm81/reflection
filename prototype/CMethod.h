@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Adaptor.h"
+#include "CAdaptor.h"
 #include "IMethod.h"
 
 template <typename Class, typename Return, typename... Args>
