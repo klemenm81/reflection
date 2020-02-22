@@ -22,24 +22,24 @@ public:
 	Method& operator=(const Method &) = delete;
 
 	template <typename Type>
-	void pushArg(Type value) {
+	void PushArg(Type value) {
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
 		m_args.push_back(new(method2.GetArgBuffer(m_args.size())) CAdaptor<Type>(value));
 	}
 
 	template <typename Type>
-	Type getArg(int iArg) {
+	Type GetArg(int iArg) {
 		CAdaptor<Type> *adaptor = static_cast<CAdaptor<Type>*>(m_args[iArg]);
 		return adaptor->GetValue();
 	}
 
 	template <typename Type>
-	Type getRetVal() {
+	Type GetRetVal() {
 		CAdaptor<Type>* adaptor = static_cast<CAdaptor<Type>*>(m_retVal);
 		return adaptor->GetValue();
 	}
 
-	void clearArgs() {
+	void ClearArgs() {
 		m_args.clear();
 	}
 

@@ -55,13 +55,13 @@ int main() {
 	int ret = method2.InvokeNewInline<int, const char *>(test, "Hello Reflected");
 	printf("Main(): Return from Foo2 = %d\n", ret);
 
-	method1.pushArg<std::string&>(str);
-	method1.pushArg<float>(3.14f);
+	method1.PushArg<std::string&>(str);
+	method1.PushArg<float>(3.14f);
 	method1.InvokeNew(test);
 
-	method2.pushArg<const char *>("Hello Reflected");
+	method2.PushArg<const char *>("Hello Reflected");
 	method2.InvokeNew(test);
-	ret = method2.getRetVal<int>();
+	ret = method2.GetRetVal<int>();
 
 
 	std::vector<IAdaptor *> args;

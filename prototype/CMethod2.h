@@ -6,19 +6,19 @@
 template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
-	static constexpr size_t size() {
+	static constexpr size_t ArgsSize() {
 		return (sizeof(CAdaptor<Args>) + ...);
 	}
 
 	template <size_t... Index>
-	static constexpr size_t offset(int iArg, std::index_sequence<Index...>) {
+	static constexpr size_t ArgOffset(int iArg, std::index_sequence<Index...>) {
 		return (((Index < iArg) ? sizeof(CAdaptor<Args>) : 0) + ...);
 	}
 
 	template <size_t... Index>
 	static std::byte *GetArgBuffer(size_t iArg, std::index_sequence<Index...>) {
-		static thread_local std::byte argsBuffer[size()];
-		static size_t offsets[sizeof...(Args)] = { offset(Index, std::index_sequence_for<Args...>{})... };
+		static thread_local std::byte argsBuffer[ArgsSize()];
+		static size_t offsets[sizeof...(Args)] = { ArgOffset(Index, std::index_sequence_for<Args...>{})... };
 		return argsBuffer + offsets[iArg];
 	}
 
