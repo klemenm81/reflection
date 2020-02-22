@@ -1,13 +1,13 @@
 #pragma once
 
 class IAdaptor;
-class IReflectable;
+class Object;
 
 class IField
 {
 public:
-	virtual IAdaptor& GetValue(IAdaptor& obj) = 0;
-	virtual void SetValue(IAdaptor& obj, IAdaptor& value) = 0;
+	virtual IAdaptor& GetValue(const Object& obj) = 0;
+	virtual void SetValue(Object& obj, IAdaptor& value) = 0;
 	virtual ~IField() {
 	}
 };

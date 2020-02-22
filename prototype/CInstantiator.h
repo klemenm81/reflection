@@ -5,7 +5,7 @@
 template <typename Class>
 class CInstantiator : public IInstantiator {
 public:
-	IReflectable& Instantiate() {
+	Object& Instantiate() {
 		return *new Class();
 	}
 };

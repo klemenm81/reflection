@@ -1,10 +1,10 @@
 #pragma once
 
-class IReflectable;
+class Object;
 
 class IInstantiator {
 public:
-	virtual IReflectable& Instantiate() = 0;
+	virtual Object& Instantiate() = 0;
 	virtual ~IInstantiator() {
 	}
 };

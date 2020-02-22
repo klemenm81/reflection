@@ -49,18 +49,21 @@ public:
 		return(m_method.Invoke(adaptor, args));
 	}
 	
-	void InvokeNew(IReflectable& obj) {
-		CAdaptor<IReflectable&> adaptor(obj);
+	void InvokeNew(Object& obj) {
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		m_retVal = method2.Invoke(adaptor, m_args.data());		
+		m_retVal = method2.Invoke(obj, m_args.data());		
+	}
+
+	void InvokeNew(const Object& obj) {
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		m_retVal = method2.Invoke(obj, m_args.data());
 	}
 	
 	template <typename Return, typename... Args>
-	Return InvokeNewInline(IReflectable& obj, Args... args) {
-		CAdaptor<IReflectable&> adaptor(obj);
+	Return InvokeNewInline(Object& obj, Args... args) {
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
 
-		IAdaptor *retVal = method2.Invoke(adaptor, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor *retVal = method2.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).GetValue());
 		}

@@ -47,14 +47,15 @@ template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::Register(													\
 	std::map<std::string, IField*>& m_fields,									\
-	std::map<std::string, IMethod*>& m_methods)									\
+	std::map<std::string, IMethod*>& m_methods,									\
+	std::map<std::string, IMethod*>& m_constMethods)							\
 {																				
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
 template<>																		\
 CClass<Class>::CClass() {														\
-	Register<Class>(m_fields, m_methods);										\
+	Register<Class>(m_fields, m_methods, m_constMethods);						\
 }	
 
 #define REFLECT_FIELD(Field)																			\
@@ -62,9 +63,6 @@ m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
 m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
-
-#define REFLECT_METHOD2(Method)																\
-m_methods[#Method] = newMethod2<ReflectedClass>(&ReflectedClass::Method);
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
@@ -100,8 +98,58 @@ m_methods[#Method] = newMethod2<ReflectedClass>(&ReflectedClass::Method);
 #define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
 #define REFLECT_METHOD(Method, ...)	CAT_FCN(REFLECT_METHOD_, ISEMPTY(__VA_ARGS__), Method, ##__VA_ARGS__)
 
+
+
+
+
+
+
+#define REFLECT_METHOD2_NO_OVERLOAD(Method)																\
+m_methods[#Method] = newMethod2<ReflectedClass>(&ReflectedClass::Method);
+
+#define REFLECT_METHOD2_OVERLOAD_NO_CVREF(Method, Return, ...)														\
+	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {	\
+		m_methods[#Method] =																						\
+			newMethod2<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(							\
+				&ReflectedClass::Method));																			\
+	}
+
+#define REFLECT_METHOD2_OVERLOAD_CVREF(Methods, Method, CvRef, Return, ...)															\
+	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
+	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
+		Methods[#Method] =																								\
+			newMethod2<ReflectedClass>(static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(							\
+				&ReflectedClass::Method));																					\
+	}
+
+#define REFLECT_METHOD2_OVERLOAD(Method, Return, ...)									\
+	REFLECT_METHOD2_OVERLOAD_NO_CVREF(Method, Return, __VA_ARGS__)						\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_constMethods, Method, const, Return, __VA_ARGS__)					\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, const volatile, Return, __VA_ARGS__)			\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, volatile, Return, __VA_ARGS__)				\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, &, Return, __VA_ARGS__)						\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, const &, Return, __VA_ARGS__)					\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, const volatile &, Return, __VA_ARGS__)		\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, volatile &, Return, __VA_ARGS__)				\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, &&, Return, __VA_ARGS__)						\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, const &&, Return, __VA_ARGS__)				\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, const volatile &&, Return, __VA_ARGS__)		\
+	REFLECT_METHOD2_OVERLOAD_CVREF(m_methods, Method, volatile &&, Return, __VA_ARGS__)
+
+#define REFLECT_METHOD2_0(Method, Return, ...) REFLECT_METHOD2_OVERLOAD(Method, Return, ##__VA_ARGS__)	
+#define REFLECT_METHOD2_1(Method) REFLECT_METHOD2_NO_OVERLOAD(Method)
+#define REFLECT_METHOD2(Method, ...)	CAT_FCN(REFLECT_METHOD2_, ISEMPTY(__VA_ARGS__), Method, ##__VA_ARGS__)
+
+
+
+
+
+
+
+
 #define REFLECT_FACTORY_START																			\
-extern "C" EXPORT_API IReflectable& AbstractFactory(const char* name) {						\
+extern "C" EXPORT_API Object& AbstractFactory(const char* name) {						\
 	static CAbstractFactory abstractFactory;															\
 	return abstractFactory.CreateInstance(name);														\
 }																										\

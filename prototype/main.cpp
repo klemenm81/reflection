@@ -7,25 +7,25 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "IReflectable.h"
+#include "Object.h"
 #include "Field.h"
 #include "Method.h"
 #include "IClass.h"
 #include "test.h"
 
-IReflectable& CreateInstance(const char* name) {
+Object& CreateInstance(const char* name) {
 #ifdef _WIN32
 	static HMODULE hModule = GetModuleHandle(NULL);
-	IReflectable& (*AbstractFactory)(const char*) =
-		(IReflectable & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
+	Object& (*AbstractFactory)(const char*) =
+		(Object & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
 #else
 	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
 	if (hModule == NULL) {
 		perror("dlopen");
 		exit(1);
 	}
-	IReflectable& (*AbstractFactory)(const char*) =
-                (IReflectable & (*)(const char*))dlsym(hModule, "AbstractFactory");
+	Object& (*AbstractFactory)(const char*) =
+                (Object & (*)(const char*))dlsym(hModule, "AbstractFactory");
 	if (AbstractFactory == NULL) {
 		printf("AbstractFactory not found\n");
 		exit(1);
@@ -35,7 +35,7 @@ IReflectable& CreateInstance(const char* name) {
 }
 
 int main() {
-	IReflectable &test = CreateInstance("Test");
+	Object &test = CreateInstance("Test");
 
 	Field field1 = test.GetClass().GetField("a");
 	Field field2 = test.GetClass().GetField("myString");

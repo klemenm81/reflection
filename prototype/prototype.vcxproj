@@ -80,6 +80,7 @@
     <ClInclude Include="CAdaptor.h" />
     <ClInclude Include="CField.h" />
     <ClInclude Include="CInstantiator.h" />
+    <ClInclude Include="Class.h" />
     <ClInclude Include="CMethod.h" />
     <ClInclude Include="CMethod2.h" />
     <ClInclude Include="DynamicAdaptor.h" />
@@ -91,11 +92,11 @@
     <ClInclude Include="macros.h" />
     <ClInclude Include="metadata.h" />
     <ClInclude Include="Method.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="Reflectable.h" />
     <ClInclude Include="CClass.h" />
     <ClInclude Include="IAdaptor.h" />
     <ClInclude Include="IField.h" />
-    <ClInclude Include="IReflectable.h" />
     <ClInclude Include="StaticAdaptor.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>

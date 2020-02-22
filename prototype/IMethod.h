@@ -3,7 +3,7 @@
 #include <vector>
 
 class IAdaptor;
-class IReflectable;
+class Object;
 
 class IMethod {
 public:

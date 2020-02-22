@@ -12,21 +12,27 @@ class CClass : public IClass {
 private:
 	std::map<std::string, IField*> m_fields;
 	std::map<std::string, IMethod*> m_methods;
+	std::map<std::string, IMethod*> m_constMethods;
 	typedef Class ReflectedClass;
 
 public:
-	IField& GetField(std::string name) {
+	IField& GetField(const char *name) {
 		return *m_fields[name];
 	}
 
-	IMethod& GetMethod(std::string name) {
+	IMethod& GetMethod(const char *name) {
 		return *m_methods[name];
+	}
+
+	IMethod& GetConstMethod(const char *name) {
+		return *m_constMethods[name];
 	}
 	
 	template <typename ReflectedClass>
 	void Register(
 		std::map<std::string, IField*>& m_fields,
-		std::map<std::string, IMethod*>& m_methods);
+		std::map<std::string, IMethod*>& m_methods,
+		std::map<std::string, IMethod*>& m_constMethods);
 	
 	CClass();
 };

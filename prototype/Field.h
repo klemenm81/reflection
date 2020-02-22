@@ -1,7 +1,7 @@
 #pragma once
 
 #include "StaticAdaptor.h"
-#include "IReflectable.h"
+#include "Object.h"
 #include "IField.h"
 
 class Field {
@@ -18,17 +18,15 @@ public:
 	Field(const Field &) = delete;
 	Field& operator=(const Field&) = delete;
 
-	template<typename Type, typename Class>
-	Type Get(Class &obj) {
-		CAdaptor<Class&> objectAdaptor(obj);
-		StaticAdaptor adaptor = m_field.GetValue(objectAdaptor);
+	template<typename Type>
+	Type Get(const Object &obj) {
+		StaticAdaptor adaptor = m_field.GetValue(obj);
 		return adaptor.Get<Type>();
 	}
 
-	template<typename Type, typename Class>
-	void Set(Class &obj, Type value) {
-		CAdaptor<Class&> objectAdaptor(obj);
+	template<typename Type>
+	void Set(Object &obj, Type value) {
 		CAdaptor<Type> adaptor(value);
-		m_field.SetValue(objectAdaptor, adaptor);
+		m_field.SetValue(obj, adaptor);
 	}
 };

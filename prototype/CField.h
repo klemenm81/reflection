@@ -3,7 +3,7 @@
 #include "IField.h"
 #include "CAdaptor.h"
 
-class IReflectable;
+class Object;
 
 template<typename Class, typename Type>
 class CFieldBase : public IField {
@@ -14,15 +14,15 @@ public:
 	constexpr CFieldBase(Type Class::* ptr) : m_ptr(ptr) {
 	}
 
-	IAdaptor& GetValue(IAdaptor& obj) {
+	IAdaptor& GetValue(const Object& obj) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Type>)];
-		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(static_cast<CAdaptor<Class&>&>(obj).GetValue().*m_ptr);
+		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(static_cast<const Class&>(obj).*m_ptr);
 		return *adaptor;
 	}
 
-	void SetValue(IAdaptor& obj, IAdaptor& value) {
+	void SetValue(Object& obj, IAdaptor& value) {
 		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(value);
-		static_cast<CAdaptor<Class&>&>(obj).GetValue().*m_ptr = adaptor.GetValue();
+		static_cast<Class&>(obj).*m_ptr = adaptor.GetValue();
 	}
 };
 

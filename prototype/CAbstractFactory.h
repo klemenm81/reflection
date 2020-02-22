@@ -4,7 +4,7 @@
 #include <string>
 
 #include "IInstantiator.h"
-#include "IReflectable.h"
+#include "Object.h"
 
 class CAbstractFactory {
 private:
@@ -13,7 +13,7 @@ private:
 public:
 	CAbstractFactory();
 
-	IReflectable& CreateInstance(const char* className) {
+	Object& CreateInstance(const char* className) {
 		return(m_instantiators[className]->Instantiate());
 	}
 };
