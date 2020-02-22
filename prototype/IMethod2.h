@@ -6,7 +6,8 @@
 
 class IMethod2 : public IMethod {
 public:
-	virtual IAdaptor& Invoke(IAdaptor& object, IAdaptor **args) { throw; };
+	virtual std::byte* GetArgBuffer(size_t iArg) = 0;
+	virtual IAdaptor* Invoke(IAdaptor& object, IAdaptor **args) { throw; };
 	virtual ~IMethod2() {
 	}
 };

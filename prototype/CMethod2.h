@@ -6,8 +6,28 @@
 template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
+	static constexpr size_t size() {
+		return (sizeof(CAdaptor<Args>) + ...);
+	}
+
+	template <size_t... Index>
+	static constexpr size_t offset(int iArg, std::index_sequence<Index...>) {
+		return (((Index < iArg) ? sizeof(CAdaptor<Args>) : 0) + ...);
+	}
+
+	template <size_t... Index>
+	static std::byte *GetArgBuffer(size_t iArg, std::index_sequence<Index...>) {
+		static thread_local std::byte argsBuffer[size()];
+		static size_t offsets[sizeof...(Args)] = { offset(Index, std::index_sequence_for<Args...>{})... };
+		return argsBuffer + offsets[iArg];
+	}
+
+	std::byte* GetArgBuffer(size_t iArg) {
+		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
+	}
+
 	template<typename Method, std::size_t... Index>
-	IAdaptor& InvokeLValue(Method method, IAdaptor& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* InvokeLValue(Method method, IAdaptor& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Return>* retVal;
 
@@ -16,7 +36,7 @@ protected:
 				static_cast<CAdaptor<Args> &>(*args[Index]).GetValue()...
 			);
 			retVal = new(retValBuffer) CAdaptor<void>();
-			return *retVal;
+			return retVal;
 		}
 		else {
 			retVal = new(retValBuffer) CAdaptor<Return>(
@@ -24,17 +44,17 @@ protected:
 					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
 				)
 			);
-			return *retVal;
+			return retVal;
 		}
 	}
 
 	template<typename Method>
-	IAdaptor& InvokeLValue(Method method, IAdaptor& object, IAdaptor** args) {
+	IAdaptor* InvokeLValue(Method method, IAdaptor& object, IAdaptor** args) {
 		return(InvokeLValue(method, object, args, std::index_sequence_for<Args...>{}));
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor& InvokeRValue(Method method, IAdaptor& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* InvokeRValue(Method method, IAdaptor& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		CAdaptor<Return>* retVal;
 
@@ -56,7 +76,7 @@ protected:
 	}
 
 	template<typename Method>
-	IAdaptor& InvokeRValue(Method method, IAdaptor& object, IAdaptor** args) {
+	IAdaptor* InvokeRValue(Method method, IAdaptor& object, IAdaptor** args) {
 		return(InvokeRValue(method, object, args, std::index_sequence_for<Args...>{}));
 	}
 };
@@ -73,7 +93,7 @@ public:
 	constexpr CMethod2(Return(Class::* method)(Args...)) : m_method(method) {
 	}
 
-	IAdaptor& Invoke(IAdaptor& object, IAdaptor **args) {
+	IAdaptor* Invoke(IAdaptor& object, IAdaptor **args) {
 		return CMethodBase2<Class, Return, Args...>::InvokeLValue(m_method, object, args);
 	}
 };

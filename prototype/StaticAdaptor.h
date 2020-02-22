@@ -44,4 +44,8 @@ public:
 	operator IAdaptor& () const {
 		return m_adaptor;
 	}
+
+	IAdaptor* GetPtr() const {
+		return &m_adaptor;
+	}
 };
