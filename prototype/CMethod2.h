@@ -3,6 +3,9 @@
 #include "CAdaptor.h"
 #include "IMethod2.h"
 
+#include <string>
+#include <typeinfo>
+
 template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
@@ -24,6 +27,30 @@ protected:
 
 	std::byte* GetArgBuffer(size_t iArg) {
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
+	}
+
+	const char* GetArgsSignature() {
+		static const std::string signature = (sizeof...(Args) > 0) ? 
+			((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...) : 
+			";";
+		return signature.c_str() + 1;
+	}
+
+	const char* GetArgsName() {
+		static const std::string name = (sizeof...(Args) > 0) ?
+			((std::string(";") + std::string(typeid(Args).name())) + ...) :
+			";";
+		return name.c_str() + 1;
+	}
+
+	const char *GetRetValSignature() {
+		static const std::string signature = std::to_string(typeid(Return).hash_code());
+		return signature.c_str();
+	}
+
+	const char *GetRetValName() {
+		static const std::string name = typeid(Return).name();
+		return name.c_str();
 	}
 
 	template<typename Method, std::size_t... Index>

@@ -34,6 +34,7 @@ Object& CreateInstance(const char* name) {
 	return AbstractFactory("Test");
 }
 
+
 int main() {
 	Object &test = CreateInstance("Test");
 
@@ -69,6 +70,16 @@ int main() {
 
 	field1.Set(test, 13);
 	printf("Main(): str = %s\n", str.c_str());
+
+	printf("Main(): Method1 args signature = %s\n", method1.GetArgsSignature());
+	printf("Main(): Method1 args name = %s\n", method1.GetArgsName());
+	printf("Main(): Method2 args signature = %s\n", method2.GetArgsSignature());
+	printf("Main(): Method2 args name = %s\n", method2.GetArgsName());
+
+	printf("Main(): Method1 retval signature = %s\n", method1.GetRetValSignature());
+	printf("Main(): Method1 retval name = %s\n", method1.GetRetValName());
+	printf("Main(): Method2 retval signature = %s\n", method2.GetRetValSignature());
+	printf("Main(): Method2 retval name = %s\n", method2.GetRetValName());
 
 	//rvalMethod.Invoke(Test());
 }

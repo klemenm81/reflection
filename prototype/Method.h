@@ -43,6 +43,26 @@ public:
 		m_args.clear();
 	}
 
+	const char* GetArgsSignature() {
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		return method2.GetArgsSignature();
+	}
+
+	const char* GetArgsName() {
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		return method2.GetArgsName();
+	}
+
+	const char* GetRetValSignature() {
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		return method2.GetRetValSignature();
+	}
+
+	const char* GetRetValName() {
+		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		return method2.GetRetValName();
+	}
+
 	template <typename Class>
 	StaticAdaptor Invoke(Class& obj, std::vector<IAdaptor *> &args) {
 		CAdaptor<Class&> adaptor(obj);
