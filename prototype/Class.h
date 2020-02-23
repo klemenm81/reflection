@@ -17,6 +17,7 @@ public:
 
 	Class& operator=(Class&& other) noexcept {
 		m_class = other.m_class;
+		return *this;
 	}
 
 	Class(const Class& other) : m_class(other.m_class) {
@@ -24,6 +25,7 @@ public:
 
 	Class& operator=(const Class& other) {
 		m_class = other.m_class;
+		return *this;
 	}
 
 	Field GetField(const char *name) {
