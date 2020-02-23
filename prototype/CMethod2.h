@@ -135,6 +135,10 @@ public:
 	constexpr CMethod2(Return(Class::* method)(Args...)) : m_method(method) {
 	}
 
+	Qualifier GetQualifier() {
+		return LValueRef;
+	}
+
 	IAdaptor* Invoke(Object& object, IAdaptor **args) {
 		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args);
 	}
@@ -151,6 +155,10 @@ private:
 
 public:
 	constexpr CMethod2(Return(Class::* method)(Args...) const) : m_method(method) {
+	}
+
+	Qualifier GetQualifier() {
+		return ConstLValueRef;
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {

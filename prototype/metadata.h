@@ -48,14 +48,14 @@ template <typename ReflectedClass>												\
 void CClass<Class>::Register(													\
 	std::map<std::string, IField*>& m_fields,									\
 	std::map<std::string, IMethod*>& m_methods,									\
-	std::map<std::string, IMethod*>& m_constMethods)							\
+	std::map<std::string, CMethodOverloads *>& m_methodOverloads)				\
 {																				
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
 template<>																		\
 CClass<Class>::CClass() {														\
-	Register<Class>(m_fields, m_methods, m_constMethods);						\
+	Register<Class>(m_fields, m_methods, m_methodOverloads);					\
 }	
 
 #define REFLECT_FIELD(Field)																			\
