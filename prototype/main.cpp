@@ -53,16 +53,16 @@ int main() {
 
 		std::string str = "PI = ";
 
-		method1.InvokeNewInline<void, std::string&, float>(test, str, 3.14f);
-		int ret = method2.InvokeNewInline<int, const char*>(test, "Hello Reflected");
+		method1.InvokeInline<void, std::string&, float>(test, str, 3.14f);
+		int ret = method2.InvokeInline<int, const char*>(test, "Hello Reflected");
 		printf("Main(): Return from Foo2 = %d\n", ret);
 
 		method1.PushArg<std::string&>(str);
 		method1.PushArg<float>(3.14f);
-		method1.InvokeNew(test);
+		method1.Invoke(test);
 
 		method2.PushArg<const char*>("Hello Reflected");
-		method2.InvokeNew(test);
+		method2.Invoke(test);
 		int ret2 = method2.GetRetVal<int>();
 
 

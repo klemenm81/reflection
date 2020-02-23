@@ -82,11 +82,6 @@ protected:
 		}
 	}
 
-	template<typename Method>
-	IAdaptor* Invoke(Method method, Object& object, IAdaptor** args) {
-		return Invoke(method, object, args, std::index_sequence_for<Args...>{});
-	}
-
 	template<typename Method, std::size_t... Index>
 	IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
@@ -105,11 +100,6 @@ protected:
 		}
 	}
 
-	template<typename Method>
-	IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args) {
-		return Invoke(method, object, args, std::index_sequence_for<Args...>{});
-	}
-
 	template<typename Method, std::size_t... Index>
 	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
@@ -126,11 +116,6 @@ protected:
 				)
 			);
 		}
-	}
-
-	template<typename Method>
-	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args) {
-		return Invoke(method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 private:
@@ -155,7 +140,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor **args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args);
+		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -178,11 +163,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args);
+		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args);
+		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 };
 

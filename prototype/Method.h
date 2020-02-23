@@ -78,7 +78,7 @@ public:
 		return(m_method.Invoke(adaptor, args));
 	}
 	*/
-	void InvokeNew(Object& obj) {
+	void Invoke(Object& obj) {
 		std::string argsSignature;
 		std::string argsName;
 		for (IAdaptor* arg : m_args) {
@@ -89,7 +89,7 @@ public:
 		m_retVal = method2.Invoke(obj, m_args.data());		
 	}
 
-	void InvokeNew(const Object& obj) {
+	void Invoke(const Object& obj) {
 		std::string argsSignature;
 		std::string argsName;
 		for (IAdaptor* arg : m_args) {
@@ -102,7 +102,7 @@ public:
 	}
 	
 	template <typename Return, typename... Args>
-	Return InvokeNewInline(Object& obj, Args... args) {
+	Return InvokeInline(Object& obj, Args... args) {
 		std::string argsSignature = (sizeof...(Args) > 0) ?
 			((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...) :
 			";";
