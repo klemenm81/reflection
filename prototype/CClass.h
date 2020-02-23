@@ -6,8 +6,7 @@
 
 #include "IField.h"
 #include "IMethod.h"
-
-#include "CMethodOverloads.h"
+#include "IMethodOverloads.h"
 
 #include "exceptions/MethodNotFoundException.h"
 
@@ -16,7 +15,7 @@ class CClass : public IClass {
 private:
 	std::map<std::string, IField*> m_fields;
 	std::map<std::string, IMethod*> m_methods;
-	std::map<std::string, CMethodOverloads *> m_methodOverloads;
+	std::map<std::string, IMethodOverloads *> m_methodOverloads;
 	typedef Class ReflectedClass;
 
 public:
@@ -28,8 +27,8 @@ public:
 		return *m_methods[name];
 	}
 
-	CMethodOverloads& GetMethodOverloads(const char *name) {
-		CMethodOverloads* methodOverloads = (m_methodOverloads.find(name) != m_methodOverloads.end()) ?
+	IMethodOverloads& GetMethodOverloads(const char *name) {
+		IMethodOverloads* methodOverloads = (m_methodOverloads.find(name) != m_methodOverloads.end()) ?
 			m_methodOverloads[name] :
 			nullptr;
 
@@ -44,7 +43,7 @@ public:
 	void Register(
 		std::map<std::string, IField*>& m_fields,
 		std::map<std::string, IMethod*>& m_methods,
-		std::map<std::string, CMethodOverloads*> &m_methodOverloads);
+		std::map<std::string, IMethodOverloads*> &m_methodOverloads);
 	
 	CClass();
 };

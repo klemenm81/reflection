@@ -30,7 +30,7 @@ public:
 };
 
 
-class CMethodOverloads {
+class IMethodOverloads {
 private:
 	std::map<std::string, CMethodQualifiers *> m_overloadedMethods;
 

@@ -7,7 +7,7 @@
 	friend void CClass<ReflectedClass>::Register<ReflectedClass>(	\
 		std::map<std::string, IField*>&,							\
 		std::map<std::string, IMethod*>&,							\
-		std::map<std::string, CMethodOverloads*>&);
+		std::map<std::string, IMethodOverloads*>&);
 
 #define REFLECT_PUBLIC_ACCESS
 
