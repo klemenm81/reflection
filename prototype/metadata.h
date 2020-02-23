@@ -33,8 +33,8 @@ IMethod* newMethod(Method method) {
 }
 
 template <typename ReflectedClass, typename Method>
-IMethod2* newMethod2(const char *name, Method method) {
-	return new CMethod2<ReflectedClass, Method>(name, method);
+IMethod2& newMethod2(const char *name, Method method) {
+	return *new CMethod2<ReflectedClass, Method>(name, method);
 }
 
 template <typename ReflectedClass, typename Field>
@@ -105,22 +105,22 @@ m_methods[#Method] = newMethod<ReflectedClass>(&ReflectedClass::Method);
 
 
 #define REFLECT_METHOD2_NO_OVERLOAD(Method)																\
-m_methods[#Method] = newMethod2<ReflectedClass>(#Method, &ReflectedClass::Method);
+	AddMethod(newMethod2<ReflectedClass>(#Method, &ReflectedClass::Method));
 
 #define REFLECT_METHOD2_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		m_methods[#Method] =																						\
+		AddMethod(																									\
 			newMethod2<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
-				&ReflectedClass::Method));																			\
+				&ReflectedClass::Method)));																			\
 	}
 
 #define REFLECT_METHOD2_OVERLOAD_CVREF(Methods, Method, CvRef, Return, ...)													\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		Methods[#Method] =																									\
+		AddMethod(																											\
 			newMethod2<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(					\
-				&ReflectedClass::Method));																					\
+				&ReflectedClass::Method)));																					\
 	}
 
 #define REFLECT_METHOD2_OVERLOAD(Method, Return, ...)									\

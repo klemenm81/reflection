@@ -6,6 +6,8 @@
 #include "IMethod2.h"
 #include "exceptions/MethodWithSignatureNotFoundException.h"
 #include "exceptions/MethodWithQualifierNotFoundException.h"
+#include "exceptions/MethodContainingSignatureNotFoundException.h"
+#include "exceptions/InternalErrorException.h"
  
 class CMethodQualifiers {
 private:
@@ -27,6 +29,16 @@ public:
 
 		return *m_qualifiedMethods[qualifier];
 	}
+
+	IMethod2& GetAnyMethod() {
+		for (auto it = m_qualifiedMethods.begin(); it != m_qualifiedMethods.end(); it++) {
+			if (it->second != nullptr) {
+				return *it->second;
+			}
+		}
+
+		throw InternalErrorException("There should be at least one method with specific signature!!!");
+	}
 };
 
 
@@ -34,6 +46,7 @@ class IMethodOverloads {
 private:
 	std::map<std::string, CMethodQualifiers *> m_overloadedMethods;
 
+public:
 	void AddMethod(IMethod2& method) {
 		CMethodQualifiers* methodQualifiers = (m_overloadedMethods.find(method.GetArgsSignature()) != m_overloadedMethods.end()) ?
 			m_overloadedMethods[method.GetArgsSignature()] :
@@ -47,7 +60,7 @@ private:
 		methodQualifiers->AddMethod(method);
 	}
 
-	IMethod& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
+	IMethod2& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
 		CMethodQualifiers* methodQualifiers = (m_overloadedMethods.find(argsSignature) != m_overloadedMethods.end()) ?
 			m_overloadedMethods[argsSignature] :
 			nullptr;
@@ -56,6 +69,17 @@ private:
 			throw MethodWithSignatureNotFoundException(argsName);
 		}
 
-		methodQualifiers->GetMethod(qualifier);
+		return methodQualifiers->GetMethod(qualifier);
+	}
+
+	IMethod2& GetMethodContainingSignature(const char* argsSignature, const char* argsName) {
+		for (auto it = m_overloadedMethods.begin(); it != m_overloadedMethods.end(); it++) {
+			if (!strncmp(it->first.c_str(), argsSignature, strlen(argsSignature))) {
+				CMethodQualifiers& methodQualifiers = *(it->second);
+				return methodQualifiers.GetAnyMethod();
+			}
+		}
+
+		throw MethodContainingSignatureNotFoundException(argsName);
 	}
 };

@@ -2,5 +2,5 @@
 
 class Exception {
 public:
-	virtual const char *GetMessage() const = 0;
+	virtual const char *Message() const = 0;
 };

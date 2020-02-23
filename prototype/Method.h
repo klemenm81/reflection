@@ -4,15 +4,18 @@
 #include "DynamicAdaptor.h"
 #include "IMethod.h"
 #include "IMethod2.h"
+#include "IMethodOverloads.h"
 
 class Method {
 private:
-	IMethod& m_method;
+	IMethodOverloads& m_method;
 	std::vector<IAdaptor *> m_args;
+	std::string m_argsSignature;
+	std::string m_argsName;
 	IAdaptor* m_retVal;
 
 public:
-	Method(IMethod& method) : m_method(method), m_retVal(nullptr) {
+	Method(IMethodOverloads& method) : m_method(method), m_retVal(nullptr) {
 	}
 
 	Method(Method&& other) noexcept : m_method(other.m_method), m_retVal(other.m_retVal) {
@@ -23,8 +26,14 @@ public:
 
 	template <typename Type>
 	void PushArg(Type value) {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		std::string argsSignature = m_argsSignature;
+		std::string argsName = m_argsName;
+		argsSignature += std::string(";") + std::to_string(typeid(Type).hash_code());
+		argsName += std::string(";") + std::string(typeid(Type).name());
+		IMethod2& method2 = m_method.GetMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
 		m_args.push_back(new(method2.GetArgBuffer(m_args.size())) CAdaptor<Type>(value));
+		m_argsSignature = argsSignature;
+		m_argsName = argsName;
 	}
 
 	template <typename Type>
@@ -42,7 +51,7 @@ public:
 	void ClearArgs() {
 		m_args.clear();
 	}
-
+	/*
 	const char* GetArgsSignature() {
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
 		return method2.GetArgsSignature();
@@ -62,28 +71,46 @@ public:
 		IMethod2& method2 = static_cast<IMethod2&>(m_method);
 		return method2.GetRetValName();
 	}
-
+	
 	template <typename Class>
 	StaticAdaptor Invoke(Class& obj, std::vector<IAdaptor *> &args) {
 		CAdaptor<Class&> adaptor(obj);
 		return(m_method.Invoke(adaptor, args));
 	}
-	
+	*/
 	void InvokeNew(Object& obj) {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		std::string argsSignature;
+		std::string argsName;
+		for (IAdaptor* arg : m_args) {
+			argsSignature += std::string(";") + std::string(arg->GetSignature());
+			argsName += std::string(";") + std::string(arg->GetName());
+		}
+		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());		
 	}
 
 	void InvokeNew(const Object& obj) {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
+		std::string argsSignature;
+		std::string argsName;
+		for (IAdaptor* arg : m_args) {
+			argsSignature += std::string(";") + std::string(arg->GetSignature());
+			argsName += std::string(";") + std::string(arg->GetName());
+		}
+
+		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());
 	}
 	
 	template <typename Return, typename... Args>
 	Return InvokeNewInline(Object& obj, Args... args) {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-
-		IAdaptor *retVal = method2.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		std::string argsSignature = (sizeof...(Args) > 0) ?
+			((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...) :
+			";";
+		std::string argsName = (sizeof...(Args) > 0) ?
+			((std::string(";") + std::string(typeid(Args).name())) + ...) :
+			";";
+		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
+		IAdaptor* retVal = method2.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).GetValue());
 		}

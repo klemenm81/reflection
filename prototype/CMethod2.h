@@ -32,6 +32,10 @@ protected:
 		return m_name.c_str();
 	}
 
+	size_t GetNArgs() {
+		return sizeof...(Args);
+	}
+
 	std::byte* GetArgBuffer(size_t iArg) {
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}

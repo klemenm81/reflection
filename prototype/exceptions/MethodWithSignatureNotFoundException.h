@@ -18,11 +18,11 @@ public:
 		std::string("Method with signature ") + 
 		std::string(argsName) +
 		std::string(" not found: \n") + 
-		std::string(other.GetMessage())
+		std::string(other.Message())
 	) {
 	}
 
-	const char* GetMessage() const {
+	const char* Message() const {
 		return m_errorMsg.c_str();
 	}
 };

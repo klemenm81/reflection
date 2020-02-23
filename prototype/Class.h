@@ -33,6 +33,6 @@ public:
 	}
 
 	Method GetMethod(const char *name) {
-		return m_class.GetMethod(name);
+		return m_class.GetMethodOverloads(name);
 	}
 };
