@@ -41,6 +41,7 @@ private:
 
 		if (methodQualifiers == nullptr) {
 			methodQualifiers = new CMethodQualifiers();
+			m_overloadedMethods[method.GetArgsSignature()] = methodQualifiers;
 		}
 
 		methodQualifiers->AddMethod(method);

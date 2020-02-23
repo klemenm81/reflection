@@ -38,6 +38,19 @@ public:
 
 		return *m_methodOverloads[name];
 	}
+
+	void AddMethod(IMethod2& method) {
+		IMethodOverloads* methodOverloads = (m_methodOverloads.find(method.GetName()) != m_methodOverloads.end()) ?
+			m_methodOverloads[method.GetName()] :
+			nullptr;
+
+		if (methodOverloads == nullptr) {
+			methodOverloads = new IMethodOverloads();
+			m_methodOverloads[method.GetName()] = methodOverloads;
+		}
+
+		methodOverloads->AddMethod(method);
+	}
 	
 	template <typename ReflectedClass>
 	void Register(
