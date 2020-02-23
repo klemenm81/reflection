@@ -9,6 +9,9 @@
 template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
+	CMethodBase2(const char* name) : m_name(name) {
+	}
+
 	static constexpr size_t ArgsSize() {
 		return (sizeof(CAdaptor<Args>) + ...);
 	}
@@ -23,6 +26,10 @@ protected:
 		static thread_local std::byte argsBuffer[ArgsSize()];
 		static size_t offsets[sizeof...(Args)] = { ArgOffset(Index, std::index_sequence_for<Args...>{})... };
 		return argsBuffer + offsets[iArg];
+	}
+
+	const char* GetName() {
+		return m_name.c_str();
 	}
 
 	std::byte* GetArgBuffer(size_t iArg) {
@@ -121,6 +128,9 @@ protected:
 	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args) {
 		return Invoke(method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
+
+private:
+	std::string m_name;
 };
 
 template <typename Class, typename Method>
@@ -132,7 +142,8 @@ private:
 	Return(Class::* m_method)(Args...);
 	
 public:
-	constexpr CMethod2(Return(Class::* method)(Args...)) : m_method(method) {
+	constexpr CMethod2(const char *name, Return(Class::* method)(Args...)) : 
+		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -154,7 +165,8 @@ private:
 	Return(Class::* m_method)(Args...) const;
 
 public:
-	constexpr CMethod2(Return(Class::* method)(Args...) const) : m_method(method) {
+	constexpr CMethod2(const char *name, Return(Class::* method)(Args...) const) : 
+		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
