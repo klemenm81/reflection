@@ -81,27 +81,58 @@ public:
 		return(m_method.Invoke(adaptor, args));
 	}
 	*/
-	void Invoke(Object& obj) {
-		std::string argsSignature;
-		std::string argsName;
-		for (IAdaptor* arg : m_args) {
-			argsSignature += std::string(";") + std::string(arg->GetSignature());
-			argsName += std::string(";") + std::string(arg->GetName());
+	std::string GetArgsSignature() {
+		std::string argsSignature;		
+		if (m_args.empty()) {
+			argsSignature = ";";
 		}
+		else {
+			for (IAdaptor* arg : m_args) {
+				argsSignature += std::string(";") + std::string(arg->GetSignature());
+			}
+		}
+		return argsSignature;
+	}
+
+	std::string GetArgsName() {
+		std::string argsName;
+		if (m_args.empty()) {
+			argsName = ";";
+		}
+		else {
+			for (IAdaptor* arg : m_args) {
+				argsName += std::string(";") + std::string(arg->GetName());
+			}
+		}
+		return argsName;
+	}
+
+	void Invoke(Object& obj) {
+		std::string argsSignature = GetArgsSignature();
+		std::string argsName = GetArgsName();
 		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());		
 	}
 
 	void Invoke(const Object& obj) {
-		std::string argsSignature;
-		std::string argsName;
-		for (IAdaptor* arg : m_args) {
-			argsSignature += std::string(";") + std::string(arg->GetSignature());
-			argsName += std::string(";") + std::string(arg->GetName());
-		}
-
+		std::string argsSignature = GetArgsSignature();
+		std::string argsName = GetArgsName();
 		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());
+	}
+
+	void Invoke(Object&& obj) {
+		std::string argsSignature = GetArgsSignature();
+		std::string argsName = GetArgsName();
+		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
+		m_retVal = method2.Invoke(std::move(obj), m_args.data());
+	}
+
+	void Invoke(const Object&& obj) {
+		std::string argsSignature = GetArgsSignature();
+		std::string argsName = GetArgsName();
+		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
+		m_retVal = method2.Invoke(std::move(obj), m_args.data());
 	}
 	
 	template <typename Return, typename... Args>

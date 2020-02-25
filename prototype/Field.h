@@ -1,6 +1,6 @@
 #pragma once
 
-#include "StaticAdaptor.h"
+#include "CAdaptor.h"
 #include "Object.h"
 #include "IField.h"
 
@@ -20,8 +20,8 @@ public:
 
 	template<typename Type>
 	Type Get(const Object &obj) {
-		StaticAdaptor adaptor = m_field.GetValue(obj);
-		return adaptor.Get<Type>();
+		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(m_field.GetValue(obj));
+		return adaptor.GetValue();
 	}
 
 	template<typename Type>

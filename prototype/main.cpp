@@ -44,8 +44,8 @@ int main() {
 		Field field3 = test.GetClass().GetField("ptrString");
 		Method method1 = test.GetClass().GetMethod("Foo1");
 		Method method2 = test.GetClass().GetMethod("Foo2");
-		//Method constMethod = test.GetClass().GetMethod("FooConst");
-		//Method rvalMethod = test.GetClass().GetMethod("void Bar17() &&");
+		Method constMethod = test.GetClass().GetMethod("FooConst");
+		Method rvalMethod = test.GetClass().GetMethod("Bar17");
 
 		int see1 = field1.Get<int>(test);
 		std::string see2 = field2.Get<std::string>(test);
@@ -82,7 +82,7 @@ int main() {
 		printf("Main(): Method2 retval signature = %s\n", method2.GetRetValSignature());
 		printf("Main(): Method2 retval name = %s\n", method2.GetRetValName());
 		*/
-		//rvalMethod.Invoke(Test());
+		rvalMethod.Invoke(Test());
 	}
 	catch (const Exception& e) {
 		printf("ERROR: Exception caught: %s\n", e.Message());

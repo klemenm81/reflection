@@ -82,7 +82,6 @@
     <ClInclude Include="CInstantiator.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="CMethod2.h" />
-    <ClInclude Include="DynamicAdaptor.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
     <ClInclude Include="exceptions\Exception.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
@@ -104,7 +103,6 @@
     <ClInclude Include="CClass.h" />
     <ClInclude Include="IAdaptor.h" />
     <ClInclude Include="IField.h" />
-    <ClInclude Include="StaticAdaptor.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>
