@@ -15,14 +15,14 @@ public:
 	virtual const char* GetRetValSignature() = 0;
 	virtual const char* GetRetValName() = 0;
 	virtual Qualifier GetQualifier() = 0;
-	virtual IAdaptor* Invoke(Object &obj, IAdaptor **args) { throw; };
-	virtual IAdaptor* Invoke(const Object& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(volatile Object& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(volatile const Object& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(Object&& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(const Object&& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(volatile Object&& obj, IAdaptor** args) { throw; };
-	virtual IAdaptor* Invoke(volatile const Object&& obj, IAdaptor** args) { throw; };
+	virtual IAdaptor* Invoke(Object &obj, IAdaptor **args) = 0;
+	virtual IAdaptor* Invoke(const Object& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(volatile Object& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(const volatile Object& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(Object&& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(const Object&& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(volatile Object&& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(const volatile Object&& obj, IAdaptor** args) = 0;
 	virtual ~IMethod2() {
 	}
 };

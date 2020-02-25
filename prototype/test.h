@@ -22,6 +22,84 @@ public:
 	int FooOverloaded(std::vector<int> i) const;
 	std::string FooConst() const;
 
+	void Fcn1() {
+	}
+
+	void Fcn2() const {
+	}
+
+	void Fcn3() volatile {
+	}
+
+	void Fcn4() const volatile {
+	}
+
+	void Fcn5() noexcept {
+	}
+
+	void Fcn6() const noexcept {
+	}
+
+	void Fcn7() volatile noexcept {
+	}
+
+	void Fcn8() const volatile noexcept{
+	}
+
+
+	void Fcn9() & {
+	}
+
+	void Fcn10() const & {
+	}
+
+	void Fcn11() volatile & {
+	}
+
+	void Fcn12() const volatile & {
+	}
+
+	void Fcn13() & noexcept {
+	}
+
+	void Fcn14() const & noexcept {
+	}
+
+	void Fcn15() volatile & noexcept {
+	}
+
+	void Fcn16() const volatile & noexcept {
+	}
+
+
+	void Fcn17()&& {
+	}
+
+	void Fcn18() const&& {
+	}
+
+	void Fcn19() volatile&& {
+	}
+
+	void Fcn20() const volatile&& {
+	}
+
+	void Fcn21() && noexcept {
+	}
+
+	void Fcn22() const&& noexcept {
+	}
+
+	void Fcn23() volatile&& noexcept {
+	}
+
+	void Fcn24() const volatile&& noexcept {
+	}
+
+
+
+
+
 	void Bar1();
 	void Bar2() const;
 	void Bar3() noexcept;

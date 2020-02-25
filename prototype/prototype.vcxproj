@@ -84,6 +84,7 @@
     <ClInclude Include="CMethod.h" />
     <ClInclude Include="CMethod2.h" />
     <ClInclude Include="DynamicAdaptor.h" />
+    <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
     <ClInclude Include="exceptions\Exception.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
     <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h" />
