@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Class.h"
+class Class;
 
 class Object {
 public:
-	virtual Class GetClass() = 0;
+	virtual Class &GetClass() = 0;
 	virtual ~Object() {
 	}
 };

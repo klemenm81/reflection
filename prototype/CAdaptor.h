@@ -1,4 +1,6 @@
 #pragma once
+
+#include <string>
 #include <forward_list>
 #include <typeinfo>
 #include "IAdaptor.h"

@@ -1,7 +1,7 @@
 #pragma once
 
-class IAdaptor;
-class Object;
+#include "IAdaptor.h"
+#include "Object.h"
 
 class IField
 {

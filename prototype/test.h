@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Reflectable.h"
-//#include "Adaptor.h"
-
 #include <vector>
 
 class Test : public Reflectable<Test> {

@@ -2,8 +2,7 @@
 
 #include "IField.h"
 #include "CAdaptor.h"
-
-class Object;
+#include "Object.h"
 
 template<typename Class, typename Type>
 class CFieldBase : public IField {

@@ -8,6 +8,7 @@
 
 #include "exceptions/ArgumentOutOfBoundsException.h"
 
+#include "Object.h"
 #include "Reflectable.h"
 
 template <typename Class, typename Return, typename... Args>

@@ -2,11 +2,11 @@
 
 #include "Object.h"
 #include "CClass.h"
+#include "Class.h"
 
 #define REFLECT_FULL_ACCESS											\
 	friend void CClass<ReflectedClass>::Register<ReflectedClass>(	\
 		std::map<std::string, IField*>&,							\
-		std::map<std::string, IMethod*>&,							\
 		std::map<std::string, IMethodOverloads*>&);
 
 #define REFLECT_PUBLIC_ACCESS
@@ -16,8 +16,9 @@ class Reflectable : public Object {
 protected:
 	typedef ClassType ReflectedClass;
 public:
-	Class GetClass() {
+	Class &GetClass() {
 		static CClass<ClassType> reflection;
-		return reflection;
+		static Class clasz(reflection);
+		return clasz;
 	}
 };

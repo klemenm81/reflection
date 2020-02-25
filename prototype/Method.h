@@ -1,10 +1,13 @@
 #pragma once
 
-#include "StaticAdaptor.h"
-#include "DynamicAdaptor.h"
-#include "IMethod.h"
+
+#include <vector>
+
+#include "IAdaptor.h"
+#include "Object.h"
 #include "IMethod2.h"
 #include "IMethodOverloads.h"
+#include "CAdaptor.h"
 
 class Method {
 private:

@@ -1,11 +1,10 @@
 #pragma once
 
-
-#include "IMethod.h"
 #include "IAdaptor.h"
 #include "Qualifier.h"
+#include "Object.h"
 
-class IMethod2 : public IMethod {
+class IMethod2 {
 public:
 	virtual const char* GetName() = 0;
 	virtual size_t GetNArgs() = 0;

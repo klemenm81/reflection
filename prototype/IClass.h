@@ -2,14 +2,12 @@
 
 #include <string>
 
-class IField;
-class IMethod;
-class IMethodOverloads;
+#include "IField.h"
+#include "IMethodOverloads.h"
 
 class IClass {
 public:
 	virtual IField& GetField(const char *name) = 0;
-	virtual IMethod& GetMethod(const char *name) = 0;
 	virtual IMethodOverloads& GetMethodOverloads(const char* name) = 0;
 	virtual ~IClass() {
 	}

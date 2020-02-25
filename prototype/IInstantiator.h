@@ -1,6 +1,6 @@
 #pragma once
 
-class Object;
+#include "Object.h"
 
 class IInstantiator {
 public:

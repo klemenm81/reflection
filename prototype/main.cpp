@@ -10,7 +10,7 @@
 #include "Object.h"
 #include "Field.h"
 #include "Method.h"
-#include "IClass.h"
+#include "Class.h"
 #include "test.h"
 
 Object& CreateInstance(const char* name) {

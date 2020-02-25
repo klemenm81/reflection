@@ -81,7 +81,6 @@
     <ClInclude Include="CField.h" />
     <ClInclude Include="CInstantiator.h" />
     <ClInclude Include="Class.h" />
-    <ClInclude Include="CMethod.h" />
     <ClInclude Include="CMethod2.h" />
     <ClInclude Include="DynamicAdaptor.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
@@ -94,7 +93,6 @@
     <ClInclude Include="Field.h" />
     <ClInclude Include="Qualifier.h" />
     <ClInclude Include="IInstantiator.h" />
-    <ClInclude Include="IMethod.h" />
     <ClInclude Include="IClass.h" />
     <ClInclude Include="IMethod2.h" />
     <ClInclude Include="IMethodOverloads.h" />
