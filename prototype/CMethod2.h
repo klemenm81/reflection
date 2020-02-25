@@ -205,8 +205,8 @@ protected:
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<volatile Class&&>(object).*method)(
 					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
-					)
-				);
+				)
+			);
 		}
 	}
 
@@ -216,15 +216,15 @@ protected:
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(object).*method)(
 				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
-				);
+			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<const volatile Class&&>(object).*method)(
 					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
-					)
-				);
+				)
+			);
 		}
 	}
 
@@ -1376,7 +1376,3 @@ public:
 		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
-
-
-
-
