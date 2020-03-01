@@ -4,6 +4,8 @@
 #include "CAdaptor.h"
 #include "Object.h"
 
+#include "json/json.h"
+
 template<typename Class, typename Type>
 class CFieldBase : public IField {
 private:
@@ -22,6 +24,17 @@ public:
 	void SetValue(Object& obj, IAdaptor& value) {
 		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(value);
 		static_cast<Class&>(obj).*m_ptr = adaptor.GetValue();
+	}
+
+	Json::Value Serialize(const Object& obj) {
+		IAdaptor& adaptor = GetValue(obj);
+		return adaptor.Serialize();
+	}
+
+	void Deserialize(Object& obj, Json::Value value) {
+		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Type>)];
+		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(value);
+		SetValue(obj, *adaptor);
 	}
 };
 

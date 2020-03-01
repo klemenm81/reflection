@@ -1,6 +1,8 @@
 #include "test.h"
 
 Test::Test() : a(5), myString("Reflection"), ptrString("Hello") {
+	vec1.push_back(5);
+	vec1.push_back(3);
 }
 
 void Test::Foo1(std::string& str, float val) {

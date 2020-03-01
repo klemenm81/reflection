@@ -1,9 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <forward_list>
 #include <typeinfo>
 #include "IAdaptor.h"
+
+#include "Serialization.h"
 
 template <typename Type>
 class CAdaptor : public IAdaptor {
@@ -15,6 +18,9 @@ public:
 	}
 	
 	CAdaptor(Type&& value) : m_value(std::move(value)) {
+	}
+
+	CAdaptor(Json::Value value) : m_value(Serialization<Type>::Deserialize(value)) {
 	}
 	
 	const Type &GetValue() {
@@ -29,6 +35,10 @@ public:
 	const char* GetName() {
 		static const std::string name = typeid(Type).name();
 		return name.c_str();
+	}
+
+	Json::Value Serialize() {
+		return Serialization<Type>::Serialize(m_value);
 	}
 };
 
@@ -54,6 +64,10 @@ public:
 		static const std::string name = typeid(Type&).name();
 		return name.c_str();
 	}
+
+	Json::Value Serialize() {
+		return Serialization<Type>::Serialize(m_value);
+	}
 };
 
 template <typename Type>
@@ -78,6 +92,10 @@ public:
 		static const std::string name = typeid(Type&&).name();
 		return name.c_str();
 	}
+
+	Json::Value Serialize() {
+		return Serialization<Type>::Serialize(m_value);
+	}
 };
 
 template <>
@@ -94,5 +112,9 @@ public:
 	const char* GetName() {
 		static const std::string name = typeid(void).name();
 		return name.c_str();
+	}
+
+	Json::Value Serialize() {
+		return Json::Value("");
 	}
 };

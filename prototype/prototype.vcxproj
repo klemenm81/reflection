@@ -53,9 +53,11 @@
       <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\libjson\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>..\libjson\lib\windows_x64\VC142_MDD\libjson.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -68,11 +70,13 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>..\libjson\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>..\libjson\lib\windows_x64\VC142_MD\libjson.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -83,12 +87,14 @@
     <ClInclude Include="Class.h" />
     <ClInclude Include="CMethod2.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
+    <ClInclude Include="exceptions\DeserializationException.h" />
     <ClInclude Include="exceptions\Exception.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
     <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodNotFoundException.h" />
     <ClInclude Include="exceptions\MethodWithSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
+    <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="Qualifier.h" />
     <ClInclude Include="IInstantiator.h" />
@@ -103,6 +109,7 @@
     <ClInclude Include="CClass.h" />
     <ClInclude Include="IAdaptor.h" />
     <ClInclude Include="IField.h" />
+    <ClInclude Include="Serialization.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>
   <ItemGroup>

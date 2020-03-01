@@ -10,6 +10,7 @@ private:
 	int a;
 	std::string myString;
 	const char* ptrString;
+	std::vector<int> vec1;
 
 public:
 	Test();

@@ -4,6 +4,9 @@
 #include "Object.h"
 #include "IField.h"
 
+#include "json/json.h"
+#include <sstream>
+
 class Field {
 private:
 	IField& m_field;
@@ -28,5 +31,22 @@ public:
 	void Set(Object &obj, Type value) {
 		CAdaptor<Type> adaptor(value);
 		m_field.SetValue(obj, adaptor);
+	}
+
+	std::string Serialize(const Object& obj) {
+		Json::Value json = m_field.Serialize(obj);
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "\t";
+		return Json::writeString(wbuilder, json);
+	}
+
+	void Deserialize(Object &obj, std::string val) {
+		Json::CharReaderBuilder rbuilder;
+		rbuilder["collectComments"] = false;
+		std::string errs;
+		std::stringstream s(val);
+		Json::Value json;
+		Json::parseFromStream(rbuilder, s, &json, &errs);
+		m_field.Deserialize(obj, json);
 	}
 };

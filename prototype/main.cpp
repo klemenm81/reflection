@@ -34,7 +34,6 @@ Object& CreateInstance(const char* name) {
 	return AbstractFactory("Test");
 }
 
-
 int main() {
 	try {
 		Object& test = CreateInstance("Test");
@@ -42,6 +41,7 @@ int main() {
 		Field field1 = test.GetClass().GetField("a");
 		Field field2 = test.GetClass().GetField("myString");
 		Field field3 = test.GetClass().GetField("ptrString");
+		Field field4 = test.GetClass().GetField("vec1");
 		Method method1 = test.GetClass().GetMethod("Foo1");
 		Method method2 = test.GetClass().GetMethod("Foo2");
 		Method constMethod = test.GetClass().GetMethod("FooConst");
@@ -50,6 +50,12 @@ int main() {
 		int see1 = field1.Get<int>(test);
 		std::string see2 = field2.Get<std::string>(test);
 		const char* see3 = field3.Get<const char*>(test);
+
+		std::string ser1 = field1.Serialize(test);
+		field1.Deserialize(test, "15");
+
+		std::string ser2 = field4.Serialize(test);
+		field4.Deserialize(test, "[15, 14, 12]");
 
 		std::string str = "PI = ";
 
@@ -65,9 +71,8 @@ int main() {
 		method2.Invoke(test);
 		int ret2 = method2.GetRetVal<int>();
 
-
-		std::vector<IAdaptor*> args;
-		//	printf("Main(): Return from FooConst = %s\n", constMethod.Invoke(test, args).Get<std::string>().c_str());
+		constMethod.Invoke(test);
+		printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
 
 		field1.Set(test, 13);
 		printf("Main(): str = %s\n", str.c_str());
