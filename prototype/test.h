@@ -18,7 +18,7 @@ public:
 	int Foo2(const char* str);
 	int FooOverloaded(int i);
 	int FooOverloaded(float i);
-	int FooOverloaded(std::vector<int> i) const;
+	int FooOverloaded(std::vector<int> i, int j);
 	std::string FooConst() const;
 
 	void Fcn1() {

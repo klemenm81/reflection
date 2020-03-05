@@ -16,14 +16,14 @@ int Test::Foo2(const char* str) {
 }
 
 int Test::FooOverloaded(int i) {
-	return 0;
+	return 100;
 }
 
 int Test::FooOverloaded(float i) {
 	return 1;
 }
 
-int Test::FooOverloaded(std::vector<int> i) const {
+int Test::FooOverloaded(std::vector<int> i, int j) {
 	return -1;
 }
 

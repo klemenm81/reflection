@@ -43,16 +43,53 @@ public:
 };
 
 template <typename Type>
-class CAdaptor<Type&> : public IAdaptor {
+class CAdaptor<Type*> : public IAdaptor {
 private:
-	Type &m_value;
+	Type* m_value;
 
 public:
-	CAdaptor(Type &value) : m_value(value) {
+	CAdaptor(Type *value) : m_value(value) {
+	}
+
+	CAdaptor(Json::Value value) {
+		throw;
+	}
+
+	Type *GetValue() {
+		return m_value;
+	}
+
+	const char* GetSignature() {
+		static const std::string signature = std::to_string(typeid(Type*).hash_code());
+		return signature.c_str();
+	}
+
+	const char* GetName() {
+		static const std::string name = typeid(Type*).name();
+		return name.c_str();
+	}
+
+	Json::Value Serialize() {
+		return Serialization<Type>::Serialize(*m_value);
+	}
+};
+
+
+template <typename Type>
+class CAdaptor<Type&> : public IAdaptor {
+private:
+	Type *m_value;
+
+public:
+	CAdaptor(Type &value) : m_value(&value) {
+	}
+
+	CAdaptor(Json::Value value) {
+		throw;
 	}
 
 	Type& GetValue() {
-		return m_value;
+		return *m_value;
 	}
 
 	const char* GetSignature() {
@@ -66,7 +103,7 @@ public:
 	}
 
 	Json::Value Serialize() {
-		return Serialization<Type>::Serialize(m_value);
+		return Serialization<Type>::Serialize(*m_value);
 	}
 };
 
@@ -77,6 +114,9 @@ private:
 
 public:
 	CAdaptor(Type &&value) : m_value(std::forward<Type>(value)) {
+	}
+
+	CAdaptor(Json::Value value) : m_value(Serialization<Type>::Deserialize(value)) {
 	}
 
 	Type && GetValue() {

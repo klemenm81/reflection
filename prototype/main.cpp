@@ -34,6 +34,7 @@ Object& CreateInstance(const char* name) {
 	return AbstractFactory("Test");
 }
 
+
 int main() {
 	try {
 		Object& test = CreateInstance("Test");
@@ -46,6 +47,7 @@ int main() {
 		Method method2 = test.GetClass().GetMethod("Foo2");
 		Method constMethod = test.GetClass().GetMethod("FooConst");
 		Method rvalMethod = test.GetClass().GetMethod("Bar17");
+		Method overloadedMethod = test.GetClass().GetMethod("FooOverloaded");
 
 		int see1 = field1.Get<int>(test);
 		std::string see2 = field2.Get<std::string>(test);
@@ -71,22 +73,14 @@ int main() {
 		method2.Invoke(test);
 		int ret2 = method2.GetRetVal<int>();
 
-		constMethod.Invoke(test);
-		printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
+		std::string retStr = overloadedMethod.InvokeMarshalled(test, std::vector<std::string> { "[3, 5, 4]", "5" });
+
+		//constMethod.Invoke(test);
+		//printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
 
 		field1.Set(test, 13);
 		printf("Main(): str = %s\n", str.c_str());
-		/*
-		printf("Main(): Method1 args signature = %s\n", method1.GetArgsSignature());
-		printf("Main(): Method1 args name = %s\n", method1.GetArgsName());
-		printf("Main(): Method2 args signature = %s\n", method2.GetArgsSignature());
-		printf("Main(): Method2 args name = %s\n", method2.GetArgsName());
 
-		printf("Main(): Method1 retval signature = %s\n", method1.GetRetValSignature());
-		printf("Main(): Method1 retval name = %s\n", method1.GetRetValName());
-		printf("Main(): Method2 retval signature = %s\n", method2.GetRetValSignature());
-		printf("Main(): Method2 retval name = %s\n", method2.GetRetValName());
-		*/
 		rvalMethod.Invoke(Test());
 	}
 	catch (const Exception& e) {

@@ -22,6 +22,10 @@ public:
 	virtual IAdaptor* Invoke(const Object&& obj, IAdaptor** args) = 0;
 	virtual IAdaptor* Invoke(volatile Object&& obj, IAdaptor** args) = 0;
 	virtual IAdaptor* Invoke(const volatile Object&& obj, IAdaptor** args) = 0;
+
+	virtual Json::Value InvokeMarshalled(Object& obj, Json::Value args) {
+		throw;
+	}
 	virtual ~IMethod2() {
 	}
 };

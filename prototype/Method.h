@@ -54,33 +54,7 @@ public:
 	void ClearArgs() {
 		m_args.clear();
 	}
-	/*
-	const char* GetArgsSignature() {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		return method2.GetArgsSignature();
-	}
 
-	const char* GetArgsName() {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		return method2.GetArgsName();
-	}
-
-	const char* GetRetValSignature() {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		return method2.GetRetValSignature();
-	}
-
-	const char* GetRetValName() {
-		IMethod2& method2 = static_cast<IMethod2&>(m_method);
-		return method2.GetRetValName();
-	}
-	
-	template <typename Class>
-	StaticAdaptor Invoke(Class& obj, std::vector<IAdaptor *> &args) {
-		CAdaptor<Class&> adaptor(obj);
-		return(m_method.Invoke(adaptor, args));
-	}
-	*/
 	std::string GetArgsSignature() {
 		std::string argsSignature;		
 		if (m_args.empty()) {
@@ -148,6 +122,43 @@ public:
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).GetValue());
 		}
+	}
+
+	std::string InvokeMarshalled(Object& obj, std::vector<std::string> args) {
+		Json::CharReaderBuilder rbuilder;
+		rbuilder["collectComments"] = false;
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "\t";
+		Json::Value jsonArgs;
+		Json::Value jsonRetVal;
+
+		int index = 0;
+		for (std::string arg : args) {
+			std::string errs;
+			std::stringstream s(arg);
+			Json::Value json;
+			Json::parseFromStream(rbuilder, s, &json, &errs);
+			jsonArgs.insert(index++, json);
+		}
+
+		size_t nMethods = 0;
+		size_t iMethod = 0;
+		IMethod2** methods = m_method.GetMethodsByNArgs(args.size(), nMethods);
+		for (iMethod = 0; iMethod < nMethods; iMethod++) {
+			try {
+				jsonRetVal = methods[iMethod]->InvokeMarshalled(obj, jsonArgs);
+				break;
+			}
+			catch (Exception&) {
+				continue;
+			}
+		}
+
+		if (iMethod == nMethods) {
+			throw;
+		}
+
+		return Json::writeString(wbuilder, jsonRetVal);
 	}
 
 protected:

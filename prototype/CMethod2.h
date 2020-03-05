@@ -11,6 +11,8 @@
 #include "Object.h"
 #include "Reflectable.h"
 
+#include "json/json.h"
+
 template <typename Class, typename Return, typename... Args>
 class CMethodBase2 : public IMethod2 {
 protected:
@@ -85,6 +87,23 @@ protected:
 	const char *GetRetValName() {
 		static const std::string name = typeid(Return).name();
 		return name.c_str();
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).GetValue()...
+			);
+			return CAdaptor<void>().Serialize();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).GetValue()...
+				)
+			).Serialize();
+		}
 	}
 
 	template<typename Method, std::size_t... Index>
@@ -253,6 +272,10 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor **args) {
+		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	}
+
+	Json::Value InvokeMarshalled(Object& object, Json::Value args) {
 		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
