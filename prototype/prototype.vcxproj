@@ -101,7 +101,6 @@
     <ClInclude Include="IClass.h" />
     <ClInclude Include="IMethod2.h" />
     <ClInclude Include="IMethodOverloads.h" />
-    <ClInclude Include="macros.h" />
     <ClInclude Include="metadata.h" />
     <ClInclude Include="Method.h" />
     <ClInclude Include="Object.h" />
