@@ -12,7 +12,7 @@
 #include "exceptions/MethodContainingSignatureNotFoundException.h"
 #include "exceptions/InternalErrorException.h"
 
-class IMethod2 {
+class IMethodInvoker {
 public:
 	virtual const char* GetName() = 0;
 	virtual size_t GetNArgs() = 0;
@@ -34,89 +34,50 @@ public:
 	virtual Json::Value InvokeMarshalled(Object& obj, Json::Value args) {
 		throw;
 	}
-	virtual ~IMethod2() {
-	}
-};
-
-class IMethodQualifiers {
-private:
-	std::map<Qualifier, IMethod2 *> m_qualifiedMethods;
-
-public:
-	void AddMethod(IMethod2& method) {
-		m_qualifiedMethods[method.GetQualifier()] = &method;
-	}
-
-	IMethod2 &GetMethod(Qualifier qualifier) {
-		IMethod2* method = (m_qualifiedMethods.find(qualifier) != m_qualifiedMethods.end()) ?
-			m_qualifiedMethods[qualifier] :
-			nullptr;
-
-		if (method == nullptr) {
-			throw MethodWithQualifierNotFoundException(qualifier);
-		}
-
-		return *m_qualifiedMethods[qualifier];
-	}
-
-	IMethod2& GetAnyMethod() {
-		for (auto it = m_qualifiedMethods.begin(); it != m_qualifiedMethods.end(); it++) {
-			if (it->second != nullptr) {
-				return *it->second;
-			}
-		}
-
-		throw InternalErrorException("There should be at least one method with specific signature!!!");
+	virtual ~IMethodInvoker() {
 	}
 };
 
 
-class IMethodOverloads {
+class IMethod {
 private:
-	std::map<std::string, IMethodQualifiers *> m_overloadedMethods;
-	std::map<size_t, std::vector<IMethod2*>> m_methodOverloadMapByNArgs;
+	std::map<std::string, std::map<Qualifier, IMethodInvoker*>> m_methodOverloadMap;
+	std::map<size_t, std::vector<IMethodInvoker*>> m_methodOverloadMapByNArgs;
 
 public:
-	void AddMethod(IMethod2& method) {
-		IMethodQualifiers* methodQualifiers = (m_overloadedMethods.find(method.GetArgsSignature()) != m_overloadedMethods.end()) ?
-			m_overloadedMethods[method.GetArgsSignature()] :
-			nullptr;
-
-		if (methodQualifiers == nullptr) {
-			methodQualifiers = new IMethodQualifiers();
-			m_overloadedMethods[method.GetArgsSignature()] = methodQualifiers;
-		}
-
-		methodQualifiers->AddMethod(method);
-
-		m_methodOverloadMapByNArgs[method.GetNArgs()].push_back(&method);
+	void AddMethod(IMethodInvoker& methodInvoker) {
+		std::map<Qualifier, IMethodInvoker*> &methodInvokers = m_methodOverloadMap[methodInvoker.GetArgsSignature()];
+		methodInvokers[methodInvoker.GetQualifier()] = &methodInvoker;
+		m_methodOverloadMapByNArgs[methodInvoker.GetNArgs()].push_back(&methodInvoker);
 	}
 
-	IMethod2& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
-		IMethodQualifiers* methodQualifiers = (m_overloadedMethods.find(argsSignature) != m_overloadedMethods.end()) ?
-			m_overloadedMethods[argsSignature] :
-			nullptr;
-
-		if (methodQualifiers == nullptr) {
+	IMethodInvoker& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
+		std::map<Qualifier, IMethodInvoker*>& methodInvokers = m_methodOverloadMap.find(argsSignature) != m_methodOverloadMap.end() ?
+			m_methodOverloadMap[argsSignature] : 
 			throw MethodWithSignatureNotFoundException(argsName);
-		}
-
-		return methodQualifiers->GetMethod(qualifier);
+		IMethodInvoker& invoker =  methodInvokers.find(qualifier) != methodInvokers.end() ? 
+			*methodInvokers[qualifier] :
+			throw MethodWithQualifierNotFoundException(qualifier);
+		return invoker;
 	}
 
-	IMethod2& GetMethodContainingSignature(const char* argsSignature, const char* argsName) {
-		for (auto it = m_overloadedMethods.begin(); it != m_overloadedMethods.end(); it++) {
+	IMethodInvoker& GetMethodContainingSignature(const char* argsSignature, const char* argsName) {
+		for (auto it = m_methodOverloadMap.begin(); it != m_methodOverloadMap.end(); it++) {
 			if (!strncmp(it->first.c_str(), argsSignature, strlen(argsSignature))) {
-				IMethodQualifiers& methodQualifiers = *(it->second);
-				return methodQualifiers.GetAnyMethod();
+				std::map<Qualifier, IMethodInvoker*>& methodInvokers = it->second;
+				for (auto it = methodInvokers.begin(); it != methodInvokers.end(); it++) {
+					if (it->second != nullptr) {
+						return *it->second;
+					}
+				}
 			}
 		}
 
 		throw MethodContainingSignatureNotFoundException(argsName);
 	}
 
-	IMethod2** GetMethodsByNArgs(size_t nArgs, size_t& nMethods) {
-		std::vector<IMethod2*>& methods = m_methodOverloadMapByNArgs[nArgs];
+	IMethodInvoker** GetMethodsByNArgs(size_t nArgs, size_t& nMethods) {
+		std::vector<IMethodInvoker*>& methods = m_methodOverloadMapByNArgs[nArgs];
 		nMethods = methods.size();
 		return methods.data();
 	}

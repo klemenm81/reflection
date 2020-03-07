@@ -26,7 +26,7 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 }
 
 template <typename ReflectedClass, typename Method>
-IMethod2& newMethod2(const char *name, Method method) {
+IMethodInvoker& newMethod2(const char *name, Method method) {
 	return *new CMethod2<ReflectedClass, Method>(name, method);
 }
 
@@ -40,7 +40,7 @@ template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::Register(													\
 	std::map<std::string, IField*>& m_fields,									\
-	std::map<std::string, IMethodOverloads *>& m_methodOverloads)				\
+	std::map<std::string, IMethod *>& m_methodOverloads)				\
 {																				
 
 #define REFLECT_CLASS_END(Class)												\

@@ -14,7 +14,7 @@
 #include "json/json.h"
 
 template <typename Class, typename Return, typename... Args>
-class CMethodBase2 : public IMethod2 {
+class CMethodBase2 : public IMethodInvoker {
 protected:
 	CMethodBase2(const char* name) : m_name(name) {
 	}

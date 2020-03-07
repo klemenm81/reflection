@@ -10,14 +10,14 @@
 
 class Method {
 private:
-	IMethodOverloads& m_method;
+	IMethod& m_method;
 	std::vector<IAdaptor *> m_args;
 	std::string m_argsSignature;
 	std::string m_argsName;
 	IAdaptor* m_retVal;
 
 public:
-	Method(IMethodOverloads& method) : m_method(method), m_retVal(nullptr) {
+	Method(IMethod& method) : m_method(method), m_retVal(nullptr) {
 	}
 
 	Method(Method&& other) noexcept : m_method(other.m_method), m_retVal(other.m_retVal) {
@@ -32,7 +32,7 @@ public:
 		std::string argsName = m_argsName;
 		argsSignature += std::string(";") + std::to_string(typeid(Type).hash_code());
 		argsName += std::string(";") + std::string(typeid(Type).name());
-		IMethod2& method2 = m_method.GetMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
+		IMethodInvoker& method2 = m_method.GetMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
 		m_args.push_back(new(method2.GetArgBuffer(m_args.size())) CAdaptor<Type>(value));
 		m_argsSignature = argsSignature;
 		m_argsName = argsName;
@@ -83,28 +83,28 @@ public:
 	void Invoke(Object& obj) {
 		std::string argsSignature = GetArgsSignature();
 		std::string argsName = GetArgsName();
-		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
+		IMethodInvoker& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());		
 	}
 
 	void Invoke(const Object& obj) {
 		std::string argsSignature = GetArgsSignature();
 		std::string argsName = GetArgsName();
-		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
+		IMethodInvoker& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
 		m_retVal = method2.Invoke(obj, m_args.data());
 	}
 
 	void Invoke(Object&& obj) {
 		std::string argsSignature = GetArgsSignature();
 		std::string argsName = GetArgsName();
-		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
+		IMethodInvoker& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
 		m_retVal = method2.Invoke(std::move(obj), m_args.data());
 	}
 
 	void Invoke(const Object&& obj) {
 		std::string argsSignature = GetArgsSignature();
 		std::string argsName = GetArgsName();
-		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
+		IMethodInvoker& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
 		m_retVal = method2.Invoke(std::move(obj), m_args.data());
 	}
 	
@@ -116,7 +116,7 @@ public:
 		std::string argsName = (sizeof...(Args) > 0) ?
 			((std::string(";") + std::string(typeid(Args).name())) + ...) :
 			";";
-		IMethod2& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
+		IMethodInvoker& method2 = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = method2.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).GetValue());
@@ -142,7 +142,7 @@ public:
 
 		size_t nMethods = 0;
 		size_t iMethod = 0;
-		IMethod2** methods = m_method.GetMethodsByNArgs(args.size(), nMethods);
+		IMethodInvoker** methods = m_method.GetMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
 				jsonRetVal = methods[iMethod]->InvokeMarshalled(obj, jsonArgs);
