@@ -96,11 +96,10 @@
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="IMethod.h" />
     <ClInclude Include="Qualifier.h" />
     <ClInclude Include="IInstantiator.h" />
     <ClInclude Include="IClass.h" />
-    <ClInclude Include="IMethod2.h" />
-    <ClInclude Include="IMethodOverloads.h" />
     <ClInclude Include="metadata.h" />
     <ClInclude Include="Method.h" />
     <ClInclude Include="Object.h" />

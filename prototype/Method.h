@@ -5,8 +5,7 @@
 
 #include "IAdaptor.h"
 #include "Object.h"
-#include "IMethod2.h"
-#include "IMethodOverloads.h"
+#include "IMethod.h"
 #include "CAdaptor.h"
 
 class Method {

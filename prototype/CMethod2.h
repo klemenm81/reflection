@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CAdaptor.h"
-#include "IMethod2.h"
+#include "IMethod.h"
 
 #include <string>
 #include <typeinfo>
