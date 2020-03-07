@@ -27,7 +27,7 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 
 template <typename ReflectedClass, typename Method>
 IMethodInvoker& newMethod2(const char *name, Method method) {
-	return *new CMethod2<ReflectedClass, Method>(name, method);
+	return *new CMethodInvoker<ReflectedClass, Method>(name, method);
 }
 
 template <typename ReflectedClass, typename Field>

@@ -14,9 +14,9 @@
 #include "json/json.h"
 
 template <typename Class, typename Return, typename... Args>
-class CMethodBase2 : public IMethodInvoker {
+class CMethodInvokerBase : public IMethodInvoker {
 protected:
-	CMethodBase2(const char* name) : m_name(name) {
+	CMethodInvokerBase(const char* name) : m_name(name) {
 	}
 
 	static constexpr size_t ArgsSize() {
@@ -255,16 +255,16 @@ private:
 };
 
 template <typename Class, typename Method>
-class CMethod2;
+class CMethodInvoker;
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...)> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...)> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...);
 	
 public:
-	constexpr CMethod2(const char *name, Return(Class::* method)(Args...)) : 
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char *name, Return(Class::* method)(Args...)) : 
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -272,11 +272,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor **args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value InvokeMarshalled(Object& object, Json::Value args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -309,13 +309,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const;
 
 public:
-	constexpr CMethod2(const char *name, Return(Class::* method)(Args...) const) : 
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char *name, Return(Class::* method)(Args...) const) : 
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -323,11 +323,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
@@ -356,13 +356,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -370,7 +370,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -378,7 +378,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
@@ -403,13 +403,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -417,19 +417,19 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
@@ -450,13 +450,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -464,7 +464,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -497,13 +497,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -511,11 +511,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
@@ -544,13 +544,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -558,7 +558,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -566,7 +566,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
@@ -591,13 +591,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -605,19 +605,19 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
@@ -647,13 +647,13 @@ public:
 
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) &> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) &> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) &;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) &) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) &) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -661,7 +661,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -694,13 +694,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const &> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const &> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const &;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const &) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const &) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -708,11 +708,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
@@ -741,13 +741,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile &> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile &> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile &;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile &) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile &) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -755,7 +755,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -763,7 +763,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
@@ -788,13 +788,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile &> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile &> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile &;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile &) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile &) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -802,19 +802,19 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
@@ -835,13 +835,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) & noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) & noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) & noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) & noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) & noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -849,7 +849,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -882,13 +882,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const & noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const & noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const & noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const & noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const & noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -896,11 +896,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
@@ -929,13 +929,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile & noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile & noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile & noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile & noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile & noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -943,7 +943,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
@@ -951,7 +951,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
@@ -976,13 +976,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile & noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile & noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile & noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile & noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile & noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -990,19 +990,19 @@ public:
 	}
 
 	IAdaptor* Invoke(Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
@@ -1028,13 +1028,13 @@ public:
 
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) &&> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) &&> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) &&;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) &&) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) &&) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1058,7 +1058,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
@@ -1075,13 +1075,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const &&> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const &&> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const &&;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const &&) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const &&) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1105,11 +1105,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
@@ -1122,13 +1122,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile &&> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile &&> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile &&;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile &&) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile &&) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1152,7 +1152,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
@@ -1160,7 +1160,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) {
@@ -1169,13 +1169,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile &&> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile &&> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile &&;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile &&) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile &&) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1199,30 +1199,30 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) && noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) && noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) && noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) && noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) && noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1246,7 +1246,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
@@ -1263,13 +1263,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const && noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const && noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const && noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const && noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const && noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1293,11 +1293,11 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
@@ -1310,13 +1310,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) volatile && noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) volatile && noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) volatile && noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) volatile && noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) volatile && noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1340,7 +1340,7 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
@@ -1348,7 +1348,7 @@ public:
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) {
@@ -1357,13 +1357,13 @@ public:
 };
 
 template <typename Class, typename Return, typename... Args>
-class CMethod2<Class, Return(Class::*)(Args...) const volatile && noexcept> : public CMethodBase2<Class, Return, Args...> {
+class CMethodInvoker<Class, Return(Class::*)(Args...) const volatile && noexcept> : public CMethodInvokerBase<Class, Return, Args...> {
 private:
 	Return(Class::* m_method)(Args...) const volatile && noexcept;
 
 public:
-	constexpr CMethod2(const char* name, Return(Class::* method)(Args...) const volatile && noexcept) :
-		CMethodBase2<Class, Return, Args...>(name), m_method(method) {
+	constexpr CMethodInvoker(const char* name, Return(Class::* method)(Args...) const volatile && noexcept) :
+		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
 	Qualifier GetQualifier() {
@@ -1387,18 +1387,18 @@ public:
 	}
 
 	IAdaptor* Invoke(Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) {
-		return CMethodBase2<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
