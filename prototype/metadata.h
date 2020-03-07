@@ -4,7 +4,7 @@
 #include "CInstantiator.h"
 #include "CClass.h"
 #include "CField.h"
-#include "CMethod2.h"
+#include "CMethodInvoker.h"
 
 #ifdef _WIN32
     #define EXPORT_API _declspec(dllexport)

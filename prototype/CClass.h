@@ -20,7 +20,7 @@ public:
 		return *m_fields[name];
 	}
 
-	IMethod& GetMethodOverloads(const char *name) {
+	IMethod& GetMethod(const char *name) {
 		IMethod* methodOverloads = (m_methodOverloads.find(name) != m_methodOverloads.end()) ?
 			m_methodOverloads[name] :
 			nullptr;

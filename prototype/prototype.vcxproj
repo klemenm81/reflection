@@ -85,7 +85,7 @@
     <ClInclude Include="CField.h" />
     <ClInclude Include="CInstantiator.h" />
     <ClInclude Include="Class.h" />
-    <ClInclude Include="CMethod2.h" />
+    <ClInclude Include="CMethodInvoker.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
     <ClInclude Include="exceptions\DeserializationException.h" />
     <ClInclude Include="exceptions\Exception.h" />

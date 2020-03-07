@@ -8,7 +8,7 @@
 class IClass {
 public:
 	virtual IField& GetField(const char *name) = 0;
-	virtual IMethod& GetMethodOverloads(const char* name) = 0;
+	virtual IMethod& GetMethod(const char* name) = 0;
 	virtual ~IClass() {
 	}
 };
