@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CAbstractFactory.h"
-#include "CInstantiator.h"
+#include "CConstructor.h"
 #include "CClass.h"
 #include "CField.h"
 #include "CMethodInvoker.h"
@@ -25,14 +25,14 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 	return true;
 }
 
+template <typename ReflectedClass, typename Field>
+IField& newField(const char* name, Field field) {
+	return *new CField<ReflectedClass, Field>(name, field);
+}
+
 template <typename ReflectedClass, typename Method>
 IMethodInvoker& newMethod(const char *name, Method method) {
 	return *new CMethodInvoker<ReflectedClass, Method>(name, method);
-}
-
-template <typename ReflectedClass, typename Field>
-IField* newField(Field field) {
-	return new CField<ReflectedClass, Field>(field);
 }
 
 #define REFLECT_CLASS_START(Class)												\
@@ -40,18 +40,19 @@ template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::Register(													\
 	std::map<std::string, IField*>& m_fields,									\
-	std::map<std::string, IMethod *>& m_methods)								\
+	std::map<std::string, IMethod*>& m_methods,									\
+	std::map<std::string, IConstructor*>& m_constructors)						\
 {																				
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
 template<>																		\
 CClass<Class>::CClass() {														\
-	Register<Class>(m_fields,  m_methods);										\
+	Register<Class>(m_fields,  m_methods, m_constructors);						\
 }	
 
 #define REFLECT_FIELD(Field)																			\
-m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
+	AddField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
 	AddMethod(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
@@ -103,7 +104,7 @@ extern "C" EXPORT_API IAbstractFactory& AbstractFactory() {												\
 	static CAbstractFactory abstractFactory;															\
 	return abstractFactory;																				\
 }																										\
-std::map<std::string, std::map<std::string, IInstantiator*>> CAbstractFactory::m_instantiators;			\
+std::map<std::string, std::map<std::string, IConstructor*>> CAbstractFactory::m_instantiators;			\
 CAbstractFactory::CAbstractFactory() {
 
 #define REFLECT_CLASS(Class, ...)																		\

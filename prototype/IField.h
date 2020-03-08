@@ -8,6 +8,8 @@
 class IField
 {
 public:
+	virtual const char* GetName() = 0;
+
 	virtual IAdaptor& GetValue(const Object& obj) = 0;
 	virtual void SetValue(Object& obj, IAdaptor& value) = 0;
 

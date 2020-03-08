@@ -1,12 +1,12 @@
 #pragma once
 
 #include "CAdaptor.h"
-#include "IInstantiator.h"
+#include "IConstructor.h"
 
 #include "exceptions/ArgumentOutOfBoundsException.h"
 
 template <typename Class, typename... Args>
-class CInstantiator : public IInstantiator {
+class CConstructor : public IConstructor {
 public:
 	static constexpr size_t ArgsSize() {
 		if constexpr (sizeof...(Args) > 0) {

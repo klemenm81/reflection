@@ -15,6 +15,9 @@
 
 template <typename Class, typename Return, typename... Args>
 class CMethodInvokerBase : public IMethodInvoker {
+private:
+	std::string m_name;
+
 protected:
 	CMethodInvokerBase(const char* name) : m_name(name) {
 	}
@@ -249,9 +252,6 @@ protected:
 			);
 		}
 	}
-
-private:
-	std::string m_name;
 };
 
 template <typename Class, typename Method>

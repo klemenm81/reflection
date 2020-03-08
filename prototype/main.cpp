@@ -37,7 +37,7 @@ Object& CreateInstance(const char* name, Args... args) {
 		exit(1);
 	}
 	IAbstractFactory& (*AbstractFactory)() =
-                (IInstantiator& (*)())dlsym(hModule, "AbstractFactory");
+                (IConstructor& (*)())dlsym(hModule, "AbstractFactory");
 	if (AbstractFactory == NULL) {
 		printf("AbstractFactory not found\n");
 		exit(1);
@@ -58,7 +58,7 @@ Object& CreateInstance(const char* name, Args... args) {
 		argsName = ";";
 	}
 	IAbstractFactory& abstractFactory = AbstractFactory();
-	IInstantiator& instantiator = abstractFactory.GetInstantiator("Test", argsSignature.c_str() + 1, argsName.c_str() + 1);
+	IConstructor& instantiator = abstractFactory.GetInstantiator("Test", argsSignature.c_str() + 1, argsName.c_str() + 1);
 	return instantiator.Instantiate(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 }
 

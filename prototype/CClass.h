@@ -5,6 +5,8 @@
 #include <map>
 
 #include "IField.h"
+#include "IMethod.h"
+#include "IConstructor.h"
 
 #include "exceptions/MethodNotFoundException.h"
 
@@ -12,12 +14,18 @@ template<typename Class>
 class CClass : public IClass {
 private:
 	std::map<std::string, IField*> m_fields;
-	std::map<std::string, IMethod *> m_methods;
+	std::map<std::string, IMethod*> m_methods;
+	std::map<std::string, IConstructor*> m_constructors;
+
 	typedef Class ReflectedClass;
 
 public:
 	IField& GetField(const char *name) {
 		return *m_fields[name];
+	}
+
+	void AddField(IField& field) {
+		m_fields[field.GetName()] = &field;
 	}
 
 	IMethod& GetMethod(const char *name) {
@@ -48,7 +56,8 @@ public:
 	template <typename ReflectedClass>
 	void Register(
 		std::map<std::string, IField*>& m_fields,
-		std::map<std::string, IMethod*>& m_methods);
+		std::map<std::string, IMethod*>& m_methods,
+		std::map<std::string, IConstructor*>& m_constructors);
 	
 	CClass();
 };
