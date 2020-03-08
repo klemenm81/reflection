@@ -11,27 +11,46 @@
 #include "Field.h"
 #include "Method.h"
 #include "Class.h"
+#include "IAbstractFactory.h"
+
 #include "test.h"
 
-Object& CreateInstance(const char* name) {
+template <typename... Args>
+Object& CreateInstance(const char* name, Args... args) {
 #ifdef _WIN32
 	static HMODULE hModule = GetModuleHandle(NULL);
-	Object& (*AbstractFactory)(const char*) =
-		(Object & (*)(const char*))GetProcAddress(hModule, "AbstractFactory");
+	IAbstractFactory& (*AbstractFactory)() =
+		(IAbstractFactory & (*)())GetProcAddress(hModule, "AbstractFactory");
 #else
 	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
 	if (hModule == NULL) {
 		perror("dlopen");
 		exit(1);
 	}
-	Object& (*AbstractFactory)(const char*) =
-                (Object & (*)(const char*))dlsym(hModule, "AbstractFactory");
+	IAbstractFactory& (*AbstractFactory)() =
+                (IInstantiator& (*)())dlsym(hModule, "AbstractFactory");
 	if (AbstractFactory == NULL) {
 		printf("AbstractFactory not found\n");
 		exit(1);
 	}
 #endif
-	return AbstractFactory("Test");
+	std::string argsSignature;
+	if constexpr (sizeof...(Args) > 0) {
+		argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
+	}
+	else {
+		argsSignature = ";";
+	}
+	std::string argsName;
+	if constexpr (sizeof...(Args) > 0) {
+		argsName = ((std::string(";") + std::string(typeid(Args).name())) + ...);
+	}
+	else {
+		argsName = ";";
+	}
+	IAbstractFactory& abstractFactory = AbstractFactory();
+	IInstantiator& instantiator = abstractFactory.GetInstantiator("Test", argsSignature.c_str() + 1, argsName.c_str() + 1);
+	return instantiator.Instantiate(nullptr);
 }
 
 

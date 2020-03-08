@@ -87,6 +87,8 @@
     <ClInclude Include="Class.h" />
     <ClInclude Include="CMethodInvoker.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
+    <ClInclude Include="exceptions\ClassConstructorNotFoundException.h" />
+    <ClInclude Include="exceptions\ClassNotFoundException.h" />
     <ClInclude Include="exceptions\DeserializationException.h" />
     <ClInclude Include="exceptions\Exception.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
@@ -96,6 +98,7 @@
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="IAbstractFactory.h" />
     <ClInclude Include="IMethod.h" />
     <ClInclude Include="Qualifier.h" />
     <ClInclude Include="IInstantiator.h" />

@@ -26,7 +26,7 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 }
 
 template <typename ReflectedClass, typename Method>
-IMethodInvoker& newMethod2(const char *name, Method method) {
+IMethodInvoker& newMethod(const char *name, Method method) {
 	return *new CMethodInvoker<ReflectedClass, Method>(name, method);
 }
 
@@ -54,13 +54,13 @@ CClass<Class>::CClass() {														\
 m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
-	AddMethod(newMethod2<ReflectedClass>(#Method, &ReflectedClass::Method));
+	AddMethod(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {	\
 		AddMethod(																									\
-			newMethod2<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
+			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
 				&ReflectedClass::Method)));																			\
 	}
 
@@ -68,7 +68,7 @@ m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
 		AddMethod(																											\
-			newMethod2<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(					\
+			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(					\
 				&ReflectedClass::Method)));																					\
 	}
 
@@ -99,15 +99,15 @@ m_fields[#Field] = newField<ReflectedClass>(&ReflectedClass::Field);
 #define REFLECT_METHOD_2(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)	
 
 #define REFLECT_FACTORY_START																			\
-extern "C" EXPORT_API Object& AbstractFactory(const char* name) {						\
+extern "C" EXPORT_API IAbstractFactory& AbstractFactory() {												\
 	static CAbstractFactory abstractFactory;															\
-	return abstractFactory.CreateInstance(name);														\
+	return abstractFactory;																				\
 }																										\
-std::map<std::string, IInstantiator*> CAbstractFactory::m_instantiators;								\
+std::map<std::string, std::map<std::string, IInstantiator*>> CAbstractFactory::m_instantiators;			\
 CAbstractFactory::CAbstractFactory() {
 
-#define REFLECT_CLASS(Class)																			\
-m_instantiators[#Class] = new CInstantiator<Class>();
+#define REFLECT_CLASS(Class, ...)																		\
+	AddInstantiator<Class, ##__VA_ARGS__>(#Class);
 
 #define REFLECT_FACTORY_END																				\
 }
