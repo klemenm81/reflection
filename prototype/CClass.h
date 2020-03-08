@@ -12,7 +12,7 @@ template<typename Class>
 class CClass : public IClass {
 private:
 	std::map<std::string, IField*> m_fields;
-	std::map<std::string, IMethod *> m_methodOverloads;
+	std::map<std::string, IMethod *> m_methods;
 	typedef Class ReflectedClass;
 
 public:
@@ -21,25 +21,25 @@ public:
 	}
 
 	IMethod& GetMethod(const char *name) {
-		IMethod* methodOverloads = (m_methodOverloads.find(name) != m_methodOverloads.end()) ?
-			m_methodOverloads[name] :
+		IMethod* methodOverloads = (m_methods.find(name) != m_methods.end()) ?
+			m_methods[name] :
 			nullptr;
 
 		if (methodOverloads == nullptr) {
 			throw MethodNotFoundException(name);
 		}
 
-		return *m_methodOverloads[name];
+		return *m_methods[name];
 	}
 
 	void AddMethod(IMethodInvoker& method) {
-		IMethod* methodOverloads = (m_methodOverloads.find(method.GetName()) != m_methodOverloads.end()) ?
-			m_methodOverloads[method.GetName()] :
+		IMethod* methodOverloads = (m_methods.find(method.GetName()) != m_methods.end()) ?
+			m_methods[method.GetName()] :
 			nullptr;
 
 		if (methodOverloads == nullptr) {
 			methodOverloads = new IMethod();
-			m_methodOverloads[method.GetName()] = methodOverloads;
+			m_methods[method.GetName()] = methodOverloads;
 		}
 
 		methodOverloads->AddMethod(method);
@@ -48,7 +48,7 @@ public:
 	template <typename ReflectedClass>
 	void Register(
 		std::map<std::string, IField*>& m_fields,
-		std::map<std::string, IMethod*> &m_methodOverloads);
+		std::map<std::string, IMethod*>& m_methods);
 	
 	CClass();
 };
