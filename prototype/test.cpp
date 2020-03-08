@@ -5,6 +5,11 @@ Test::Test() : a(5), myString("Reflection"), ptrString("Hello") {
 	vec1.push_back(3);
 }
 
+Test::Test(int aa) : a(aa), myString("Reflection"), ptrString("Hello") {
+	vec1.push_back(5);
+	vec1.push_back(3);
+}
+
 void Test::Foo1(std::string& str, float val) {
 	str += std::to_string(val);
 	printf("Foo(): str = %s\n", str.c_str());

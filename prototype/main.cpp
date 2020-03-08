@@ -15,6 +15,15 @@
 
 #include "test.h"
 
+template <typename... Adaptors>
+std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
+	std::vector<IAdaptor*> result;
+	if constexpr (sizeof...(Adaptors) > 0) {
+		int dummy[] = { (result.push_back(&adaptors), 0)... };
+	}
+	return result;
+}
+
 template <typename... Args>
 Object& CreateInstance(const char* name, Args... args) {
 #ifdef _WIN32
@@ -50,13 +59,13 @@ Object& CreateInstance(const char* name, Args... args) {
 	}
 	IAbstractFactory& abstractFactory = AbstractFactory();
 	IInstantiator& instantiator = abstractFactory.GetInstantiator("Test", argsSignature.c_str() + 1, argsName.c_str() + 1);
-	return instantiator.Instantiate(nullptr);
+	return instantiator.Instantiate(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 }
 
 
 int main() {
 	try {
-		Object& test = CreateInstance("Test");
+ 		Object& test = CreateInstance<int>("Test", 5);
 
 		Field field1 = test.GetClass().GetField("a");
 		Field field2 = test.GetClass().GetField("myString");

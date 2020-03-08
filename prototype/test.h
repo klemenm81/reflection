@@ -14,6 +14,8 @@ private:
 
 public:
 	Test();
+	Test(int aa);
+
 	void Foo1(std::string& str, float val);
 	int Foo2(const char* str);
 	int FooOverloaded(int i);
