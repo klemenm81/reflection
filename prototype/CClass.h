@@ -27,22 +27,15 @@ public:
 		return m_name.c_str();
 	}
 
+	void AddField(IField& field) {
+		m_fields[field.GetName()] = &field;
+	}
+
 	IField& GetField(const char *name) {
 		IField& field = (m_fields.find(name) != m_fields.end()) ?
 			*m_fields[name] :
 			throw FieldNotFoundException(name);
 		return field;
-	}
-
-	void AddField(IField& field) {
-		m_fields[field.GetName()] = &field;
-	}
-
-	IMethod& GetMethod(const char *name) {
-		IMethod& method = (m_methods.find(name) != m_methods.end()) ?
-			*m_methods[name] :
-			throw MethodNotFoundException(name);
-		return method;
 	}
 
 	void AddMethod(IMethodInvoker& method) {
@@ -56,6 +49,13 @@ public:
 		}
 
 		methodOverloads->AddMethod(method);
+	}
+
+	IMethod& GetMethod(const char *name) {
+		IMethod& method = (m_methods.find(name) != m_methods.end()) ?
+			*m_methods[name] :
+			throw MethodNotFoundException(name);
+		return method;
 	}
 
 	void AddConstructor(IConstructor& constructor) {
