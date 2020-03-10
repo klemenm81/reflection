@@ -54,6 +54,7 @@
       <DisableSpecificWarnings>
       </DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\libjson\include</AdditionalIncludeDirectories>
+      <TreatWarningAsError>false</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -91,6 +92,7 @@
     <ClInclude Include="exceptions\ClassNotFoundException.h" />
     <ClInclude Include="exceptions\DeserializationException.h" />
     <ClInclude Include="exceptions\Exception.h" />
+    <ClInclude Include="exceptions\FieldNotFoundException.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
     <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodNotFoundException.h" />

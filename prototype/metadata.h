@@ -12,6 +12,16 @@
     #define EXPORT_API __attribute__ ((visibility("default")))
 #endif
 
+template<typename ...Args>
+struct parameter_pack_counter {
+	constexpr static int getN() {
+		return sizeof...(Args);
+	}
+};
+
+template <typename T, typename... Ts>
+using parameter_pack_conjunction = std::conjunction<std::is_same<T, Ts>...>;
+
 template<typename I>
 struct nothing {};
 
@@ -35,6 +45,11 @@ IMethodInvoker& newMethod(const char *name, Method method) {
 	return *new CMethodInvoker<ReflectedClass, Method>(name, method);
 }
 
+template <typename ReflectedClass, typename... Args>
+IConstructor& newConstructor() {
+	return *new CConstructor<ReflectedClass, Args...>();
+}
+
 #define REFLECT_CLASS_START(Class)												\
 template<>																		\
 template <typename ReflectedClass>												\
@@ -42,7 +57,17 @@ void CClass<Class>::Register(													\
 	std::map<std::string, IField*>& m_fields,									\
 	std::map<std::string, IMethod*>& m_methods,									\
 	std::map<std::string, IConstructor*>& m_constructors)						\
-{																				
+{																				\
+	if constexpr (std::is_default_constructible<Class>::value){					\
+		AddConstructor(newConstructor<Class>());								\
+	}																			\
+	if constexpr (std::is_copy_constructible<Class>::value) {					\
+		AddConstructor(newConstructor<Class, const Class &>());					\
+	}																			\
+	if constexpr (std::is_move_constructible<Class>::value) {					\
+		AddConstructor(newConstructor<Class, Class &&>());						\
+	}
+
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
@@ -97,7 +122,20 @@ CClass<Class>::CClass() {														\
 	CAT2(REFLECT_METHOD_, NARG16(dummy, ##__VA_ARGS__))(Method, ##__VA_ARGS__)
 
 #define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
-#define REFLECT_METHOD_2(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)	
+#define REFLECT_METHOD_2(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)
+
+#define REFLECT_CONSTRUCTOR(Class, ...)																				\
+	static_assert(parameter_pack_counter<__VA_ARGS__>::getN() != 0, "Default constructor does not have to be specified. It gets registered automatically if it exists.");	\
+	if constexpr (parameter_pack_counter<__VA_ARGS__>::getN() == 1) {																										\
+		if constexpr (parameter_pack_conjunction<const Class &, ##__VA_ARGS__>::value) {																											\
+			static_assert(false, "Copy constructor does not have to be specified. It gets registered automatically if it exists.");											\
+		}																																									\
+		if constexpr (parameter_pack_conjunction<Class &&, ##__VA_ARGS__>::value) {																												\
+			static_assert(false, "Move constructor does not have to be specified. It gets registered automatically if it exists.");											\
+		}																																									\
+	}																																										\
+	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");															\
+	AddConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
 #define REFLECT_FACTORY_START																			\
 extern "C" EXPORT_API IAbstractFactory& AbstractFactory() {												\

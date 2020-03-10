@@ -10,6 +10,25 @@ Test::Test(int aa) : a(aa), myString("Reflection"), ptrString("Hello") {
 	vec1.push_back(3);
 }
 
+Test::Test(const char *ptr) : a(1), myString(ptr), ptrString(ptr) {
+	vec1.push_back(5);
+	vec1.push_back(3);
+}
+
+Test::Test(int aa, std::vector<int> vec) : a(aa), vec1(vec) {
+	vec1.push_back(5);
+	vec1.push_back(3);
+}
+
+Test::Test(const Test& other) {
+
+}
+
+Test::Test(Test&& other) {
+
+}
+
+
 void Test::Foo1(std::string& str, float val) {
 	str += std::to_string(val);
 	printf("Foo(): str = %s\n", str.c_str());

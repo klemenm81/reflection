@@ -15,6 +15,11 @@ private:
 public:
 	Test();
 	Test(int aa);
+	Test(const char *ptr);
+	Test(int aa, std::vector<int> vec);
+
+	Test(const Test& other);
+	Test(Test&& other);
 
 	void Foo1(std::string& str, float val);
 	int Foo2(const char* str);

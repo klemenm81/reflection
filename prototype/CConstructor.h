@@ -5,6 +5,9 @@
 
 #include "exceptions/ArgumentOutOfBoundsException.h"
 
+#include "Object.h"
+#include "Reflectable.h"
+
 template <typename Class, typename... Args>
 class CConstructor : public IConstructor {
 public:
@@ -66,7 +69,7 @@ public:
 
 	template <std::size_t... Index>
 	Object& Instantiate(IAdaptor **args, std::index_sequence<Index...>) {
-		return *new Class(static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...);
+		return static_cast<Reflectable<Class> &>(*new Class(static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...));
 	}
 
 	Object& Instantiate(IAdaptor **args) {

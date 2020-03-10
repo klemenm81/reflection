@@ -63,6 +63,7 @@ Object& CreateInstance(const char* name, Args... args) {
 }
 
 
+
 int main() {
 	try {
  		Object& test = CreateInstance<int>("Test", 5);
