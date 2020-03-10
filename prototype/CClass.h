@@ -15,6 +15,7 @@
 template<typename Class>
 class CClass : public IClass {
 private:
+	std::string m_name;
 	std::map<std::string, IField*> m_fields;
 	std::map<std::string, IMethod*> m_methods;
 	std::map<std::string, IConstructor*> m_constructors;
@@ -22,6 +23,10 @@ private:
 	typedef Class ReflectedClass;
 
 public:
+	const char* GetName() {
+		return m_name.c_str();
+	}
+
 	IField& GetField(const char *name) {
 		IField& field = (m_fields.find(name) != m_fields.end()) ?
 			*m_fields[name] :

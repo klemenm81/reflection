@@ -8,6 +8,7 @@
 
 class IClass {
 public:
+	virtual const char* GetName() = 0;
 	virtual IField& GetField(const char *name) = 0;
 	virtual IMethod& GetMethod(const char* name) = 0;
 	virtual IConstructor& GetConstructor(const char* argsSignature, const char* argsName) = 0;
