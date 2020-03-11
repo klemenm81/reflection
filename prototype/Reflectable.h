@@ -5,13 +5,7 @@
 #include "Class.h"
 
 #define REFLECT_FULL_ACCESS											\
-	friend void CClass<ReflectedClass>::Register<ReflectedClass>(	\
-		std::map<std::string, IField*>&,							\
-		std::map<std::string, IMethod*>&,							\
-		std::map<std::string, IConstructor*>&,						\
-		std::vector<IField*>&,										\
-		std::vector<IMethod*>&,										\
-		std::vector<IConstructor*>&);
+	friend void CClass<ReflectedClass>::Register<ReflectedClass>();
 
 #define REFLECT_PUBLIC_ACCESS
 

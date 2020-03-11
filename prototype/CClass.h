@@ -91,13 +91,7 @@ public:
 	}
 	
 	template <typename ReflectedClass>
-	void Register(
-		std::map<std::string, IField*>& m_fieldMap,
-		std::map<std::string, IMethod*>& m_methodMap,
-		std::map<std::string, IConstructor*>& m_constructorMap,
-		std::vector<IField *>& m_fieldVector,
-		std::vector<IMethod *>& m_methodVector,
-		std::vector<IConstructor *>& m_constructorVector);
+	void Register();
 	
 	CClass();
 };

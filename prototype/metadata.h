@@ -63,13 +63,7 @@ std::vector<std::string> hashes() {
 #define REFLECT_CLASS_START(Class)												\
 template<>																		\
 template <typename ReflectedClass>												\
-void CClass<Class>::Register(													\
-	std::map<std::string, IField*>& m_fields,									\
-	std::map<std::string, IMethod*>& m_methods,									\
-	std::map<std::string, IConstructor*>& m_constructors,						\
-	std::vector<IField *>& m_fieldVector,										\
-	std::vector<IMethod *>& m_methodVector,										\
-	std::vector<IConstructor *>& m_constructorVector)							\
+void CClass<Class>::Register()													\
 {																				\
 	if constexpr (std::is_default_constructible<Class>::value){					\
 		AddConstructor(newConstructor<Class>());								\
@@ -81,11 +75,11 @@ void CClass<Class>::Register(													\
 		AddConstructor(newConstructor<Class, Class &&>());						\
 	}
 
-#define REFLECT_CLASS_END(Class)																						\
-}																														\
-template<>																												\
-CClass<Class>::CClass() : m_name(#Class) {																				\
-	Register<Class>(m_fieldMap,  m_methodMap, m_constructorMap, m_fieldVector, m_methodVector, m_constructorVector);	\
+#define REFLECT_CLASS_END(Class)				\
+}												\
+template<>										\
+CClass<Class>::CClass() : m_name(#Class) {		\
+	Register<Class>();							\
 }	
 
 #define REFLECT_FIELD(Field)																			\
