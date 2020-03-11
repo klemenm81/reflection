@@ -43,8 +43,28 @@ public:
 		return m_class.GetField(name);
 	}
 
+	std::vector<Field> GetFields() {
+		std::vector<Field> ret;
+		size_t nFields = 0;
+		IField** fields = m_class.GetFields(nFields);
+		for (size_t iField = 0; iField < nFields; iField++) {
+			ret.push_back(Field(*fields[iField]));
+		}
+		return ret;
+	}
+
 	Method GetMethod(const char *name) {
 		return m_class.GetMethod(name);
+	}
+
+	std::vector<Method> GetMethods() {
+		std::vector<Method> ret;
+		size_t nMethods = 0;
+		IMethod** methods = m_class.GetMethods(nMethods);
+		for (size_t iMethod = 0; iMethod < nMethods; iMethod++) {
+			ret.push_back(Method(*methods[iMethod]));
+		}
+		return ret;
 	}
 
 	template <typename... Args>
