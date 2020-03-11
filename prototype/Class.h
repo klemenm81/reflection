@@ -39,6 +39,13 @@ public:
 		return *this;
 	}
 
+	template <typename Cast>
+	Cast& Query(Object& obj) {
+		ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str());
+		CAdaptor<Cast&> *adaptor = static_cast<CAdaptor<Cast&> *>(cast.CastClass(obj));
+		return adaptor->GetValue();
+	}
+
 	Field GetField(const char *name) {
 		return m_class.GetField(name);
 	}

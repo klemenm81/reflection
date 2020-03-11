@@ -4,10 +4,12 @@
 #include <string>
 #include <map>
 
+#include "ICast.h"
 #include "IField.h"
 #include "IMethod.h"
 #include "IConstructor.h"
 
+#include "exceptions/CastNotFoundException.h"
 #include "exceptions/FieldNotFoundException.h"
 #include "exceptions/MethodNotFoundException.h"
 #include "exceptions/ClassConstructorNotFoundException.h"
@@ -16,9 +18,11 @@ template<typename Class>
 class CClass : public IClass {
 private:
 	std::string m_name;
+	std::map<std::string, ICast*> m_castMap;
 	std::map<std::string, IField*> m_fieldMap;
 	std::map<std::string, IMethod*> m_methodMap;
 	std::map<std::string, IConstructor*> m_constructorMap;
+	std::vector<ICast*> m_castVector;
 	std::vector<IField*> m_fieldVector;
 	std::vector<IMethod*> m_methodVector;
 	std::vector<IConstructor*> m_constructorVector;
@@ -28,6 +32,18 @@ private:
 public:
 	const char* GetName() {
 		return m_name.c_str();
+	}
+
+	void AddCast(ICast& cast) {
+		m_castMap[cast.GetSignature()] = &cast;
+		m_castVector.push_back(&cast);
+	}
+
+	ICast& GetCast(const char* signature) {
+		ICast& cast = (m_castMap.find(signature) != m_castMap.end()) ?
+			*m_castMap[signature] :
+			throw CastNotFoundException(signature);
+		return cast;
 	}
 
 	void AddField(IField& field) {

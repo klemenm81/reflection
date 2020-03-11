@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CAdaptor.h" />
+    <ClInclude Include="CCast.h" />
     <ClInclude Include="CClassRegistry.h" />
     <ClInclude Include="CConstructor.h" />
     <ClInclude Include="CField.h" />
@@ -89,6 +90,7 @@
     <ClInclude Include="ClassRegistry.h" />
     <ClInclude Include="CMethodInvoker.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
+    <ClInclude Include="exceptions\CastNotFoundException.h" />
     <ClInclude Include="exceptions\ClassConstructorNotFoundException.h" />
     <ClInclude Include="exceptions\ClassNotFoundException.h" />
     <ClInclude Include="exceptions\DeserializationException.h" />
@@ -101,6 +103,7 @@
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="ICast.h" />
     <ClInclude Include="IClassRegistry.h" />
     <ClInclude Include="IConstructor.h" />
     <ClInclude Include="IMethod.h" />

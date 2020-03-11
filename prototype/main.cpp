@@ -48,6 +48,8 @@ int main() {
 		Class clasz = classRegistry.GetClass("Test");
  		Object& test = clasz.Instantiate<int>(5);
 
+		Test& test2 = test.GetClass().Query<Test>(test);
+
 		Field field1 = test.GetClass().GetField("a");
 		Field field2 = test.GetClass().GetField("myString");
 		Field field3 = test.GetClass().GetField("ptrString");

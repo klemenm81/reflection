@@ -2,6 +2,7 @@
 
 #include "CConstructor.h"
 #include "CClass.h"
+#include "CCast.h"
 #include "CField.h"
 #include "CMethodInvoker.h"
 #include "CClassRegistry.h"
@@ -35,6 +36,11 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 	return true;
 }
 
+template <typename ReflectedClass, typename Class>
+ICast& newCast() {
+	return *new CCast<ReflectedClass, Class>(std::to_string(typeid(Class).hash_code()).c_str(), typeid(Class).name());
+}
+
 template <typename ReflectedClass, typename Field>
 IField& newField(const char* name, Field field) {
 	return *new CField<ReflectedClass, Field>(name, field);
@@ -65,6 +71,7 @@ template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::Register()													\
 {																				\
+	AddCast(newCast<Class, Class>());											\
 	if constexpr (std::is_default_constructible<Class>::value){					\
 		AddConstructor(newConstructor<Class>());								\
 	}																			\
