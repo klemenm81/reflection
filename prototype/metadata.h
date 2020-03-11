@@ -1,10 +1,10 @@
 #pragma once
 
-#include "CAbstractFactory.h"
 #include "CConstructor.h"
 #include "CClass.h"
 #include "CField.h"
 #include "CMethodInvoker.h"
+#include "CClassRegistry.h"
 
 #ifdef _WIN32
     #define EXPORT_API _declspec(dllexport)
@@ -67,7 +67,6 @@ void CClass<Class>::Register(													\
 	if constexpr (std::is_move_constructible<Class>::value) {					\
 		AddConstructor(newConstructor<Class, Class &&>());						\
 	}
-
 
 #define REFLECT_CLASS_END(Class)												\
 }																				\
@@ -137,17 +136,18 @@ CClass<Class>::CClass() : m_name(#Class) {										\
 	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");															\
 	AddConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
-#define REFLECT_FACTORY_START																			\
-extern "C" EXPORT_API IAbstractFactory& AbstractFactory() {												\
-	static CAbstractFactory abstractFactory;															\
-	return abstractFactory;																				\
-}																										\
-std::map<std::string, std::map<std::string, IConstructor*>> CAbstractFactory::m_instantiators;			\
-CAbstractFactory::CAbstractFactory() {
+#define REFLECT_CLASS_REGISTRY_START											\
+extern "C" EXPORT_API IClassRegistry& ClassRegistry() {							\
+	static CClassRegistry classRegistry;										\
+	return classRegistry;														\
+}																				\
+CClassRegistry::CClassRegistry() {
 
-#define REFLECT_CLASS(Class, ...)																		\
-	AddInstantiator<Class, ##__VA_ARGS__>(#Class);
-
-#define REFLECT_FACTORY_END																				\
+#define REFLECT_CLASS_REGISTRY_END												\
 }
+
+#define REFLECT_REGISTER_CLASS(Class)											\
+	m_classes[#Class] = new CClass<Class>();
+
+
 

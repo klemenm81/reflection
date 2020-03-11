@@ -11,7 +11,7 @@
 #include "Field.h"
 #include "Method.h"
 #include "Class.h"
-#include "IAbstractFactory.h"
+#include "IClassRegistry.h"
 
 #include "test.h"
 
@@ -28,38 +28,24 @@ template <typename... Args>
 Object& CreateInstance(const char* name, Args... args) {
 #ifdef _WIN32
 	static HMODULE hModule = GetModuleHandle(NULL);
-	IAbstractFactory& (*AbstractFactory)() =
-		(IAbstractFactory & (*)())GetProcAddress(hModule, "AbstractFactory");
+	IClassRegistry& (*ClassRegistry)() =
+		(IClassRegistry & (*)())GetProcAddress(hModule, "ClassRegistry");
 #else
 	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
 	if (hModule == NULL) {
 		perror("dlopen");
 		exit(1);
 	}
-	IAbstractFactory& (*AbstractFactory)() =
-                (IConstructor& (*)())dlsym(hModule, "AbstractFactory");
-	if (AbstractFactory == NULL) {
-		printf("AbstractFactory not found\n");
+	IClassRegistry& (*ClassRegistry)() =
+                (IClassRegistry & (*)())dlsym(hModule, "ClassRegistry");
+	if (ClassRegistry == NULL) {
+		printf("ClassRegistry not found\n");
 		exit(1);
 	}
 #endif
-	std::string argsSignature;
-	if constexpr (sizeof...(Args) > 0) {
-		argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
-	}
-	else {
-		argsSignature = ";";
-	}
-	std::string argsName;
-	if constexpr (sizeof...(Args) > 0) {
-		argsName = ((std::string(";") + std::string(typeid(Args).name())) + ...);
-	}
-	else {
-		argsName = ";";
-	}
-	IAbstractFactory& abstractFactory = AbstractFactory();
-	IConstructor& instantiator = abstractFactory.GetInstantiator("Test", argsSignature.c_str() + 1, argsName.c_str() + 1);
-	return instantiator.Instantiate(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+	IClassRegistry& classRegistry = ClassRegistry();
+	Class clasz = classRegistry.GetClass("Test");
+	return clasz.Instantiate<>();
 }
 
 

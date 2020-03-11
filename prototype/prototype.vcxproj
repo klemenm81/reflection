@@ -81,8 +81,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CAbstractFactory.h" />
     <ClInclude Include="CAdaptor.h" />
+    <ClInclude Include="CClassRegistry.h" />
     <ClInclude Include="CConstructor.h" />
     <ClInclude Include="CField.h" />
     <ClInclude Include="Class.h" />
@@ -100,7 +100,7 @@
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
-    <ClInclude Include="IAbstractFactory.h" />
+    <ClInclude Include="IClassRegistry.h" />
     <ClInclude Include="IConstructor.h" />
     <ClInclude Include="IMethod.h" />
     <ClInclude Include="Qualifier.h" />
