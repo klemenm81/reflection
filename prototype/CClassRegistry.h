@@ -10,19 +10,26 @@
 
 class CClassRegistry : public IClassRegistry {
 private:
-	std::map<std::string, IClass*> m_classes;
+	std::map<std::string, IClass*> m_classMap;
+	std::vector<IClass*> m_classList;
 	
 public:
 	CClassRegistry();
 
 	void AddClass(IClass& clasz) {
-		m_classes[clasz.GetName()] = &clasz;
+		m_classMap[clasz.GetName()] = &clasz;
+		m_classList.push_back(&clasz);
 	}
 
 	IClass& GetClass(const char* name) {
-		IClass& clasz = (m_classes.find(name) != m_classes.end()) ?
-			*m_classes[name] :
+		IClass& clasz = (m_classMap.find(name) != m_classMap.end()) ?
+			*m_classMap[name] :
 			throw ClassNotFoundException(name);
 		return clasz;
+	}
+
+	IClass** GetClasses(size_t &nClasses) {
+		nClasses = m_classList.size();
+		return m_classList.data();
 	}
 };

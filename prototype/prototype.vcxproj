@@ -86,6 +86,7 @@
     <ClInclude Include="CConstructor.h" />
     <ClInclude Include="CField.h" />
     <ClInclude Include="Class.h" />
+    <ClInclude Include="ClassRegistry.h" />
     <ClInclude Include="CMethodInvoker.h" />
     <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h" />
     <ClInclude Include="exceptions\ClassConstructorNotFoundException.h" />

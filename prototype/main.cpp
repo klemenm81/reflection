@@ -11,24 +11,15 @@
 #include "Field.h"
 #include "Method.h"
 #include "Class.h"
-#include "IClassRegistry.h"
+#include "ClassRegistry.h"
 
 #include "test.h"
 
-template <typename... Adaptors>
-std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
-	std::vector<IAdaptor*> result;
-	if constexpr (sizeof...(Adaptors) > 0) {
-		int dummy[] = { (result.push_back(&adaptors), 0)... };
-	}
-	return result;
-}
 
-template <typename... Args>
-Object& CreateInstance(const char* name, Args... args) {
+ClassRegistry GetClassRegistry() {
 #ifdef _WIN32
 	static HMODULE hModule = GetModuleHandle(NULL);
-	IClassRegistry& (*ClassRegistry)() =
+	IClassRegistry& (*ClassRegistryFcn)() =
 		(IClassRegistry & (*)())GetProcAddress(hModule, "ClassRegistry");
 #else
 	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
@@ -43,16 +34,19 @@ Object& CreateInstance(const char* name, Args... args) {
 		exit(1);
 	}
 #endif
-	IClassRegistry& classRegistry = ClassRegistry();
-	Class clasz = classRegistry.GetClass("Test");
-	return clasz.Instantiate<>();
+	ClassRegistry classRegistry = ClassRegistryFcn();
+	return classRegistry;
 }
 
 
 
 int main() {
 	try {
- 		Object& test = CreateInstance<int>("Test", 5);
+		ClassRegistry classRegistry = GetClassRegistry();
+		std::vector<Class> classes = classRegistry.GetClasses();
+
+		Class clasz = classRegistry.GetClass("Test");
+ 		Object& test = clasz.Instantiate<int>(5);
 
 		Field field1 = test.GetClass().GetField("a");
 		Field field2 = test.GetClass().GetField("myString");

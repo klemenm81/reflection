@@ -50,6 +50,16 @@ IConstructor& newConstructor() {
 	return *new CConstructor<ReflectedClass, Args...>();
 }
 
+template <typename... Args>
+std::vector<std::string> hashes() {
+	std::vector<std::string> ret;
+	if constexpr (sizeof...(Args) > 0) {
+		int dummy[] = { (ret.push_back(typeid(Args).hash_code()), 0)... };
+	}
+	return ret;
+}
+
+
 #define REFLECT_CLASS_START(Class)												\
 template<>																		\
 template <typename ReflectedClass>												\
@@ -147,7 +157,7 @@ CClassRegistry::CClassRegistry() {
 }
 
 #define REFLECT_REGISTER_CLASS(Class)											\
-	m_classes[#Class] = new CClass<Class>();
+	AddClass(*new CClass<Class>());
 
 
 
