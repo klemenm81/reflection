@@ -8,7 +8,10 @@
 	friend void CClass<ReflectedClass>::Register<ReflectedClass>(	\
 		std::map<std::string, IField*>&,							\
 		std::map<std::string, IMethod*>&,							\
-		std::map<std::string, IConstructor*>&);
+		std::map<std::string, IConstructor*>&,						\
+		std::vector<IField*>&,										\
+		std::vector<IMethod*>&,										\
+		std::vector<IConstructor*>&);
 
 #define REFLECT_PUBLIC_ACCESS
 

@@ -16,9 +16,12 @@ template<typename Class>
 class CClass : public IClass {
 private:
 	std::string m_name;
-	std::map<std::string, IField*> m_fields;
-	std::map<std::string, IMethod*> m_methods;
-	std::map<std::string, IConstructor*> m_constructors;
+	std::map<std::string, IField*> m_fieldMap;
+	std::map<std::string, IMethod*> m_methodMap;
+	std::map<std::string, IConstructor*> m_constructorMap;
+	std::vector<IField*> m_fieldVector;
+	std::vector<IMethod*> m_methodVector;
+	std::vector<IConstructor*> m_constructorVector;
 
 	typedef Class ReflectedClass;
 
@@ -28,52 +31,73 @@ public:
 	}
 
 	void AddField(IField& field) {
-		m_fields[field.GetName()] = &field;
+		m_fieldMap[field.GetName()] = &field;
+		m_fieldVector.push_back(&field);
 	}
 
 	IField& GetField(const char *name) {
-		IField& field = (m_fields.find(name) != m_fields.end()) ?
-			*m_fields[name] :
+		IField& field = (m_fieldMap.find(name) != m_fieldMap.end()) ?
+			*m_fieldMap[name] :
 			throw FieldNotFoundException(name);
 		return field;
 	}
 
+	IField** GetFields(size_t& nFields) {
+		nFields = m_fieldVector.size();
+		return m_fieldVector.data();
+	}
+
 	void AddMethod(IMethodInvoker& method) {
-		IMethod* methodOverloads = (m_methods.find(method.GetName()) != m_methods.end()) ?
-			m_methods[method.GetName()] :
+		IMethod* methodOverloads = (m_methodMap.find(method.GetName()) != m_methodMap.end()) ?
+			m_methodMap[method.GetName()] :
 			nullptr;
 
 		if (methodOverloads == nullptr) {
 			methodOverloads = new IMethod();
-			m_methods[method.GetName()] = methodOverloads;
+			m_methodMap[method.GetName()] = methodOverloads;
+			m_methodVector.push_back(methodOverloads);
 		}
 
 		methodOverloads->AddMethod(method);
 	}
 
 	IMethod& GetMethod(const char *name) {
-		IMethod& method = (m_methods.find(name) != m_methods.end()) ?
-			*m_methods[name] :
+		IMethod& method = (m_methodMap.find(name) != m_methodMap.end()) ?
+			*m_methodMap[name] :
 			throw MethodNotFoundException(name);
 		return method;
 	}
 
+	IMethod** GetMethods(size_t& nMethods) {
+		nMethods = m_methodVector.size();
+		return m_methodVector.data();
+	}
+
 	void AddConstructor(IConstructor& constructor) {
-		m_constructors[constructor.GetArgsSignature()] = &constructor;
+		m_constructorMap[constructor.GetArgsSignature()] = &constructor;
+		m_constructorVector.push_back(&constructor);
 	}
 
 	IConstructor& GetConstructor(const char* argsSignature, const char* argsName) {
-		IConstructor& constructor = (m_constructors.find(argsSignature) != m_constructors.end()) ?
-			*m_constructors[argsSignature] :
+		IConstructor& constructor = (m_constructorMap.find(argsSignature) != m_constructorMap.end()) ?
+			*m_constructorMap[argsSignature] :
 			throw ClassConstructorNotFoundException(argsName);
 		return constructor;
+	}
+
+	IConstructor** GetConstructors(size_t& nConstructors) {
+		nConstructors = m_constructorVector.size();
+		return m_constructorVector.data();
 	}
 	
 	template <typename ReflectedClass>
 	void Register(
-		std::map<std::string, IField*>& m_fields,
-		std::map<std::string, IMethod*>& m_methods,
-		std::map<std::string, IConstructor*>& m_constructors);
+		std::map<std::string, IField*>& m_fieldMap,
+		std::map<std::string, IMethod*>& m_methodMap,
+		std::map<std::string, IConstructor*>& m_constructorMap,
+		std::vector<IField *>& m_fieldVector,
+		std::vector<IMethod *>& m_methodVector,
+		std::vector<IConstructor *>& m_constructorVector);
 	
 	CClass();
 };

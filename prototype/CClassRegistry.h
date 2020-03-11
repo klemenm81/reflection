@@ -11,14 +11,14 @@
 class CClassRegistry : public IClassRegistry {
 private:
 	std::map<std::string, IClass*> m_classMap;
-	std::vector<IClass*> m_classList;
+	std::vector<IClass*> m_classVector;
 	
 public:
 	CClassRegistry();
 
 	void AddClass(IClass& clasz) {
 		m_classMap[clasz.GetName()] = &clasz;
-		m_classList.push_back(&clasz);
+		m_classVector.push_back(&clasz);
 	}
 
 	IClass& GetClass(const char* name) {
@@ -29,7 +29,7 @@ public:
 	}
 
 	IClass** GetClasses(size_t &nClasses) {
-		nClasses = m_classList.size();
-		return m_classList.data();
+		nClasses = m_classVector.size();
+		return m_classVector.data();
 	}
 };
