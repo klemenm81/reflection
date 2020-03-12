@@ -39,6 +39,10 @@ public:
 		return *this;
 	}
 
+	const char* GetName() {
+		return m_class.GetName();
+	}
+
 	template <typename Cast>
 	Cast& Upcast(Object& obj) {
 		ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());

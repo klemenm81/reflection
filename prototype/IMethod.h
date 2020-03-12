@@ -60,13 +60,27 @@ public:
 	}
 
 	IMethodInvoker& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
+		/*
 		std::map<Qualifier, IMethodInvoker*>& methodInvokers = m_methodOverloadMap.find(argsSignature) != m_methodOverloadMap.end() ?
 			m_methodOverloadMap[argsSignature] : 
 			throw MethodWithSignatureNotFoundException(argsName);
 		IMethodInvoker& invoker =  methodInvokers.find(qualifier) != methodInvokers.end() ? 
 			*methodInvokers[qualifier] :
 			throw MethodWithQualifierNotFoundException(qualifier);
-		return invoker;
+		*/
+		auto methodInvokers = m_methodOverloadMap.find(argsSignature);
+		if (methodInvokers != m_methodOverloadMap.end()) {
+			auto invoker = methodInvokers->second.find(qualifier);
+			if (invoker != methodInvokers->second.end()) {
+				return *(invoker->second);
+			}
+			else {
+				throw MethodWithQualifierNotFoundException(qualifier);
+			}
+		}
+		else {
+			throw MethodWithSignatureNotFoundException(argsName);
+		}
 	}
 
 	IMethodInvoker& GetMethodContainingSignature(const char* argsSignature, const char* argsName) {
