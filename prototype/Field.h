@@ -9,10 +9,10 @@
 
 class Field {
 private:
-	IField& m_field;
+	const IField& m_field;
 
 public:
-	Field(IField& field) : m_field(field) {
+	Field(const IField& field) : m_field(field) {
 	}
 
 	Field(Field&& other) noexcept : m_field(other.m_field) {

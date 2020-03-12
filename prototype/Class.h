@@ -45,7 +45,7 @@ public:
 
 	template <typename Cast>
 	Cast& Upcast(Object& obj) {
-		ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());
+		const ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());
 		CAdaptor<Cast&> *adaptor = static_cast<CAdaptor<Cast&> *>(cast.CastClass(obj));
 		return adaptor->GetValue();
 	}

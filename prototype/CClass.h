@@ -41,7 +41,7 @@ public:
 		}
 	}
 
-	ICast& GetCast(const char* signature, const char *name) {
+	const ICast& GetCast(const char* signature, const char *name) const {
 		auto cast = m_castMap.find(signature);
 		if (cast != m_castMap.end()) {
 			return *(cast->second);
@@ -56,7 +56,7 @@ public:
 		m_fieldVector.push_back(&field);
 	}
 
-	IField& GetField(const char *name) {
+	const IField& GetField(const char *name) const {
 		auto field = m_fieldMap.find(name);
 		if (field != m_fieldMap.end()) {
 			return *(field->second);
