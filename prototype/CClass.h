@@ -42,10 +42,13 @@ public:
 	}
 
 	ICast& GetCast(const char* signature, const char *name) {
-		ICast& cast = (m_castMap.find(signature) != m_castMap.end()) ?
-			*m_castMap[signature] :
+		auto cast = m_castMap.find(signature);
+		if (cast != m_castMap.end()) {
+			return *(cast->second);
+		}
+		else {
 			throw CastNotFoundException(name);
-		return cast;
+		}
 	}
 
 	void AddField(IField& field) {
@@ -54,10 +57,13 @@ public:
 	}
 
 	IField& GetField(const char *name) {
-		IField& field = (m_fieldMap.find(name) != m_fieldMap.end()) ?
-			*m_fieldMap[name] :
+		auto field = m_fieldMap.find(name);
+		if (field != m_fieldMap.end()) {
+			return *(field->second);
+		}
+		else {
 			throw FieldNotFoundException(name);
-		return field;
+		}
 	}
 
 	IField** GetFields(size_t& nFields) {
@@ -80,10 +86,13 @@ public:
 	}
 
 	IMethod& GetMethod(const char *name) {
-		IMethod& method = (m_methodMap.find(name) != m_methodMap.end()) ?
-			*m_methodMap[name] :
+		auto method = m_methodMap.find(name);
+		if (method != m_methodMap.end()) {
+			return *(method->second);
+		}
+		else {
 			throw MethodNotFoundException(name);
-		return method;
+		}
 	}
 
 	IMethod** GetMethods(size_t& nMethods) {
@@ -97,10 +106,13 @@ public:
 	}
 
 	IConstructor& GetConstructor(const char* argsSignature, const char* argsName) {
-		IConstructor& constructor = (m_constructorMap.find(argsSignature) != m_constructorMap.end()) ?
-			*m_constructorMap[argsSignature] :
+		auto constructor = m_constructorMap.find(argsSignature);
+		if (constructor != m_constructorMap.end()) {
+			return *(constructor->second);
+		}
+		else {
 			throw ClassConstructorNotFoundException(argsName);
-		return constructor;
+		}
 	}
 
 	IConstructor** GetConstructors(size_t& nConstructors) {
