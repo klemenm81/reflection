@@ -22,16 +22,16 @@ public:
 	virtual const char* GetRetValSignature() const = 0;
 	virtual const char* GetRetValName() const = 0;
 	virtual Qualifier GetQualifier() const = 0;
-	virtual IAdaptor* Invoke(Object &obj, IAdaptor **args) = 0;
-	virtual IAdaptor* Invoke(const Object& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(volatile Object& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(const volatile Object& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(Object&& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(const Object&& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(volatile Object&& obj, IAdaptor** args) = 0;
-	virtual IAdaptor* Invoke(const volatile Object&& obj, IAdaptor** args) = 0;
+	virtual IAdaptor* Invoke(Object &obj, IAdaptor **args) const = 0;
+	virtual IAdaptor* Invoke(const Object& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(volatile Object& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(const volatile Object& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(Object&& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(const Object&& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(volatile Object&& obj, IAdaptor** args) const = 0;
+	virtual IAdaptor* Invoke(const volatile Object&& obj, IAdaptor** args) const = 0;
 
-	virtual Json::Value InvokeMarshalled(Object& obj, Json::Value args) {
+	virtual Json::Value InvokeMarshalled(Object& obj, Json::Value args) const {
 		throw;
 	}
 	virtual ~IMethodInvoker() {
@@ -49,7 +49,7 @@ public:
 	IMethod(const char* name) : m_name(name) {
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_name.c_str();
 	}
 
