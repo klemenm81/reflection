@@ -27,9 +27,9 @@ ClassRegistry GetClassRegistry() {
 		perror("dlopen");
 		exit(1);
 	}
-	IClassRegistry& (*ClassRegistry)() =
+	IClassRegistry& (*ClassRegistryFcn)() =
                 (IClassRegistry & (*)())dlsym(hModule, "ClassRegistry");
-	if (ClassRegistry == NULL) {
+	if (ClassRegistryFcn == NULL) {
 		printf("ClassRegistry not found\n");
 		exit(1);
 	}

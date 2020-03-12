@@ -22,10 +22,13 @@ public:
 	}
 
 	IClass& GetClass(const char* name) {
-		IClass& clasz = (m_classMap.find(name) != m_classMap.end()) ?
-			*m_classMap[name] :
+		auto clasz = m_classMap.find(name);
+		if (clasz != m_classMap.end()) {
+			return *(clasz->second);
+		}
+		else {
 			throw ClassNotFoundException(name);
-		return clasz;
+		}
 	}
 
 	IClass** GetClasses(size_t &nClasses) {
