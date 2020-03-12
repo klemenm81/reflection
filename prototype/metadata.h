@@ -88,22 +88,6 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
 	AddMethodInvoker(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
 
-#define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
-	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
-	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		AddMethodInvoker(																							\
-			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(					\
-				&ReflectedClass::Method)));																			\
-	}
-
-#define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)															\
-	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
-	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		AddMethodInvoker(																									\
-			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(					\
-				&ReflectedClass::Method)));																					\
-	}
-
 #define REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ...)																\
 	inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->																		\
 		decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })
@@ -111,6 +95,20 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 #define REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, CvRef, Return, ...)															\
 	inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->																		\
 		decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })
+
+#define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
+	if constexpr (REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ##__VA_ARGS__)) {							\
+		AddMethodInvoker(																							\
+			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(					\
+				&ReflectedClass::Method)));																			\
+	}
+
+#define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)													\
+	if constexpr (REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, CvRef, Return, ##__VA_ARGS__)) {						\
+		AddMethodInvoker(																							\
+			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(			\
+				&ReflectedClass::Method)));																			\
+	}
 
 #define REFLECT_METHOD_OVERLOAD_CHECK(Method, Return, ...)	\
 	static_assert(																							\
