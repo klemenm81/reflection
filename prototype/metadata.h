@@ -156,16 +156,21 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 #define REFLECT_METHOD_2(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)
 
 #define REFLECT_CONSTRUCTOR(Class, ...)																				\
-	static_assert(parameter_pack_counter<__VA_ARGS__>::getN() != 0, "Default constructor does not have to be specified. It gets registered automatically if it exists.");	\
-	if constexpr (parameter_pack_counter<__VA_ARGS__>::getN() == 1) {																										\
-		if constexpr (parameter_pack_conjunction<const Class &, ##__VA_ARGS__>::value) {																					\
-			static_assert(false, "Copy constructor does not have to be specified. It gets registered automatically if it exists.");											\
-		}																																									\
-		if constexpr (parameter_pack_conjunction<Class &&, ##__VA_ARGS__>::value) {																							\
-			static_assert(false, "Move constructor does not have to be specified. It gets registered automatically if it exists.");											\
-		}																																									\
-	}																																										\
-	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");															\
+	static_assert(																									\
+		parameter_pack_counter<__VA_ARGS__>::getN() != 0,															\
+		"Default constructor does not have to be specified. It gets registered automatically if it exists."			\
+	);																												\
+	static_assert(																									\
+		!(parameter_pack_counter<__VA_ARGS__>::getN() == 1 &&														\
+		parameter_pack_conjunction<const Class &, ##__VA_ARGS__>::value),											\
+		"Copy constructor does not have to be specified. It gets registered automatically if it exists."			\
+	);																												\
+	static_assert(																									\
+		!(parameter_pack_counter<__VA_ARGS__>::getN() == 1 &&														\
+		parameter_pack_conjunction<Class &&, ##__VA_ARGS__>::value),												\
+		"Move constructor does not have to be specified. It gets registered automatically if it exists."			\
+	);																												\
+	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");	\
 	AddConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
 #define REFLECT_CLASS_REGISTRY_START											\
