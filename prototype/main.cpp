@@ -60,6 +60,8 @@ int main() {
 		Method rvalMethod = test.GetClass().GetMethod("Bar17");
 		Method overloadedMethod = test.GetClass().GetMethod("FooOverloaded");
 
+		std::vector<Method> methods = test.GetClass().GetMethods();
+
 		int see1 = field1.Get<int>(test);
 		std::string see2 = field2.Get<std::string>(test);
 		const char* see3 = field3.Get<const char*>(test);

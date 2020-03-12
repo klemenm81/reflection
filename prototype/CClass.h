@@ -34,15 +34,17 @@ public:
 		return m_name.c_str();
 	}
 
-	void AddCast(ICast& cast) {
-		m_castMap[cast.GetSignature()] = &cast;
-		m_castVector.push_back(&cast);
+	void AddCasts(std::vector<ICast *> casts) {
+		for (ICast* cast : casts) {
+			m_castMap[cast->GetSignature()] = cast;
+			m_castVector.push_back(cast);
+		}
 	}
 
-	ICast& GetCast(const char* signature) {
+	ICast& GetCast(const char* signature, const char *name) {
 		ICast& cast = (m_castMap.find(signature) != m_castMap.end()) ?
 			*m_castMap[signature] :
-			throw CastNotFoundException(signature);
+			throw CastNotFoundException(name);
 		return cast;
 	}
 

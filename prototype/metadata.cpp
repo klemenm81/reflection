@@ -80,7 +80,7 @@ REFLECT_CLASS_START(Test)
 	REFLECT_METHOD(OverloadEx, void, int) 
 REFLECT_CLASS_END(Test)
 
-REFLECT_CLASS_START(TestDerived)
+REFLECT_CLASS_START(TestDerived, Test)
 	REFLECT_METHOD(FooOverloaded)
 REFLECT_CLASS_END(TestDerived)
 

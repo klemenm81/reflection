@@ -36,9 +36,11 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 	return true;
 }
 
-template <typename ReflectedClass, typename Class>
-ICast& newCast() {
-	return *new CCast<ReflectedClass, Class>(std::to_string(typeid(Class).hash_code()).c_str(), typeid(Class).name());
+template <typename Class, typename... Casts>
+std::vector<ICast*> newCasts() {
+	std::vector<ICast*> ret;
+	int dummy[] = { (ret.push_back(new CCast<Class, Casts>(std::to_string(typeid(Class).hash_code()).c_str(), typeid(Class).name())), 0)... };
+	return ret;
 }
 
 template <typename ReflectedClass, typename Field>
@@ -66,12 +68,12 @@ std::vector<std::string> hashes() {
 }
 
 
-#define REFLECT_CLASS_START(Class)												\
+#define REFLECT_CLASS_START(Class, ...)											\
 template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::Register()													\
 {																				\
-	AddCast(newCast<Class, Class>());											\
+	AddCasts(newCasts<Class, Class, ##__VA_ARGS__>());							\
 	if constexpr (std::is_default_constructible<Class>::value){					\
 		AddConstructor(newConstructor<Class>());								\
 	}																			\
