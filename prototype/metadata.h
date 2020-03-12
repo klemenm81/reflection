@@ -111,6 +111,30 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 				&ReflectedClass::Method)));																					\
 	}
 
+#define REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ...)																\
+	inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->																		\
+		decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })
+
+#define REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, CvRef, Return, ...)															\
+	inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->																		\
+		decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })
+
+#define REFLECT_METHOD_OVERLOAD_CHECK(Method, Return, ...)	\
+	if constexpr (!REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, __VA_ARGS__) &&						\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const, Return, __VA_ARGS__) &&					\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const volatile, Return, __VA_ARGS__) &&			\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, volatile, Return, __VA_ARGS__) &&				\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, &, Return, __VA_ARGS__) &&						\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const &, Return, __VA_ARGS__) &&					\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const volatile &, Return, __VA_ARGS__) &&		\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, volatile &, Return, __VA_ARGS__) &&				\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, &&, Return, __VA_ARGS__) &&						\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const &&, Return, __VA_ARGS__) &&				\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, const volatile &&, Return, __VA_ARGS__) &&		\
+				  !REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, volatile &&, Return, __VA_ARGS__))	{			\
+		static_assert(false, "The specified method does not exist.");											\
+	}
+
 #define REFLECT_METHOD_OVERLOAD(Method, Return, ...)									\
 	REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, __VA_ARGS__)						\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const, Return, __VA_ARGS__)					\
@@ -123,7 +147,8 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, &&, Return, __VA_ARGS__)						\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const &&, Return, __VA_ARGS__)				\
 	REFLECT_METHOD_OVERLOAD_CVREF(Method, const volatile &&, Return, __VA_ARGS__)		\
-	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &&, Return, __VA_ARGS__)
+	REFLECT_METHOD_OVERLOAD_CVREF(Method, volatile &&, Return, __VA_ARGS__)				\
+	REFLECT_METHOD_OVERLOAD_CHECK(Method, Return, __VA_ARGS__)
 
 #define CAT2_IMPL(_1, _2) _1 ## _2
 #define CAT2(_1, _2) CAT2_IMPL(_1, _2)
