@@ -26,6 +26,10 @@ public:
 	Method(const Method &) = delete;
 	Method& operator=(const Method &) = delete;
 
+	const char* GetName() {
+		return m_method.GetName();
+	}
+
 	template <typename Type>
 	void PushArg(Type value) {
 		std::string argsSignature = m_argsSignature;

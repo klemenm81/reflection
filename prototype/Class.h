@@ -40,7 +40,7 @@ public:
 	}
 
 	template <typename Cast>
-	Cast& Query(Object& obj) {
+	Cast& Upcast(Object& obj) {
 		ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());
 		CAdaptor<Cast&> *adaptor = static_cast<CAdaptor<Cast&> *>(cast.CastClass(obj));
 		return adaptor->GetValue();
@@ -75,7 +75,7 @@ public:
 	}
 
 	template <typename... Args>
-	Object& Instantiate(Args... args) {
+	Object& NewInstance(Args... args) {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
 			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
@@ -91,6 +91,6 @@ public:
 			argsName = ";";
 		}
 		IConstructor& constructor = m_class.GetConstructor(argsSignature.c_str() + 1, argsName.c_str() + 1);
-		return constructor.Instantiate(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		return constructor.NewInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 	}
 };

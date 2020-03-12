@@ -41,10 +41,18 @@ public:
 
 class IMethod {
 private:
+	std::string m_name;
 	std::map<std::string, std::map<Qualifier, IMethodInvoker*>> m_methodOverloadMap;
 	std::map<size_t, std::vector<IMethodInvoker*>> m_methodOverloadMapByNArgs;
 
 public:
+	IMethod(const char* name) : m_name(name) {
+	}
+
+	const char* GetName() {
+		return m_name.c_str();
+	}
+
 	void AddMethod(IMethodInvoker& methodInvoker) {
 		std::map<Qualifier, IMethodInvoker*> &methodInvokers = m_methodOverloadMap[methodInvoker.GetArgsSignature()];
 		methodInvokers[methodInvoker.GetQualifier()] = &methodInvoker;

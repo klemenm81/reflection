@@ -65,13 +65,13 @@ public:
 		return m_fieldVector.data();
 	}
 
-	void AddMethod(IMethodInvoker& method) {
+	void AddMethodInvoker(IMethodInvoker& method) {
 		IMethod* methodOverloads = (m_methodMap.find(method.GetName()) != m_methodMap.end()) ?
 			m_methodMap[method.GetName()] :
 			nullptr;
 
 		if (methodOverloads == nullptr) {
-			methodOverloads = new IMethod();
+			methodOverloads = new IMethod(method.GetName());
 			m_methodMap[method.GetName()] = methodOverloads;
 			m_methodVector.push_back(methodOverloads);
 		}

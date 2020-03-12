@@ -68,11 +68,11 @@ public:
 	}
 
 	template <std::size_t... Index>
-	Object& Instantiate(IAdaptor **args, std::index_sequence<Index...>) {
+	Object& NewInstance(IAdaptor **args, std::index_sequence<Index...>) {
 		return static_cast<Reflectable<Class> &>(*new Class(static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...));
 	}
 
-	Object& Instantiate(IAdaptor **args) {
-		return Instantiate(args, std::index_sequence_for<Args...>{});
+	Object& NewInstance(IAdaptor **args) {
+		return NewInstance(args, std::index_sequence_for<Args...>{});
 	}
 };

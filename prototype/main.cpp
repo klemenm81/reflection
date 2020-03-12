@@ -46,9 +46,9 @@ int main() {
 		std::vector<Class> classes = classRegistry.GetClasses();
 
 		Class clasz = classRegistry.GetClass("Test");
- 		Object& test = clasz.Instantiate<int>(5);
+ 		Object& test = clasz.NewInstance<int>(5);
 
-		Test& test2 = test.GetClass().Query<Test>(test);
+		Test& test2 = test.GetClass().Upcast<Test>(test);
 
 		Field field1 = test.GetClass().GetField("a");
 		Field field2 = test.GetClass().GetField("myString");
@@ -95,6 +95,10 @@ int main() {
 		printf("Main(): str = %s\n", str.c_str());
 
 		rvalMethod.Invoke(Test());
+
+		Class testDerivedClass = classRegistry.GetClass("TestDerived");
+		Object& testDerived = testDerivedClass.NewInstance();
+		Test& testDerived2 = testDerived.GetClass().Upcast<Test>(testDerived);
 	}
 	catch (const Exception& e) {
 		printf("ERROR: Exception caught: %s\n", e.Message());

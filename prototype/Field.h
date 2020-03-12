@@ -21,6 +21,10 @@ public:
 	Field(const Field &) = delete;
 	Field& operator=(const Field&) = delete;
 
+	const char* GetName() {
+		return m_field.GetName();
+	}
+
 	template<typename Type>
 	Type Get(const Object &obj) {
 		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(m_field.GetValue(obj));

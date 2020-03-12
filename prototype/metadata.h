@@ -39,7 +39,7 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 template <typename Class, typename... Casts>
 std::vector<ICast*> newCasts() {
 	std::vector<ICast*> ret;
-	int dummy[] = { (ret.push_back(new CCast<Class, Casts>(std::to_string(typeid(Class).hash_code()).c_str(), typeid(Class).name())), 0)... };
+	int dummy[] = { (ret.push_back(new CCast<Class, Casts>(std::to_string(typeid(Casts).hash_code()).c_str(), typeid(Casts).name())), 0)... };
 	return ret;
 }
 
@@ -95,20 +95,20 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 	AddField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
-	AddMethod(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
+	AddMethodInvoker(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->											\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__)>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		AddMethod(																									\
-			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(				\
+		AddMethodInvoker(																							\
+			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(					\
 				&ReflectedClass::Method)));																			\
 	}
 
 #define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)															\
 	if constexpr (inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->													\
 	decltype(static_cast<Return(decltype(v)::*)(__VA_ARGS__) CvRef>(&decltype(v)::Method), bool{}) { return false; })) {	\
-		AddMethod(																											\
+		AddMethodInvoker(																									\
 			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(					\
 				&ReflectedClass::Method)));																					\
 	}
