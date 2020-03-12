@@ -16,27 +16,27 @@ public:
 	constexpr CFieldBase(const char *name, Type Class::* ptr) : m_name(name), m_ptr(ptr) {
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_name.c_str();
 	}
 
-	IAdaptor& GetValue(const Object& obj) {
+	IAdaptor& GetValue(const Object& obj) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Type>)];
 		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(static_cast<const Class&>(obj).*m_ptr);
 		return *adaptor;
 	}
 
-	void SetValue(Object& obj, IAdaptor& value) {
+	void SetValue(Object& obj, IAdaptor& value) const {
 		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(value);
 		static_cast<Class&>(obj).*m_ptr = adaptor.GetValue();
 	}
 
-	Json::Value Serialize(const Object& obj) {
+	Json::Value Serialize(const Object& obj) const {
 		IAdaptor& adaptor = GetValue(obj);
 		return adaptor.Serialize();
 	}
 
-	void Deserialize(Object& obj, Json::Value value) {
+	void Deserialize(Object& obj, Json::Value value) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Type>)];
 		CAdaptor<Type>* adaptor = new(retValBuffer) CAdaptor<Type>(value);
 		SetValue(obj, *adaptor);

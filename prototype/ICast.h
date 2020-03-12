@@ -5,7 +5,7 @@
 
 class ICast {
 public:
-	virtual const char* GetSignature() = 0;
-	virtual const char* GetName() = 0;
-	virtual IAdaptor* CastClass(Object& obj) = 0;
+	virtual const char* GetSignature() const = 0;
+	virtual const char* GetName() const = 0;
+	virtual IAdaptor* CastClass(Object& obj) const = 0;
 };

@@ -15,15 +15,15 @@ public:
 	CCast(const char* signature, const char* name) : m_signature(signature), m_name(name) {
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		return m_signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_name.c_str();
 	}
 
-	IAdaptor* CastClass(Object& obj) {
+	IAdaptor* CastClass(Object& obj) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Cast&>)];
 		Class& clasz = static_cast<Class&>(static_cast<Reflectable<Class>&>(obj));
 		return new(retValBuffer) CAdaptor<Cast&>(static_cast<Cast&>(clasz));

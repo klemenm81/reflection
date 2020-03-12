@@ -48,19 +48,19 @@ protected:
 		}
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_name.c_str();
 	}
 
-	size_t GetNArgs() {
+	size_t GetNArgs() const {
 		return sizeof...(Args);
 	}
 
-	std::byte* GetArgBuffer(size_t iArg) {
+	std::byte* GetArgBuffer(size_t iArg) const {
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}
 
-	const char* GetArgsSignature() {
+	const char* GetArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string signature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
 			return signature.c_str() + 1;
@@ -71,7 +71,7 @@ protected:
 		}
 	}
 
-	const char* GetArgsName() {
+	const char* GetArgsName() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string name = ((std::string(";") + std::string(typeid(Args).name())) + ...);
 			return name.c_str() + 1;
@@ -82,18 +82,18 @@ protected:
 		}
 	}
 
-	const char *GetRetValSignature() {
+	const char *GetRetValSignature() const {
 		static const std::string signature = std::to_string(typeid(Return).hash_code());
 		return signature.c_str();
 	}
 
-	const char *GetRetValName() {
+	const char *GetRetValName() const {
 		static const std::string name = typeid(Return).name();
 		return name.c_str();
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) {
+	Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).GetValue()...
@@ -110,7 +110,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
@@ -128,7 +128,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&>(static_cast<const Reflectable<Class> &>(object)).*method)(
@@ -146,7 +146,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class> &>(object)).*method)(
@@ -164,7 +164,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class> &>(object)).*method)(
@@ -182,7 +182,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
@@ -200,7 +200,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
@@ -218,7 +218,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
@@ -236,7 +236,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
+	IAdaptor* Invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
@@ -267,7 +267,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return LValueRef;
 	}
 
@@ -318,7 +318,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstLValueRef;
 	}
 
@@ -365,7 +365,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileLValueRef;
 	}
 
@@ -412,7 +412,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
@@ -459,7 +459,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return LValueRef;
 	}
 
@@ -506,7 +506,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstLValueRef;
 	}
 
@@ -553,7 +553,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileLValueRef;
 	}
 
@@ -600,7 +600,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
@@ -656,7 +656,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return LValueRef;
 	}
 
@@ -703,7 +703,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstLValueRef;
 	}
 
@@ -750,7 +750,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileLValueRef;
 	}
 
@@ -797,7 +797,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
@@ -844,7 +844,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return LValueRef;
 	}
 
@@ -891,7 +891,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstLValueRef;
 	}
 
@@ -938,7 +938,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileLValueRef;
 	}
 
@@ -985,7 +985,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
@@ -1037,7 +1037,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return RValueRef;
 	}
 
@@ -1084,7 +1084,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstRValueRef;
 	}
 
@@ -1131,7 +1131,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileRValueRef;
 	}
 
@@ -1178,7 +1178,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileRValueRef;
 	}
 
@@ -1225,7 +1225,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return RValueRef;
 	}
 
@@ -1272,7 +1272,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstRValueRef;
 	}
 
@@ -1319,7 +1319,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return VolatileRValueRef;
 	}
 
@@ -1366,7 +1366,7 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() {
+	Qualifier GetQualifier() const {
 		return ConstVolatileRValueRef;
 	}
 

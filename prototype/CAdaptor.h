@@ -27,17 +27,17 @@ public:
 		return m_value;
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		static const std::string signature = std::to_string(typeid(Type).hash_code());
 		return signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		static const std::string name = typeid(Type).name();
 		return name.c_str();
 	}
 
-	Json::Value Serialize() {
+	Json::Value Serialize() const {
 		return Serialization<Type>::Serialize(m_value);
 	}
 };
@@ -59,17 +59,17 @@ public:
 		return m_value;
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		static const std::string signature = std::to_string(typeid(Type*).hash_code());
 		return signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		static const std::string name = typeid(Type*).name();
 		return name.c_str();
 	}
 
-	Json::Value Serialize() {
+	Json::Value Serialize() const {
 		return Serialization<Type>::Serialize(*m_value);
 	}
 };
@@ -92,17 +92,17 @@ public:
 		return *m_value;
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		static const std::string signature = std::to_string(typeid(Type&).hash_code());
 		return signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		static const std::string name = typeid(Type&).name();
 		return name.c_str();
 	}
 
-	Json::Value Serialize() {
+	Json::Value Serialize() const {
 		return Serialization<Type>::Serialize(*m_value);
 	}
 };
@@ -123,17 +123,17 @@ public:
 		return std::forward<Type>(m_value);
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		static const std::string signature = std::to_string(typeid(Type&&).hash_code());
 		return signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		static const std::string name = typeid(Type&&).name();
 		return name.c_str();
 	}
 
-	Json::Value Serialize() {
+	Json::Value Serialize() const {
 		return Serialization<Type>::Serialize(m_value);
 	}
 };
@@ -144,17 +144,17 @@ public:
 	CAdaptor() {
 	}
 
-	const char* GetSignature() {
+	const char* GetSignature() const {
 		static const std::string signature = std::to_string(typeid(void).hash_code());
 		return signature.c_str();
 	}
 
-	const char* GetName() {
+	const char* GetName() const {
 		static const std::string name = typeid(void).name();
 		return name.c_str();
 	}
 
-	Json::Value Serialize() {
+	Json::Value Serialize() const {
 		return Json::Value("");
 	}
 };
