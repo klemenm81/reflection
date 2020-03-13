@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="detail">
+      <UniqueIdentifier>{3cafdbc5-227d-421a-96e0-601e1c557094}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="exceptions">
+      <UniqueIdentifier>{34b7caf5-c81c-479e-93e7-2f56cacee846}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Class.h" />
+    <ClInclude Include="ClassRegistry.h" />
+    <ClInclude Include="Field.h" />
+    <ClInclude Include="Metadata.h" />
+    <ClInclude Include="Method.h" />
+    <ClInclude Include="Object.h" />
+    <ClInclude Include="Qualifier.h" />
+    <ClInclude Include="Reflectable.h" />
+    <ClInclude Include="Serialization.h" />
+    <ClInclude Include="detail\CAdaptor.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CCast.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CClass.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CClassRegistry.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CConstructor.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CField.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\CMethodInvoker.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IAdaptor.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\ICast.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IClass.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IClassRegistry.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IConstructor.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IField.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="detail\IMethod.h">
+      <Filter>detail</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\ArgumentOutOfBoundsException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\CastNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\ClassConstructorNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\ClassNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\DeserializationException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\Exception.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\FieldNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\InternalErrorException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\MethodNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\MethodWithNArgumentsNotFound.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\MethodWithSignatureNotFoundException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="exceptions\SerializationException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
