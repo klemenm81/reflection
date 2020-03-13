@@ -30,7 +30,7 @@ private:
 	typedef Class ReflectedClass;
 
 public:
-	const char* GetName() {
+	const char* GetName() const {
 		return m_name.c_str();
 	}
 
@@ -66,7 +66,7 @@ public:
 		}
 	}
 
-	IField** GetFields(size_t& nFields) {
+	IField* const* GetFields(size_t& nFields) const {
 		nFields = m_fieldVector.size();
 		return m_fieldVector.data();
 	}
@@ -85,7 +85,7 @@ public:
 		methodOverloads->AddMethod(method);
 	}
 
-	IMethod& GetMethod(const char *name) {
+	const IMethod& GetMethod(const char *name) const {
 		auto method = m_methodMap.find(name);
 		if (method != m_methodMap.end()) {
 			return *(method->second);
@@ -95,7 +95,7 @@ public:
 		}
 	}
 
-	IMethod** GetMethods(size_t& nMethods) {
+	IMethod* const* GetMethods(size_t& nMethods) const {
 		nMethods = m_methodVector.size();
 		return m_methodVector.data();
 	}
@@ -105,7 +105,7 @@ public:
 		m_constructorVector.push_back(&constructor);
 	}
 
-	IConstructor& GetConstructor(const char* argsSignature, const char* argsName) {
+	const IConstructor& GetConstructor(const char* argsSignature, const char* argsName) const {
 		auto constructor = m_constructorMap.find(argsSignature);
 		if (constructor != m_constructorMap.end()) {
 			return *(constructor->second);
@@ -115,7 +115,7 @@ public:
 		}
 	}
 
-	IConstructor** GetConstructors(size_t& nConstructors) {
+	IConstructor* const* GetConstructors(size_t& nConstructors) const {
 		nConstructors = m_constructorVector.size();
 		return m_constructorVector.data();
 	}

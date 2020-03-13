@@ -10,6 +10,7 @@
 #include "exceptions/MethodWithSignatureNotFoundException.h"
 #include "exceptions/MethodWithQualifierNotFoundException.h"
 #include "exceptions/MethodContainingSignatureNotFoundException.h"
+#include "exceptions/MethodWithNArgumentsNotFound.h"
 #include "exceptions/InternalErrorException.h"
 
 class IMethodInvoker {
@@ -59,7 +60,7 @@ public:
 		m_methodOverloadMapByNArgs[methodInvoker.GetNArgs()].push_back(&methodInvoker);
 	}
 
-	IMethodInvoker& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) {
+	const IMethodInvoker& GetMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) const {
 		auto methodInvokers = m_methodOverloadMap.find(argsSignature);
 		if (methodInvokers != m_methodOverloadMap.end()) {
 			auto invoker = methodInvokers->second.find(qualifier);
@@ -75,10 +76,10 @@ public:
 		}
 	}
 
-	IMethodInvoker& GetMethodContainingSignature(const char* argsSignature, const char* argsName) {
+	const IMethodInvoker& GetMethodContainingSignature(const char* argsSignature, const char* argsName) const {
 		for (auto it = m_methodOverloadMap.begin(); it != m_methodOverloadMap.end(); it++) {
 			if (!strncmp(it->first.c_str(), argsSignature, strlen(argsSignature))) {
-				std::map<Qualifier, IMethodInvoker*>& methodInvokers = it->second;
+				const std::map<Qualifier, IMethodInvoker*>& methodInvokers = it->second;
 				for (auto it = methodInvokers.begin(); it != methodInvokers.end(); it++) {
 					if (it->second != nullptr) {
 						return *it->second;
@@ -90,9 +91,14 @@ public:
 		throw MethodContainingSignatureNotFoundException(argsName);
 	}
 
-	IMethodInvoker** GetMethodsByNArgs(size_t nArgs, size_t& nMethods) {
-		std::vector<IMethodInvoker*>& methods = m_methodOverloadMapByNArgs[nArgs];
-		nMethods = methods.size();
-		return methods.data();
+	IMethodInvoker* const* GetMethodsByNArgs(size_t nArgs, size_t& nMethods) const {
+		auto methods = m_methodOverloadMapByNArgs.find(nArgs);
+		if (methods != m_methodOverloadMapByNArgs.end()) {
+			nMethods = methods->second.size();
+			return methods->second.data();
+		}
+		else {
+			throw MethodWithNArgumentsNotFound(nArgs);
+		}
 	}
 };

@@ -99,6 +99,7 @@
     <ClInclude Include="exceptions\InternalErrorException.h" />
     <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodNotFoundException.h" />
+    <ClInclude Include="exceptions\MethodWithNArgumentsNotFound.h" />
     <ClInclude Include="exceptions\MethodWithSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodWithQualifierNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
