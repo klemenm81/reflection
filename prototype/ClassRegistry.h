@@ -24,7 +24,7 @@ public:
 	std::vector<Class> GetClasses() {
 		std::vector<Class> ret;
 		size_t nClasses = 0;
-		IClass** classes = m_classRegistry.GetClasses(nClasses);
+		IClass* const* classes = m_classRegistry.GetClasses(nClasses);
 		for (size_t iClass = 0; iClass < nClasses; iClass++) {
 			ret.push_back(Class(*classes[iClass]));
 		}

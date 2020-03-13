@@ -21,7 +21,7 @@ public:
 		m_classVector.push_back(&clasz);
 	}
 
-	IClass& GetClass(const char* name) {
+	const IClass& GetClass(const char* name) const {
 		auto clasz = m_classMap.find(name);
 		if (clasz != m_classMap.end()) {
 			return *(clasz->second);
@@ -31,7 +31,7 @@ public:
 		}
 	}
 
-	IClass** GetClasses(size_t &nClasses) {
+	IClass* const* GetClasses(size_t &nClasses) const {
 		nClasses = m_classVector.size();
 		return m_classVector.data();
 	}
