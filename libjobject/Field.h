@@ -17,33 +17,36 @@ public:
 	Field(Field&& other) noexcept : m_field(other.m_field) {
 	}
 
-	Field(const Field &) = delete;
+	Field(const Field& other) : m_field(other.m_field) {
+	}
+
+	Field& operator=(Field&&) = delete;
 	Field& operator=(const Field&) = delete;
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_field.GetName();
 	}
 
 	template<typename Type>
-	Type Get(const Object &obj) {
+	Type Get(const Object &obj) const {
 		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(m_field.GetValue(obj));
 		return adaptor.GetValue();
 	}
 
 	template<typename Type>
-	void Set(Object &obj, Type value) {
+	void Set(Object &obj, Type value) const {
 		CAdaptor<Type> adaptor(value);
 		m_field.SetValue(obj, adaptor);
 	}
 
-	std::string Serialize(const Object& obj) {
+	std::string Serialize(const Object& obj) const {
 		Json::Value json = m_field.Serialize(obj);
 		Json::StreamWriterBuilder wbuilder;
 		wbuilder["indentation"] = "\t";
 		return Json::writeString(wbuilder, json);
 	}
 
-	void Deserialize(Object &obj, std::string val) {
+	void Deserialize(Object &obj, std::string val) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		std::string errs;

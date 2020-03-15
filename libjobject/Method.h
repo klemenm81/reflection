@@ -15,17 +15,30 @@ private:
 	std::string m_argsName;
 	IAdaptor* m_retVal;
 
+protected:
+	template <typename... Adaptors>
+	std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) const {
+		std::vector<IAdaptor*> result;
+		if constexpr (sizeof...(Adaptors) > 0) {
+			int dummy[] = { (result.push_back(&adaptors), 0)... };
+		}
+		return result;
+	}
+
 public:
 	Method(const IMethod& method) : m_method(method), m_retVal(nullptr) {
 	}
 
-	Method(Method&& other) noexcept : m_method(other.m_method), m_retVal(other.m_retVal) {
+	Method(Method&& other) noexcept : m_method(other.m_method), m_retVal(nullptr) {
 	}
 
-	Method(const Method &) = delete;
+	Method(const Method& other) : m_method(other.m_method), m_retVal(nullptr) {
+	}
+
+	Method& operator=(Method&&) = delete;
 	Method& operator=(const Method &) = delete;
 
-	const char* GetName() {
+	const char* GetName() const {
 		return m_method.GetName();
 	}
 
@@ -42,13 +55,13 @@ public:
 	}
 
 	template <typename Type>
-	Type GetArg(int iArg) {
+	Type GetArg(int iArg) const {
 		CAdaptor<Type> *adaptor = static_cast<CAdaptor<Type>*>(m_args[iArg]);
 		return adaptor->GetValue();
 	}
 
 	template <typename Type>
-	Type GetRetVal() {
+	Type GetRetVal() const {
 		CAdaptor<Type>* adaptor = static_cast<CAdaptor<Type>*>(m_retVal);
 		return adaptor->GetValue();
 	}
@@ -57,7 +70,7 @@ public:
 		m_args.clear();
 	}
 
-	std::string GetArgsSignature() {
+	std::string GetArgsSignature() const {
 		std::string argsSignature;		
 		if (m_args.empty()) {
 			argsSignature = ";";
@@ -70,7 +83,7 @@ public:
 		return argsSignature;
 	}
 
-	std::string GetArgsName() {
+	std::string GetArgsName() const {
 		std::string argsName;
 		if (m_args.empty()) {
 			argsName = ";";
@@ -112,7 +125,7 @@ public:
 	}
 	
 	template <typename Return, typename... Args>
-	Return InvokeInline(Object& obj, Args... args) {
+	Return InvokeInline(Object& obj, Args... args) const {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
 			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
@@ -134,7 +147,7 @@ public:
 		}
 	}
 
-	std::string InvokeMarshalled(Object& obj, std::vector<std::string> args) {
+	std::string InvokeMarshalled(Object& obj, std::vector<std::string> args) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		Json::StreamWriterBuilder wbuilder;
@@ -169,15 +182,5 @@ public:
 		}
 
 		return Json::writeString(wbuilder, jsonRetVal);
-	}
-
-protected:
-	template <typename... Adaptors>
-	std::vector<IAdaptor *> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
-		std::vector<IAdaptor *> result;
-		if constexpr (sizeof...(Adaptors) > 0) {
-			int dummy[] = { (result.push_back(&adaptors), 0)... };
-		}
-		return result;
 	}
 };

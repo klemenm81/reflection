@@ -173,8 +173,8 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 	AddConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
 #define REFLECT_CLASS_REGISTRY_START											\
-extern "C" EXPORT_API IClassRegistry& ClassRegistry() {							\
-	static CClassRegistry classRegistry;										\
+extern "C" EXPORT_API const IClassRegistry& ClassRegistry() {					\
+	static const CClassRegistry classRegistry;									\
 	return classRegistry;														\
 }																				\
 CClassRegistry::CClassRegistry() {

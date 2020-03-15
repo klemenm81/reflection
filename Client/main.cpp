@@ -17,16 +17,16 @@
 ClassRegistry GetClassRegistry(const char *name) {
 #ifdef _WIN32
 	static HMODULE hModule = LoadLibraryA(name);
-	IClassRegistry& (*ClassRegistryFcn)() =
-		(IClassRegistry & (*)())GetProcAddress(hModule, "ClassRegistry");
+	const IClassRegistry& (*ClassRegistryFcn)() =
+		(const IClassRegistry & (*)())GetProcAddress(hModule, "ClassRegistry");
 #else
 	void *hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
 	if (hModule == NULL) {
 		perror("dlopen");
 		exit(1);
 	}
-	IClassRegistry& (*ClassRegistryFcn)() =
-                (IClassRegistry & (*)())dlsym(hModule, "ClassRegistry");
+	const IClassRegistry& (*ClassRegistryFcn)() =
+                (const IClassRegistry & (*)())dlsym(hModule, "ClassRegistry");
 	if (ClassRegistryFcn == NULL) {
 		printf("ClassRegistry not found\n");
 		exit(1);

@@ -5,23 +5,26 @@
 
 class ClassRegistry {
 private:
-	IClassRegistry& m_classRegistry;
+	const IClassRegistry& m_classRegistry;
 
 public:
-	ClassRegistry(IClassRegistry& classRegistry) : m_classRegistry(classRegistry) {
+	ClassRegistry(const IClassRegistry& classRegistry) : m_classRegistry(classRegistry) {
 	}
 
 	ClassRegistry(ClassRegistry&& other) noexcept : m_classRegistry(other.m_classRegistry) {
 	}
 
-	ClassRegistry(const ClassRegistry&) = delete;
+	ClassRegistry(const ClassRegistry& other) : m_classRegistry(other.m_classRegistry) {
+	}
+
+	ClassRegistry& operator=(ClassRegistry&&) = delete;
 	ClassRegistry& operator=(const ClassRegistry&) = delete;
 
-	Class GetClass(const char* name) {
+	Class GetClass(const char* name) const {
 		return m_classRegistry.GetClass(name);
 	}
 
-	std::vector<Class> GetClasses() {
+	std::vector<Class> GetClasses() const {
 		std::vector<Class> ret;
 		size_t nClasses = 0;
 		IClass* const* classes = m_classRegistry.GetClasses(nClasses);
