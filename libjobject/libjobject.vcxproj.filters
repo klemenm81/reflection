@@ -102,5 +102,8 @@
     <ClInclude Include="exceptions\SerializationException.h">
       <Filter>exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="exceptions\MarshallingException.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

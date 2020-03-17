@@ -7,10 +7,11 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="test.cpp" />
-    <ClCompile Include="metadata.cpp" />
+    <ClInclude Include="Parser.h" />
+    <ClInclude Include="IParser.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test.h" />
+    <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="metadata.cpp" />
   </ItemGroup>
 </Project>

@@ -3,6 +3,7 @@
 
 #include "IAdaptor.h"
 #include "../Serialization.h"
+#include "../exceptions/MarshallingException.h"
 #include <string>
 #include <vector>
 #include <forward_list>
@@ -37,7 +38,7 @@ public:
 		return name.c_str();
 	}
 
-	Json::Value Serialize() const {
+	Json::Value Marshall() const {
 		return Serialization<Type>::Serialize(m_value);
 	}
 };
@@ -52,7 +53,7 @@ public:
 	}
 
 	CAdaptor(Json::Value value) {
-		throw;
+		throw MarshallingException("Pointers cannot be unmarshalled");;
 	}
 
 	Type *GetValue() {
@@ -69,8 +70,8 @@ public:
 		return name.c_str();
 	}
 
-	Json::Value Serialize() const {
-		return Serialization<Type>::Serialize(*m_value);
+	Json::Value Marshall() const {
+		throw MarshallingException("Pointers cannot be marshalled");
 	}
 };
 
@@ -85,7 +86,7 @@ public:
 	}
 
 	CAdaptor(Json::Value value) {
-		throw;
+		throw MarshallingException("LValue references cannot be unmarshalled");;
 	}
 
 	Type& GetValue() {
@@ -101,9 +102,9 @@ public:
 		static const std::string name = typeid(Type&).name();
 		return name.c_str();
 	}
-
-	Json::Value Serialize() const {
-		return Serialization<Type>::Serialize(*m_value);
+	
+	Json::Value Marshall() const {
+		throw MarshallingException("LValue references cannot be marshalled");
 	}
 };
 
@@ -116,7 +117,8 @@ public:
 	CAdaptor(Type &&value) : m_value(std::forward<Type>(value)) {
 	}
 
-	CAdaptor(Json::Value value) : m_value(Serialization<Type>::Deserialize(value)) {
+	CAdaptor(Json::Value value) {
+		MarshallingException("RValue references cannot be unmarshalled");
 	}
 
 	Type && GetValue() {
@@ -133,8 +135,8 @@ public:
 		return name.c_str();
 	}
 
-	Json::Value Serialize() const {
-		return Serialization<Type>::Serialize(m_value);
+	Json::Value Marshall() const {
+		throw MarshallingException("RValue references cannot be marshalled");
 	}
 };
 
@@ -142,6 +144,9 @@ template <>
 class CAdaptor<void> : public IAdaptor {
 public:
 	CAdaptor() {
+	}
+
+	CAdaptor(Json::Value value) {
 	}
 
 	const char* GetSignature() const {
@@ -154,7 +159,7 @@ public:
 		return name.c_str();
 	}
 
-	Json::Value Serialize() const {
+	Json::Value Marshall() const {
 		return Json::Value("");
 	}
 };

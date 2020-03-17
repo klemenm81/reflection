@@ -72,7 +72,7 @@ public:
 	}
 
 	template <typename... Args>
-	Object& NewInstance(Args... args) const {
+	Object* NewInstance(Args... args) const {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
 			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
@@ -88,6 +88,6 @@ public:
 			argsName = ";";
 		}
 		const IConstructor& constructor = m_class.GetConstructor(argsSignature.c_str() + 1, argsName.c_str() + 1);
-		return constructor.NewInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		return &constructor.NewInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 	}
 };

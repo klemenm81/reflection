@@ -95,14 +95,14 @@ protected:
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).GetValue()...
 			);
-			return CAdaptor<void>().Serialize();
+			return CAdaptor<void>().Marshall();
 		}
 		else {
 			return CAdaptor<Return>(
 				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
 					CAdaptor<Args>(args[(int)Index]).GetValue()...
 				)
-			).Serialize();
+			).Marshall();
 		}
 	}
 

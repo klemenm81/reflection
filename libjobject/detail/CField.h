@@ -32,7 +32,7 @@ public:
 
 	Json::Value Serialize(const Object& obj) const {
 		IAdaptor& adaptor = GetValue(obj);
-		return adaptor.Serialize();
+		return adaptor.Marshall();
 	}
 
 	void Deserialize(Object& obj, Json::Value value) const {
