@@ -6,5 +6,5 @@
 struct ParseStruct : public Reflectable<ParseStruct> {
 	bool is_new = false;
 	std::string name;
-	std::string address;
+	std::optional<std::string> address;
 };

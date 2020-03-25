@@ -36,7 +36,7 @@ void Parser::parse(int argc, char** argv, Object& cliStructure) {
 			}
 		}
 
-		if (!optionFound && !field.isType<bool>()) {
+		if (!optionFound && (!(field.isType<bool>() || field.isOptional()))) {
 			printUsage(cliStructure);
 			return;
 		}

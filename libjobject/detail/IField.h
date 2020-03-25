@@ -17,6 +17,7 @@ public:
 
 	virtual const char* getTypeSignature() const = 0;
 	virtual const char* getTypeName() const = 0;
+	virtual bool isOptional() const = 0;
 
 	virtual ~IField() {
 	}

@@ -48,6 +48,10 @@ public:
 	const char* getTypeName() const {
 		return CAdaptor<Type>::GetName();
 	}
+
+	bool isOptional() const {
+		return CAdaptor<Type>::IsOptional();
+	}
 };
 
 template <typename Class, typename Field>

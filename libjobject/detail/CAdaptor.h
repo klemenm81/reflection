@@ -4,6 +4,7 @@
 #include "IAdaptor.h"
 #include "../Serialization.h"
 #include "../exceptions/MarshallingException.h"
+#include <optional>
 #include <string>
 #include <vector>
 #include <forward_list>
@@ -203,6 +204,57 @@ public:
 		throw MarshallingException("RValue references cannot be marshalled");
 	}
 };
+
+template <typename Type>
+class CAdaptor<std::optional<Type>> : public IAdaptor {
+private:
+	std::optional<Type> m_value;
+
+public:
+	static Indirection GetIndirection() {
+		return Value;
+	}
+
+	static bool IsOptional() {
+		return true;
+	}
+
+	static const char* GetSignature() {
+		static const std::string signature = std::to_string(typeid(std::optional<Type>).hash_code());
+		return signature.c_str();
+	}
+
+	static const char* GetName() {
+		static const std::string name = typeid(std::optional<Type>).name();
+		return name.c_str();
+	}
+
+	CAdaptor(const std::optional<Type>& value) : m_value(value) {
+	}
+
+	CAdaptor(std::optional<Type>&& value) : m_value(std::move(value)) {
+	}
+
+	CAdaptor(Json::Value value) : m_value(Serialization<std::optional<Type>>::Deserialize(value)) {
+	}
+
+	const std::optional<Type>& getValue() {
+		return m_value;
+	}
+
+	const char* getSignature() const {
+		return GetSignature();
+	}
+
+	const char* getName() const {
+		return GetName();
+	}
+
+	Json::Value marshall() const {
+		return Serialization<std::optional<Type>>::Serialize(m_value);
+	}
+};
+
 
 template <>
 class CAdaptor<void> : public IAdaptor {

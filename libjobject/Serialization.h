@@ -3,6 +3,7 @@
 #include "../libjson/include/json/json.h"
 #include "exceptions/SerializationException.h"
 #include "exceptions/DeserializationException.h"
+#include <optional>
 
 template <typename Type>
 class Serialization {
@@ -33,6 +34,27 @@ public:
 		std::vector<Type> ret;
 		for (auto it = val.begin(); it != val.end(); it++) {
 			ret.push_back(Serialization<Type>::Deserialize(*it));
+		}
+		return ret;
+	}
+};
+
+template <typename Type>
+class Serialization<std::optional<Type>> {
+public:
+	static Json::Value Serialize(std::optional<Type> value) {
+		if (value.has_value()) {
+			return Serialization<Type>::Serialize(value.value());
+		}
+		else {
+			return Json::nullValue;
+		}
+	}
+
+	static std::optional<Type> Deserialize(Json::Value json) {
+		std::optional<Type> ret;
+		if (json != Json::nullValue) {
+			ret.emplace(Serialization<Type>::Deserialize(json));
 		}
 		return ret;
 	}

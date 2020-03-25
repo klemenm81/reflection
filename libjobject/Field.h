@@ -69,4 +69,8 @@ public:
 			return false;
 		}
 	}
+
+	bool isOptional() {
+		return m_field.isOptional();
+	}
 };
