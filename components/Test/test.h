@@ -21,159 +21,159 @@ public:
 	Test(const Test& other);
 	Test(Test&& other);
 
-	void Foo1(std::string& str, float val);
-	int Foo2(const char* str);
-	int FooOverloaded(int i);
-	int FooOverloaded(float i);
-	int FooOverloaded(std::vector<int> i, int j);
-	std::string FooConst() const;
+	void foo1(std::string& str, float val);
+	int foo2(const char* str);
+	int fooOverloaded(int i);
+	int fooOverloaded(float i);
+	int fooOverloaded(std::vector<int> i, int j);
+	std::string fooConst() const;
 
-	void Fcn1() {
+	void fcn1() {
 	}
 
-	void Fcn2() const {
+	void fcn2() const {
 	}
 
-	void Fcn3() volatile {
+	void fcn3() volatile {
 	}
 
-	void Fcn4() const volatile {
+	void fcn4() const volatile {
 	}
 
-	void Fcn5() noexcept {
+	void fcn5() noexcept {
 	}
 
-	void Fcn6() const noexcept {
+	void fcn6() const noexcept {
 	}
 
-	void Fcn7() volatile noexcept {
+	void fcn7() volatile noexcept {
 	}
 
-	void Fcn8() const volatile noexcept{
-	}
-
-
-	void Fcn9() & {
-	}
-
-	void Fcn10() const & {
-	}
-
-	void Fcn11() volatile & {
-	}
-
-	void Fcn12() const volatile & {
-	}
-
-	void Fcn13() & noexcept {
-	}
-
-	void Fcn14() const & noexcept {
-	}
-
-	void Fcn15() volatile & noexcept {
-	}
-
-	void Fcn16() const volatile & noexcept {
+	void fcn8() const volatile noexcept{
 	}
 
 
-	void Fcn17()&& {
+	void fcn9() & {
 	}
 
-	void Fcn18() const&& {
+	void fcn10() const & {
 	}
 
-	void Fcn19() volatile&& {
+	void fcn11() volatile & {
 	}
 
-	void Fcn20() const volatile&& {
+	void fcn12() const volatile & {
 	}
 
-	void Fcn21() && noexcept {
+	void fcn13() & noexcept {
 	}
 
-	void Fcn22() const&& noexcept {
+	void fcn14() const & noexcept {
 	}
 
-	void Fcn23() volatile&& noexcept {
+	void fcn15() volatile & noexcept {
 	}
 
-	void Fcn24() const volatile&& noexcept {
+	void fcn16() const volatile & noexcept {
+	}
+
+
+	void fcn17()&& {
+	}
+
+	void fcn18() const&& {
+	}
+
+	void fcn19() volatile&& {
+	}
+
+	void fcn20() const volatile&& {
+	}
+
+	void fcn21() && noexcept {
+	}
+
+	void fcn22() const&& noexcept {
+	}
+
+	void fcn23() volatile&& noexcept {
+	}
+
+	void fcn24() const volatile&& noexcept {
 	}
 
 
 
 
 
-	void Bar1();
-	void Bar2() const;
-	void Bar3() noexcept;
-	void Bar4() const noexcept;
-	void Bar5() volatile;
-	void Bar6() volatile const;
-	void Bar7() volatile noexcept;
-	void Bar8() volatile const noexcept;
+	void bar1();
+	void bar2() const;
+	void bar3() noexcept;
+	void bar4() const noexcept;
+	void bar5() volatile;
+	void bar6() volatile const;
+	void bar7() volatile noexcept;
+	void bar8() volatile const noexcept;
 
-	void Bar9() &;
-	void Bar10() const &;
-	void Bar11() & noexcept;
-	void Bar12() const & noexcept;
-	void Bar13() volatile &;
-	void Bar14() volatile const &;
-	void Bar15() volatile & noexcept;
-	void Bar16() volatile const & noexcept;
+	void bar9() &;
+	void bar10() const &;
+	void bar11() & noexcept;
+	void bar12() const & noexcept;
+	void bar13() volatile &;
+	void bar14() volatile const &;
+	void bar15() volatile & noexcept;
+	void bar16() volatile const & noexcept;
 
-	void Bar17() &&;
-	void Bar17() &;
-	void Bar18() const &&;
-	void Bar19() && noexcept;
-	void Bar20() const && noexcept;
-	void Bar21() volatile &&;
-	void Bar22() volatile const &&;
-	void Bar23() volatile && noexcept;
-	void Bar24() volatile const && noexcept;
+	void bar17() &&;
+	void bar17() &;
+	void bar18() const &&;
+	void bar19() && noexcept;
+	void bar20() const && noexcept;
+	void bar21() volatile &&;
+	void bar22() volatile const &&;
+	void bar23() volatile && noexcept;
+	void bar24() volatile const && noexcept;
 
 	
-	void Overload(int) 
+	void overload(int) 
 	{
 	}
-	void Overload(int) const 
-	{
-	}
-	
-	void Overload(int) const volatile 
-	{
-	}
-	void Overload(int) volatile
+	void overload(int) const 
 	{
 	}
 	
+	void overload(int) const volatile 
+	{
+	}
+	void overload(int) volatile
+	{
+	}
+	
 
-	void OverloadEx(int) & 
+	void overloadEx(int) & 
 	{
 	}
-	void OverloadEx(int) const &
+	void overloadEx(int) const &
 	{
 	}
-	void OverloadEx(int) const volatile &
+	void overloadEx(int) const volatile &
 	{
 	}
-	void OverloadEx(int) volatile &
+	void overloadEx(int) volatile &
 	{
 	}
 
 
-	void OverloadEx(int)&&
+	void overloadEx(int)&&
 	{
 	}
-	void OverloadEx(int) const&&
+	void overloadEx(int) const&&
 	{
 	}
-	void OverloadEx(int) const volatile&&
+	void overloadEx(int) const volatile&&
 	{
 	}
-	void OverloadEx(int) volatile&&
+	void overloadEx(int) volatile&&
 	{
 	}
 
@@ -182,5 +182,5 @@ public:
 
 class TestDerived : public Test, public Reflectable<TestDerived> {
 public:
-	int FooOverloaded(int i);
+	int fooOverloaded(int i);
 };

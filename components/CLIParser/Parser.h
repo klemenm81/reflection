@@ -10,8 +10,8 @@
 
 class Parser : public IParser, public Reflectable<Parser> {
 protected:
-	void PrintUsage(Object& cliStructure);
+	void printUsage(Object& cliStructure);
 
 public:
-	void Parse(int argc, char** argv, Object& cliStructure);
+	void parse(int argc, char** argv, Object& cliStructure);
 };

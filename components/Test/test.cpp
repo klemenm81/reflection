@@ -29,110 +29,109 @@ Test::Test(Test&& other) {
 }
 
 
-void Test::Foo1(std::string& str, float val) {
+void Test::foo1(std::string& str, float val) {
 	str += std::to_string(val);
 	printf("Foo(): str = %s\n", str.c_str());
 }
 
-int Test::Foo2(const char* str) {
+int Test::foo2(const char* str) {
 	printf("Foo2(): str = %s\n", str);
 	return 13;
 }
 
-int Test::FooOverloaded(int i) {
+int Test::fooOverloaded(int i) {
 	return 100;
 }
 
-int Test::FooOverloaded(float i) {
+int Test::fooOverloaded(float i) {
 	return 1;
 }
 
-int Test::FooOverloaded(std::vector<int> i, int j) {
+int Test::fooOverloaded(std::vector<int> i, int j) {
 	return -1;
 }
 
-std::string Test::FooConst() const {
-	return "From FooConst()";
+std::string Test::fooConst() const {
+	return "From fooConst()";
 }
 
-
-void Test::Bar1() {
+void Test::bar1() {
 }
 
-void Test::Bar2() const {
+void Test::bar2() const {
 }
 
-void Test::Bar3() noexcept {
+void Test::bar3() noexcept {
 }
 
-void Test::Bar4() const noexcept {
+void Test::bar4() const noexcept {
 }
 
-void Test::Bar5() volatile {
+void Test::bar5() volatile {
 }
 
-void Test::Bar6() volatile const {
+void Test::bar6() volatile const {
 }
 
-void Test::Bar7() volatile noexcept{
+void Test::bar7() volatile noexcept{
 }
 
-void Test::Bar8() volatile const noexcept {
+void Test::bar8() volatile const noexcept {
 }
 
-void Test::Bar9() & {
+void Test::bar9() & {
 }
 
-void Test::Bar10() const & {
+void Test::bar10() const & {
 }
 
-void Test::Bar11() & noexcept {
+void Test::bar11() & noexcept {
 }
 
-void Test::Bar12() const & noexcept {
+void Test::bar12() const & noexcept {
 }
 
-void Test::Bar13() volatile & {
+void Test::bar13() volatile & {
 }
 
-void Test::Bar14() volatile const & {
+void Test::bar14() volatile const & {
 }
 
-void Test::Bar15() volatile & noexcept {
+void Test::bar15() volatile & noexcept {
 }
 
-void Test::Bar16() volatile const & noexcept {
+void Test::bar16() volatile const & noexcept {
 }
 
-void Test::Bar17() & {
+void Test::bar17() & {
 	printf("From Bar17\n");
 }
 
-void Test::Bar17() && {
+void Test::bar17() && {
 	printf("From Bar17 &&\n");
 }
 
-void Test::Bar18() const && {
+void Test::bar18() const && {
 }
 
-void Test::Bar19() && noexcept {
+void Test::bar19() && noexcept {
 }
 
-void Test::Bar20() const && noexcept {
+void Test::bar20() const && noexcept {
 }
 
-void Test::Bar21() volatile && {
+void Test::bar21() volatile && {
 }
 
-void Test::Bar22() volatile const && {
+void Test::bar22() volatile const && {
 }
 
-void Test::Bar23() volatile && noexcept {
+void Test::bar23() volatile && noexcept {
 }
 
-void Test::Bar24() volatile const && noexcept {
+void Test::bar24() volatile const && noexcept {
 }
 
-int TestDerived::FooOverloaded(int i) {
+int TestDerived::fooOverloaded(int i) {
 	return 0;
 }

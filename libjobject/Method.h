@@ -17,12 +17,38 @@ private:
 
 protected:
 	template <typename... Adaptors>
-	std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) const {
+	static std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
 		std::vector<IAdaptor*> result;
 		if constexpr (sizeof...(Adaptors) > 0) {
 			int dummy[] = { (result.push_back(&adaptors), 0)... };
 		}
 		return result;
+	}
+
+	std::string getArgsSignature() const {
+		std::string argsSignature;
+		if (m_args.empty()) {
+			argsSignature = ";";
+		}
+		else {
+			for (IAdaptor* arg : m_args) {
+				argsSignature += std::string(";") + std::string(arg->getSignature());
+			}
+		}
+		return argsSignature;
+	}
+
+	std::string getArgsName() const {
+		std::string argsName;
+		if (m_args.empty()) {
+			argsName = ";";
+		}
+		else {
+			for (IAdaptor* arg : m_args) {
+				argsName += std::string(";") + std::string(arg->getName());
+			}
+		}
+		return argsName;
 	}
 
 public:
@@ -38,12 +64,12 @@ public:
 	Method& operator=(Method&&) = delete;
 	Method& operator=(const Method &) = delete;
 
-	const char* GetName() const {
+	const char* getName() const {
 		return m_method.GetName();
 	}
 
 	template <typename Type>
-	void PushArg(Type value) {
+	void pushArg(Type value) {
 		std::string argsSignature = m_argsSignature;
 		std::string argsName = m_argsName;
 		argsSignature += std::string(";") + std::to_string(typeid(Type).hash_code());
@@ -55,77 +81,51 @@ public:
 	}
 
 	template <typename Type>
-	Type GetArg(int iArg) const {
+	Type getArg(int iArg) const {
 		CAdaptor<Type> *adaptor = static_cast<CAdaptor<Type>*>(m_args[iArg]);
-		return adaptor->GetValue();
+		return adaptor->getValue();
 	}
 
 	template <typename Type>
-	Type GetRetVal() const {
+	Type getRetVal() const {
 		CAdaptor<Type>* adaptor = static_cast<CAdaptor<Type>*>(m_retVal);
-		return adaptor->GetValue();
+		return adaptor->getValue();
 	}
 
-	void ClearArgs() {
+	void clearArgs() {
 		m_args.clear();
 	}
 
-	std::string GetArgsSignature() const {
-		std::string argsSignature;		
-		if (m_args.empty()) {
-			argsSignature = ";";
-		}
-		else {
-			for (IAdaptor* arg : m_args) {
-				argsSignature += std::string(";") + std::string(arg->GetSignature());
-			}
-		}
-		return argsSignature;
-	}
-
-	std::string GetArgsName() const {
-		std::string argsName;
-		if (m_args.empty()) {
-			argsName = ";";
-		}
-		else {
-			for (IAdaptor* arg : m_args) {
-				argsName += std::string(";") + std::string(arg->GetName());
-			}
-		}
-		return argsName;
-	}
-
-	void Invoke(Object& obj) {
-		std::string argsSignature = GetArgsSignature();
-		std::string argsName = GetArgsName();
+	void invoke(Object& obj) {
+		std::string argsSignature = getArgsSignature();
+		std::string argsName = getArgsName();
 		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		m_retVal = methodInvoker.Invoke(obj, m_args.data());		
 	}
 
-	void Invoke(const Object& obj) {
-		std::string argsSignature = GetArgsSignature();
-		std::string argsName = GetArgsName();
+	void invoke(const Object& obj) {
+		std::string argsSignature = getArgsSignature();
+		std::string argsName = getArgsName();
 		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
 		m_retVal = methodInvoker.Invoke(obj, m_args.data());
 	}
 
-	void Invoke(Object&& obj) {
-		std::string argsSignature = GetArgsSignature();
-		std::string argsName = GetArgsName();
+	void invoke(Object&& obj) {
+		std::string argsSignature = getArgsSignature();
+		std::string argsName = getArgsName();
 		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
 		m_retVal = methodInvoker.Invoke(std::move(obj), m_args.data());
 	}
 
-	void Invoke(const Object&& obj) {
-		std::string argsSignature = GetArgsSignature();
-		std::string argsName = GetArgsName();
+	void invoke(const Object&& obj) {
+		std::string argsSignature = getArgsSignature();
+		std::string argsName = getArgsName();
 		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
 		m_retVal = methodInvoker.Invoke(std::move(obj), m_args.data());
 	}
 	
 	template <typename Return, typename... Args>
-	Return InvokeInline(Object& obj, Args... args) const {
+	Return invokeInline(Object& obj, Args... args) const {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
 			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
@@ -143,11 +143,11 @@ public:
 		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return> &>(*retVal).GetValue());
+			return(static_cast<CAdaptor<Return> &>(*retVal).getValue());
 		}
 	}
 
-	std::string InvokeMarshalled(Object& obj, std::vector<std::string> args) const {
+	std::string invokeMarshalled(Object& obj, std::vector<std::string> args) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		Json::StreamWriterBuilder wbuilder;

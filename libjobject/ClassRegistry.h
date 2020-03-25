@@ -20,11 +20,11 @@ public:
 	ClassRegistry& operator=(ClassRegistry&&) = delete;
 	ClassRegistry& operator=(const ClassRegistry&) = delete;
 
-	Class GetClass(const char* name) const {
+	Class getClass(const char* name) const {
 		return m_classRegistry.GetClass(name);
 	}
 
-	std::vector<Class> GetClasses() const {
+	std::vector<Class> getClasses() const {
 		std::vector<Class> ret;
 		size_t nClasses = 0;
 		IClass* const* classes = m_classRegistry.GetClasses(nClasses);

@@ -170,6 +170,7 @@
     <ClInclude Include="exceptions\MethodWithSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\SerializationException.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="Indirection.h" />
     <ClInclude Include="Metadata.h" />
     <ClInclude Include="Method.h" />
     <ClInclude Include="Object.h" />

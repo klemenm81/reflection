@@ -23,36 +23,50 @@ public:
 	Field& operator=(Field&&) = delete;
 	Field& operator=(const Field&) = delete;
 
-	const char* GetName() const {
+	const char* getName() const {
 		return m_field.GetName();
 	}
 
 	template<typename Type>
-	Type Get(const Object &obj) const {
-		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(m_field.GetValue(obj));
-		return adaptor.GetValue();
+	Type get(const Object &obj) const {
+		CAdaptor<Type>& adaptor = static_cast<CAdaptor<Type>&>(m_field.getValue(obj));
+		return adaptor.getValue();
 	}
 
 	template<typename Type>
-	void Set(Object &obj, Type value) const {
+	void set(Object &obj, Type value) const {
 		CAdaptor<Type> adaptor(value);
 		m_field.SetValue(obj, adaptor);
 	}
 
-	std::string Serialize(const Object& obj) const {
+	std::string serialize(const Object& obj) const {
 		Json::Value json = m_field.Serialize(obj);
 		Json::StreamWriterBuilder wbuilder;
 		wbuilder["indentation"] = "\t";
 		return Json::writeString(wbuilder, json);
 	}
 
-	void Deserialize(Object &obj, std::string val) const {
+	void deserialize(Object &obj, std::string val) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		std::string errs;
 		std::stringstream s(val);
 		Json::Value json;
-		Json::parseFromStream(rbuilder, s, &json, &errs);
+		bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
+		if (!result) {
+			std::stringstream s(std::string("\"") + val + std::string("\""));
+			bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
+		}
 		m_field.Deserialize(obj, json);
+	}
+
+	template<typename Type>
+	bool isType() {
+		if (std::to_string(typeid(Type).hash_code()) == m_field.GetTypeSignature()) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 };

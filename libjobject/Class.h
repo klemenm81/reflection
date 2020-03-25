@@ -11,7 +11,7 @@ private:
 
 protected:
 	template <typename... Adaptors>
-	std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) const {
+	static std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
 		std::vector<IAdaptor*> result;
 		if constexpr (sizeof...(Adaptors) > 0) {
 			int dummy[] = { (result.push_back(&adaptors), 0)... };
@@ -32,22 +32,22 @@ public:
 	Class& operator=(Class&& other) = delete;
 	Class& operator=(const Class& other) = delete;
 
-	const char* GetName() const {
+	const char* getName() const {
 		return m_class.GetName();
 	}
 
 	template <typename Cast>
-	Cast& Upcast(Object& obj) const {
+	Cast& upcast(Object& obj) const {
 		const ICast& cast = m_class.GetCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());
 		CAdaptor<Cast&> *adaptor = static_cast<CAdaptor<Cast&> *>(cast.CastClass(obj));
-		return adaptor->GetValue();
+		return adaptor->getValue();
 	}
 
-	Field GetField(const char *name) const {
+	Field getField(const char *name) const {
 		return m_class.GetField(name);
 	}
 
-	std::vector<Field> GetFields() const {
+	std::vector<Field> getFields() const {
 		std::vector<Field> ret;
 		size_t nFields = 0;
 		const IField* const * fields = m_class.GetFields(nFields);
@@ -57,11 +57,11 @@ public:
 		return ret;
 	}
 
-	Method GetMethod(const char *name) const {
+	Method getMethod(const char *name) const {
 		return m_class.GetMethod(name);
 	}
 
-	std::vector<Method> GetMethods() const {
+	std::vector<Method> getMethods() const {
 		std::vector<Method> ret;
 		size_t nMethods = 0;
 		IMethod* const* methods = m_class.GetMethods(nMethods);
@@ -72,7 +72,7 @@ public:
 	}
 
 	template <typename... Args>
-	Object* NewInstance(Args... args) const {
+	Object* newInstance(Args... args) const {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
 			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);

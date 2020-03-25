@@ -105,5 +105,6 @@
     <ClInclude Include="exceptions\MarshallingException.h">
       <Filter>exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="Indirection.h" />
   </ItemGroup>
 </Project>

@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29905.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libjobject", "libjobject\libjobject.vcxproj", "{9EF90F34-E3A3-49B3-ABA4-79BF2DCA6A19}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prototype", "prototype\prototype.vcxproj", "{796A199F-7D21-4E8F-9898-E8814EF78902}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test", "components\Test\Test.vcxproj", "{7052679C-CD25-4045-872E-81AFF03C72BE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client\Client.vcxproj", "{2E7508BA-6909-4093-A34F-7205C941E4F7}"
@@ -29,12 +27,6 @@ Global
 		{9EF90F34-E3A3-49B3-ABA4-79BF2DCA6A19}.Release|x64.Build.0 = Release|x64
 		{9EF90F34-E3A3-49B3-ABA4-79BF2DCA6A19}.Release|x86.ActiveCfg = Release|Win32
 		{9EF90F34-E3A3-49B3-ABA4-79BF2DCA6A19}.Release|x86.Build.0 = Release|Win32
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Debug|x64.ActiveCfg = Debug|x64
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Debug|x64.Build.0 = Debug|x64
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Debug|x86.ActiveCfg = Debug|x64
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Release|x64.ActiveCfg = Release|x64
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Release|x64.Build.0 = Release|x64
-		{796A199F-7D21-4E8F-9898-E8814EF78902}.Release|x86.ActiveCfg = Release|x64
 		{7052679C-CD25-4045-872E-81AFF03C72BE}.Debug|x64.ActiveCfg = Debug|x64
 		{7052679C-CD25-4045-872E-81AFF03C72BE}.Debug|x64.Build.0 = Debug|x64
 		{7052679C-CD25-4045-872E-81AFF03C72BE}.Debug|x86.ActiveCfg = Debug|Win32

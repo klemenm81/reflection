@@ -63,3 +63,16 @@ public:
 		return json.asUInt();
 	}
 };
+
+template <>
+class Serialization<std::string> {
+public:
+	static Json::Value Serialize(std::string value) {
+		Json::Value json(value);
+		return json;
+	}
+
+	static std::string Deserialize(Json::Value json) {
+		return json.asString();
+	}
+};

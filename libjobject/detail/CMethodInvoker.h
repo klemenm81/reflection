@@ -93,16 +93,16 @@ protected:
 	Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
-				CAdaptor<Args>(args[(int)Index]).GetValue()...
+				CAdaptor<Args>(args[(int)Index]).getValue()...
 			);
-			return CAdaptor<void>().Marshall();
+			return CAdaptor<void>().marshall();
 		}
 		else {
 			return CAdaptor<Return>(
 				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
-					CAdaptor<Args>(args[(int)Index]).GetValue()...
+					CAdaptor<Args>(args[(int)Index]).getValue()...
 				)
-			).Marshall();
+			).marshall();
 		}
 	}
 
@@ -111,14 +111,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
-				static_cast<CAdaptor<Args> &>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args> &>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -129,14 +129,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&>(static_cast<const Reflectable<Class> &>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<const Class&>(static_cast<const Reflectable<Class>&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -147,14 +147,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class> &>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class>&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -165,14 +165,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class> &>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class>&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -183,14 +183,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -201,14 +201,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -219,14 +219,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}
@@ -237,14 +237,14 @@ protected:
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
-				static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+				static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 			);
 			return new(retValBuffer) CAdaptor<void>();
 		}
 		else {
 			return new(retValBuffer) CAdaptor<Return>(
 				(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
-					static_cast<CAdaptor<Args>&>(*args[Index]).GetValue()...
+					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
 		}

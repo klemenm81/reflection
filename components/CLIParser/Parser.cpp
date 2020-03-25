@@ -6,31 +6,38 @@
 #include <vector>
 #include <string>
 
-void Parser::PrintUsage(Object& cliStructure) {
+void Parser::printUsage(Object& cliStructure) {
 }
 
-void Parser::Parse(int argc, char** argv, Object& cliStructure) {
-	std::vector<Field> fields = cliStructure.GetClass().GetFields();
+void Parser::parse(int argc, char** argv, Object& cliStructure) {
+	std::vector<Field> fields = cliStructure.getClass().getFields();
 
 	for (Field field : fields) {
 		bool optionFound = false;
-		for (int iArg = 0; iArg < argc; iArg++) {
+		for (int iArg = 1; iArg < argc; iArg++) {
 			char* option = argv[iArg];
-			if (option[0] == '-' && std::string(option + 1) == field.GetName()) {
-				if (iArg + 1 < argc) {
-					field.Deserialize(cliStructure, argv[iArg + 1]);
+			if (option[0] == '-' && std::string(option + 1) == field.getName()) {
+				if (field.isType<bool>()) {
+					field.set<bool>(cliStructure, true);
 					optionFound = true;
 					break;
 				}
 				else {
-					PrintUsage(cliStructure);
-					return;
+					if (iArg + 1 < argc) {
+						field.deserialize(cliStructure, argv[iArg + 1]);
+						optionFound = true;
+						break;
+					}
+					else {
+						printUsage(cliStructure);
+						return;
+					}
 				}
 			}
 		}
 
-		if (!optionFound) {
-			PrintUsage(cliStructure);
+		if (!optionFound && !field.isType<bool>()) {
+			printUsage(cliStructure);
 			return;
 		}
 	}
