@@ -65,7 +65,7 @@ public:
 	Method& operator=(const Method &) = delete;
 
 	const char* getName() const {
-		return m_method.GetName();
+		return m_method.getName();
 	}
 
 	template <typename Type>
@@ -74,8 +74,8 @@ public:
 		std::string argsName = m_argsName;
 		argsSignature += std::string(";") + std::to_string(typeid(Type).hash_code());
 		argsName += std::string(";") + std::string(typeid(Type).name());
-		const IMethodInvoker& methodInvoker = m_method.GetMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
-		m_args.push_back(new(methodInvoker.GetArgBuffer(m_args.size())) CAdaptor<Type>(value));
+		const IMethodInvoker& methodInvoker = m_method.getMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
+		m_args.push_back(new(methodInvoker.getArgBuffer(m_args.size())) CAdaptor<Type>(value));
 		m_argsSignature = argsSignature;
 		m_argsName = argsName;
 	}
@@ -99,29 +99,29 @@ public:
 	void invoke(Object& obj) {
 		std::string argsSignature = getArgsSignature();
 		std::string argsName = getArgsName();
-		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
-		m_retVal = methodInvoker.Invoke(obj, m_args.data());		
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
+		m_retVal = methodInvoker.invoke(obj, m_args.data());		
 	}
 
 	void invoke(const Object& obj) {
 		std::string argsSignature = getArgsSignature();
 		std::string argsName = getArgsName();
-		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
-		m_retVal = methodInvoker.Invoke(obj, m_args.data());
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstLValueRef);
+		m_retVal = methodInvoker.invoke(obj, m_args.data());
 	}
 
 	void invoke(Object&& obj) {
 		std::string argsSignature = getArgsSignature();
 		std::string argsName = getArgsName();
-		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
-		m_retVal = methodInvoker.Invoke(std::move(obj), m_args.data());
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, RValueRef);
+		m_retVal = methodInvoker.invoke(std::move(obj), m_args.data());
 	}
 
 	void invoke(const Object&& obj) {
 		std::string argsSignature = getArgsSignature();
 		std::string argsName = getArgsName();
-		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
-		m_retVal = methodInvoker.Invoke(std::move(obj), m_args.data());
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, ConstRValueRef);
+		m_retVal = methodInvoker.invoke(std::move(obj), m_args.data());
 	}
 	
 	template <typename Return, typename... Args>
@@ -140,8 +140,8 @@ public:
 		else {
 			argsName = ";";
 		}
-		const IMethodInvoker& methodInvoker = m_method.GetMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.Invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature.c_str() + 1, argsName.c_str() + 1, LValueRef);
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).getValue());
 		}
@@ -166,10 +166,10 @@ public:
 
 		size_t nMethods = 0;
 		size_t iMethod = 0;
-		IMethodInvoker* const* methods = m_method.GetMethodsByNArgs(args.size(), nMethods);
+		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->InvokeMarshalled(obj, jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeMarshalled(obj, jsonArgs);
 				break;
 			}
 			catch (Exception&) {

@@ -62,31 +62,31 @@ IConstructor& newConstructor() {
 #define REFLECT_CLASS_START(Class, ...)											\
 template<>																		\
 template <typename ReflectedClass>												\
-void CClass<Class>::Register()													\
+void CClass<Class>::registerMetadata()											\
 {																				\
-	AddCasts(newCasts<Class, Class, ##__VA_ARGS__>());							\
+	addCasts(newCasts<Class, Class, ##__VA_ARGS__>());							\
 	if constexpr (std::is_default_constructible<Class>::value){					\
-		AddConstructor(newConstructor<Class>());								\
+		addConstructor(newConstructor<Class>());								\
 	}																			\
 	if constexpr (std::is_copy_constructible<Class>::value) {					\
-		AddConstructor(newConstructor<Class, const Class &>());					\
+		addConstructor(newConstructor<Class, const Class &>());					\
 	}																			\
 	if constexpr (std::is_move_constructible<Class>::value) {					\
-		AddConstructor(newConstructor<Class, Class &&>());						\
+		addConstructor(newConstructor<Class, Class &&>());						\
 	}
 
 #define REFLECT_CLASS_END(Class)				\
 }												\
 template<>										\
 CClass<Class>::CClass() : m_name(#Class) {		\
-	Register<Class>();							\
+	registerMetadata<Class>();							\
 }	
 
 #define REFLECT_FIELD(Field)																			\
-	AddField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
+	addField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
-	AddMethodInvoker(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
+	addMethodInvoker(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
 
 #define REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ...)																\
 	inline_sfinae(nothing<ReflectedClass>{}, [](auto v) ->																		\
@@ -98,14 +98,14 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 
 #define REFLECT_METHOD_OVERLOAD_NO_CVREF(Method, Return, ...)														\
 	if constexpr (REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ##__VA_ARGS__)) {							\
-		AddMethodInvoker(																							\
+		addMethodInvoker(																							\
 			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__)>(					\
 				&ReflectedClass::Method)));																			\
 	}
 
 #define REFLECT_METHOD_OVERLOAD_CVREF(Method, CvRef, Return, ...)													\
 	if constexpr (REFLECT_METHOD_OVERLOAD_CHECK_CVREF(Method, CvRef, Return, ##__VA_ARGS__)) {						\
-		AddMethodInvoker(																							\
+		addMethodInvoker(																							\
 			newMethod<ReflectedClass>(#Method, static_cast<Return(ReflectedClass::*)(__VA_ARGS__) CvRef>(			\
 				&ReflectedClass::Method)));																			\
 	}
@@ -170,7 +170,7 @@ CClass<Class>::CClass() : m_name(#Class) {		\
 		"Move constructor does not have to be specified. It gets registered automatically if it exists."			\
 	);																												\
 	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");	\
-	AddConstructor(newConstructor<Class, ##__VA_ARGS__>());												
+	addConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
 #define REFLECT_CLASS_REGISTRY_START											\
 extern "C" EXPORT_API const IClassRegistry& ClassRegistry() {					\
@@ -183,7 +183,7 @@ CClassRegistry::CClassRegistry() {
 }
 
 #define REFLECT_REGISTER_CLASS(Class)											\
-	AddClass(*new CClass<Class>());
+	addClass(*new CClass<Class>());
 
 
 

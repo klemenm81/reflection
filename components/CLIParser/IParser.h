@@ -4,5 +4,5 @@
 
 class IParser {
 public:
-	virtual void Parse(int argc, char** argv, Object& cliStructure) = 0;
+	virtual void parse(int argc, char** argv, Object& cliStructure) = 0;
 };

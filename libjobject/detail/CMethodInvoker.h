@@ -45,19 +45,19 @@ protected:
 		}
 	}
 
-	const char* GetName() const {
+	const char* getName() const {
 		return m_name.c_str();
 	}
 
-	size_t GetNArgs() const {
+	size_t getNArgs() const {
 		return sizeof...(Args);
 	}
 
-	std::byte* GetArgBuffer(size_t iArg) const {
+	std::byte* getArgBuffer(size_t iArg) const {
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}
 
-	const char* GetArgsSignature() const {
+	const char* getArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string signature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
 			return signature.c_str() + 1;
@@ -68,7 +68,7 @@ protected:
 		}
 	}
 
-	const char* GetArgsName() const {
+	const char* getArgsName() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string name = ((std::string(";") + std::string(typeid(Args).name())) + ...);
 			return name.c_str() + 1;
@@ -79,18 +79,18 @@ protected:
 		}
 	}
 
-	const char *GetRetValSignature() const {
+	const char *getRetValSignature() const {
 		static const std::string signature = std::to_string(typeid(Return).hash_code());
 		return signature.c_str();
 	}
 
-	const char *GetRetValName() const {
+	const char *getRetValName() const {
 		static const std::string name = typeid(Return).name();
 		return name.c_str();
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
+	Json::Value invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -107,7 +107,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
@@ -125,7 +125,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&>(static_cast<const Reflectable<Class> &>(object)).*method)(
@@ -143,7 +143,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class> &>(object)).*method)(
@@ -161,7 +161,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class> &>(object)).*method)(
@@ -179,7 +179,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
@@ -197,7 +197,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
@@ -215,7 +215,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
@@ -233,7 +233,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* Invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	IAdaptor* invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
@@ -264,43 +264,43 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return LValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor **args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor **args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value InvokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -315,39 +315,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -362,39 +362,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -409,39 +409,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -456,39 +456,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return LValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -503,39 +503,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -550,39 +550,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -597,39 +597,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -653,39 +653,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return LValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -700,39 +700,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -747,39 +747,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -794,39 +794,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -841,39 +841,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return LValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -888,39 +888,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -935,39 +935,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -982,39 +982,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileLValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1034,39 +1034,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return RValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1081,39 +1081,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1128,39 +1128,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1175,40 +1175,40 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
 
@@ -1222,39 +1222,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return RValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1269,39 +1269,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1316,39 +1316,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return VolatileRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
 		return nullptr;
 	}
 };
@@ -1363,39 +1363,39 @@ public:
 		CMethodInvokerBase<Class, Return, Args...>(name), m_method(method) {
 	}
 
-	Qualifier GetQualifier() const {
+	Qualifier getQualifier() const {
 		return ConstVolatileRValueRef;
 	}
 
-	IAdaptor* Invoke(Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(const volatile Object& object, IAdaptor** args) const {
+	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
 		return nullptr;
 	}
 
-	IAdaptor* Invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	IAdaptor* Invoke(const volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
+		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };

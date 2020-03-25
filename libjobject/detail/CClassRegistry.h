@@ -14,12 +14,12 @@ private:
 public:
 	CClassRegistry();
 
-	void AddClass(IClass& clasz) {
-		m_classMap[clasz.GetName()] = &clasz;
+	void addClass(IClass& clasz) {
+		m_classMap[clasz.getName()] = &clasz;
 		m_classVector.push_back(&clasz);
 	}
 
-	const IClass& GetClass(const char* name) const {
+	const IClass& getClass(const char* name) const {
 		auto clasz = m_classMap.find(name);
 		if (clasz != m_classMap.end()) {
 			return *(clasz->second);
@@ -29,7 +29,7 @@ public:
 		}
 	}
 
-	IClass* const* GetClasses(size_t &nClasses) const {
+	IClass* const* getClasses(size_t &nClasses) const {
 		nClasses = m_classVector.size();
 		return m_classVector.data();
 	}

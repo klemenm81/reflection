@@ -28,18 +28,18 @@ private:
 	typedef Class ReflectedClass;
 
 public:
-	const char* GetName() const {
+	const char* getName() const {
 		return m_name.c_str();
 	}
 
-	void AddCasts(std::vector<ICast *> casts) {
+	void addCasts(std::vector<ICast *> casts) {
 		for (ICast* cast : casts) {
-			m_castMap[cast->GetSignature()] = cast;
+			m_castMap[cast->getSignature()] = cast;
 			m_castVector.push_back(cast);
 		}
 	}
 
-	const ICast& GetCast(const char* signature, const char *name) const {
+	const ICast& getCast(const char* signature, const char *name) const {
 		auto cast = m_castMap.find(signature);
 		if (cast != m_castMap.end()) {
 			return *(cast->second);
@@ -49,12 +49,12 @@ public:
 		}
 	}
 
-	void AddField(IField& field) {
-		m_fieldMap[field.GetName()] = &field;
+	void addField(IField& field) {
+		m_fieldMap[field.getName()] = &field;
 		m_fieldVector.push_back(&field);
 	}
 
-	const IField& GetField(const char *name) const {
+	const IField& getField(const char *name) const {
 		auto field = m_fieldMap.find(name);
 		if (field != m_fieldMap.end()) {
 			return *(field->second);
@@ -64,26 +64,26 @@ public:
 		}
 	}
 
-	IField* const* GetFields(size_t& nFields) const {
+	IField* const* getFields(size_t& nFields) const {
 		nFields = m_fieldVector.size();
 		return m_fieldVector.data();
 	}
 
-	void AddMethodInvoker(IMethodInvoker& method) {
-		IMethod* methodOverloads = (m_methodMap.find(method.GetName()) != m_methodMap.end()) ?
-			m_methodMap[method.GetName()] :
+	void addMethodInvoker(IMethodInvoker& method) {
+		IMethod* methodOverloads = (m_methodMap.find(method.getName()) != m_methodMap.end()) ?
+			m_methodMap[method.getName()] :
 			nullptr;
 
 		if (methodOverloads == nullptr) {
-			methodOverloads = new IMethod(method.GetName());
-			m_methodMap[method.GetName()] = methodOverloads;
+			methodOverloads = new IMethod(method.getName());
+			m_methodMap[method.getName()] = methodOverloads;
 			m_methodVector.push_back(methodOverloads);
 		}
 
-		methodOverloads->AddMethod(method);
+		methodOverloads->addMethod(method);
 	}
 
-	const IMethod& GetMethod(const char *name) const {
+	const IMethod& getMethod(const char *name) const {
 		auto method = m_methodMap.find(name);
 		if (method != m_methodMap.end()) {
 			return *(method->second);
@@ -93,17 +93,17 @@ public:
 		}
 	}
 
-	IMethod* const* GetMethods(size_t& nMethods) const {
+	IMethod* const* getMethods(size_t& nMethods) const {
 		nMethods = m_methodVector.size();
 		return m_methodVector.data();
 	}
 
-	void AddConstructor(IConstructor& constructor) {
-		m_constructorMap[constructor.GetArgsSignature()] = &constructor;
+	void addConstructor(IConstructor& constructor) {
+		m_constructorMap[constructor.getArgsSignature()] = &constructor;
 		m_constructorVector.push_back(&constructor);
 	}
 
-	const IConstructor& GetConstructor(const char* argsSignature, const char* argsName) const {
+	const IConstructor& getConstructor(const char* argsSignature, const char* argsName) const {
 		auto constructor = m_constructorMap.find(argsSignature);
 		if (constructor != m_constructorMap.end()) {
 			return *(constructor->second);
@@ -113,13 +113,13 @@ public:
 		}
 	}
 
-	IConstructor* const* GetConstructors(size_t& nConstructors) const {
+	IConstructor* const* getConstructors(size_t& nConstructors) const {
 		nConstructors = m_constructorVector.size();
 		return m_constructorVector.data();
 	}
 	
 	template <typename ReflectedClass>
-	void Register();
+	void registerMetadata();
 	
 	CClass();
 };

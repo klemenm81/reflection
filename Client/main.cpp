@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 		std::unique_ptr<Object> obj(parserClass.newInstance());
 		IParser& parser = parserClass.upcast<IParser>(*obj);
 		ParseStruct parseStruct;
-		parser.Parse(argc, argv, parseStruct);
+		parser.parse(argc, argv, parseStruct);
 		
 	}
 	catch (const Exception & e) {
@@ -101,13 +101,13 @@ int main(int argc, char **argv) {
 
 		std::string retStr = overloadedMethod.invokeMarshalled(*test, std::vector<std::string> { "[3, 5, 4]", "5" });
 
-		//constMethod.Invoke(test);
+		//constMethod.invoke(test);
 		//printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
 
 		field1.set(*test, 13);
 		printf("Main(): str = %s\n", str.c_str());
 
-		//rvalMethod.Invoke(Test());
+		//rvalMethod.invoke(Test());
 
 		Class testDerivedClass = classRegistry.getClass("TestDerived");
 		std::unique_ptr<Object> testDerived(testDerivedClass.newInstance());

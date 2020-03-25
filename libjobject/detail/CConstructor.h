@@ -36,15 +36,15 @@ public:
 		}
 	}
 
-	size_t GetNArgs() const {
+	size_t getNArgs() const {
 		return sizeof...(Args);
 	}
 
-	std::byte* GetArgBuffer(size_t iArg) const {
+	std::byte* getArgBuffer(size_t iArg) const {
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}
 
-	const char* GetArgsSignature() const {
+	const char* getArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string signature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
 			return signature.c_str() + 1;
@@ -55,7 +55,7 @@ public:
 		}
 	}
 
-	const char* GetArgsName() const {
+	const char* getArgsName() const {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string name = ((std::string(";") + std::string(typeid(Args).name())) + ...);
 			return name.c_str() + 1;
@@ -67,11 +67,11 @@ public:
 	}
 
 	template <std::size_t... Index>
-	Object& NewInstance(IAdaptor **args, std::index_sequence<Index...>) const {
+	Object& newInstance(IAdaptor **args, std::index_sequence<Index...>) const {
 		return static_cast<Reflectable<Class> &>(*new Class(static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...));
 	}
 
-	Object& NewInstance(IAdaptor **args) const {
-		return NewInstance(args, std::index_sequence_for<Args...>{});
+	Object& newInstance(IAdaptor **args) const {
+		return newInstance(args, std::index_sequence_for<Args...>{});
 	}
 };

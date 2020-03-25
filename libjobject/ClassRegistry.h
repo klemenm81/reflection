@@ -21,13 +21,13 @@ public:
 	ClassRegistry& operator=(const ClassRegistry&) = delete;
 
 	Class getClass(const char* name) const {
-		return m_classRegistry.GetClass(name);
+		return m_classRegistry.getClass(name);
 	}
 
 	std::vector<Class> getClasses() const {
 		std::vector<Class> ret;
 		size_t nClasses = 0;
-		IClass* const* classes = m_classRegistry.GetClasses(nClasses);
+		IClass* const* classes = m_classRegistry.getClasses(nClasses);
 		for (size_t iClass = 0; iClass < nClasses; iClass++) {
 			ret.push_back(Class(*classes[iClass]));
 		}

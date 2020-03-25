@@ -5,7 +5,7 @@
 #include "Class.h"
 
 #define REFLECT_FULL_ACCESS											\
-	friend void CClass<ReflectedClass>::Register<ReflectedClass>();
+	friend void CClass<ReflectedClass>::registerMetadata<ReflectedClass>();
 
 #define REFLECT_PUBLIC_ACCESS
 

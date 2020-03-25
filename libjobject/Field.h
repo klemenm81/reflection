@@ -24,7 +24,7 @@ public:
 	Field& operator=(const Field&) = delete;
 
 	const char* getName() const {
-		return m_field.GetName();
+		return m_field.getName();
 	}
 
 	template<typename Type>
@@ -36,11 +36,11 @@ public:
 	template<typename Type>
 	void set(Object &obj, Type value) const {
 		CAdaptor<Type> adaptor(value);
-		m_field.SetValue(obj, adaptor);
+		m_field.setValue(obj, adaptor);
 	}
 
 	std::string serialize(const Object& obj) const {
-		Json::Value json = m_field.Serialize(obj);
+		Json::Value json = m_field.serialize(obj);
 		Json::StreamWriterBuilder wbuilder;
 		wbuilder["indentation"] = "\t";
 		return Json::writeString(wbuilder, json);
@@ -57,12 +57,12 @@ public:
 			std::stringstream s(std::string("\"") + val + std::string("\""));
 			bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
 		}
-		m_field.Deserialize(obj, json);
+		m_field.deserialize(obj, json);
 	}
 
 	template<typename Type>
 	bool isType() {
-		if (std::to_string(typeid(Type).hash_code()) == m_field.GetTypeSignature()) {
+		if (std::to_string(typeid(Type).hash_code()) == m_field.getTypeSignature()) {
 			return true;
 		}
 		else {
