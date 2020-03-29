@@ -29,11 +29,34 @@ public:
 		return ret;
 	}
 
+	const char* toString() const {
+		static thread_local std::string ret;
+		Json::Value json = serialize();
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "\t";
+		ret = Json::writeString(wbuilder, json);
+		return ret.c_str();
+	}
+
 	void deserialize(Json::Value value) {
 		Json::Value::Members members = value.getMemberNames();
 		for (std::string memberName : members) {
 			Field field = getClass().getField(memberName.c_str());
 			field.deserialize(*this, value[memberName]);
 		}
+	}
+
+	void fromString(const char* val) {
+		Json::CharReaderBuilder rbuilder;
+		rbuilder["collectComments"] = false;
+		std::string errs;
+		std::stringstream s(val);
+		Json::Value json;
+		bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
+		if (!result) {
+			std::stringstream s(std::string("\"") + val + std::string("\""));
+			bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
+		}
+		deserialize(json);
 	}
 };

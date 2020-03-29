@@ -23,14 +23,9 @@ void example1(int argc, char** argv) {
 		ParseStruct parseStruct;		
 		parser.parse(argc, argv, parseStruct);											// Parse argc/argv pair and store the values in parseStruct
 
-		Json::StreamWriterBuilder wbuilder;
-		wbuilder["indentation"] = "\t";
-
-		Json::Value serialized = parseStruct.serialize();
-
-		std::cout << Json::writeString(wbuilder, serialized) << "\n";
-
-		parseStruct.deserialize(serialized);
+		const char *serialized = parseStruct.toString();
+		std::cout << serialized << "\n";
+		parseStruct.fromString(serialized);
 	}
 	catch (const Exception & e) {
 		printf("Exception occured during parse of options: %s\n", e.Message());

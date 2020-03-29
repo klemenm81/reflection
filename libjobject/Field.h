@@ -43,18 +43,20 @@ public:
 		return(m_field.serialize(obj));
 	}
 
-	std::string toString(const Object& obj) const {
-		Json::Value json = m_field.serialize(obj);
+	const char *toString(const Object& obj) const {
+		static thread_local std::string ret;
+		Json::Value json = serialize(obj);
 		Json::StreamWriterBuilder wbuilder;
 		wbuilder["indentation"] = "\t";
-		return Json::writeString(wbuilder, json);
+		ret = Json::writeString(wbuilder, json);
+		return ret.c_str();
 	}
 
 	void deserialize(Object& obj, Json::Value json) const {
 		m_field.deserialize(obj, json);
 	}
 
-	void fromString(Object &obj, std::string val) const {
+	void fromString(Object &obj, const char *val) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		std::string errs;
@@ -65,7 +67,7 @@ public:
 			std::stringstream s(std::string("\"") + val + std::string("\""));
 			bool result = Json::parseFromStream(rbuilder, s, &json, &errs);
 		}
-		m_field.deserialize(obj, json);
+		deserialize(obj, json);
 	}
 
 	Indirection getIndirection() {
