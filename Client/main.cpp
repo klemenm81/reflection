@@ -64,11 +64,11 @@ void example2() {
 
 		field1.set(*test, 13);														// Set field a of type int to value 13
 
-		std::string ser1 = field1.serialize(*test);									// Get serialized field value of a, which is of type int
-		field1.deserialize(*test, "15");											// Set field value of a by means of deserialization in json form
+		std::string ser1 = field1.toString(*test);									// Get serialized field value of a, which is of type int
+		field1.fromString(*test, "15");												// Set field value of a by means of deserialization in json form
 
-		std::string ser2 = field4.serialize(*test);									// Get serialized value of vec1, which is of type std::vector<int>
-		field4.deserialize(*test, "[15, 14, 12]");									// Set field value of vec1 by means of deserialization in json form
+		std::string ser2 = field4.toString(*test);									// Get serialized value of vec1, which is of type std::vector<int>
+		field4.fromString(*test, "[15, 14, 12]");									// Set field value of vec1 by means of deserialization in json form
 
 		std::string str = "PI = ";
 

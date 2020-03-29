@@ -33,7 +33,7 @@ public:
 		Json::Value::Members members = value.getMemberNames();
 		for (std::string memberName : members) {
 			Field field = getClass().getField(memberName.c_str());
-			field.deserialize(*this, value[memberName].asString());
+			field.deserialize(*this, value[memberName]);
 		}
 	}
 };

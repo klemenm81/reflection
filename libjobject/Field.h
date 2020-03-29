@@ -39,14 +39,22 @@ public:
 		m_field.setValue(obj, adaptor);
 	}
 
-	std::string serialize(const Object& obj) const {
+	Json::Value serialize(const Object& obj) const {
+		return(m_field.serialize(obj));
+	}
+
+	std::string toString(const Object& obj) const {
 		Json::Value json = m_field.serialize(obj);
 		Json::StreamWriterBuilder wbuilder;
 		wbuilder["indentation"] = "\t";
 		return Json::writeString(wbuilder, json);
 	}
 
-	void deserialize(Object &obj, std::string val) const {
+	void deserialize(Object& obj, Json::Value json) const {
+		m_field.deserialize(obj, json);
+	}
+
+	void fromString(Object &obj, std::string val) const {
 		Json::CharReaderBuilder rbuilder;
 		rbuilder["collectComments"] = false;
 		std::string errs;
