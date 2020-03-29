@@ -183,4 +183,5 @@ public:
 class TestDerived : public Test, public Reflectable<TestDerived> {
 public:
 	int fooOverloaded(int i);
+	int fooMarshal1(Test test);
 };
