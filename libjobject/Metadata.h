@@ -79,7 +79,7 @@ void CClass<Class>::registerMetadata()											\
 }												\
 template<>										\
 CClass<Class>::CClass() : m_name(#Class) {		\
-	registerMetadata<Class>();							\
+	registerMetadata<Class>();					\
 }	
 
 #define REFLECT_FIELD(Field)																			\
