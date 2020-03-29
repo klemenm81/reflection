@@ -39,7 +39,7 @@ void example2() {
 		std::vector<Class> classes = classRegistry.getClasses();					// Get vector of all classes in Test.dll
 
 		Class clasz = classRegistry.getClass("Test");								// Get metaobject of class Test
-		std::unique_ptr<Object> test(clasz.newInstance<int>(5));					// Create an instance of Test with non-default constructor
+		std::unique_ptr<Object> test = clasz.newInstance<int>(5);					// Create an instance of Test with non-default constructor
 
 		Field field1 = test->getClass().getField("a");
 		Field field2 = test->getClass().getField("myString");
@@ -90,7 +90,7 @@ void example2() {
 		//rvalMethod.invoke(Test());
 
 		Class testDerivedClass = classRegistry.getClass("TestDerived");				// Get metaobject of class TestDerived, which is a derived class from Test
-		std::unique_ptr<Object> testDerived(testDerivedClass.newInstance());		// Create an instance of class TestDerived
+		std::unique_ptr<Object> testDerived = testDerivedClass.newInstance();		// Create an instance of class TestDerived
 	}
 	catch (const Exception & e) {
 		printf("ERROR: Exception caught: %s\n", e.Message());

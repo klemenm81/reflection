@@ -59,7 +59,7 @@ IConstructor& newConstructor() {
 }
 
 
-#define REFLECT_CLASS_START(Class, ...)											\
+#define REFLECT_TYPE_START(Class, ...)											\
 template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::registerMetadata()											\
@@ -75,7 +75,7 @@ void CClass<Class>::registerMetadata()											\
 		addConstructor(newConstructor<Class, Class &&>());						\
 	}
 
-#define REFLECT_CLASS_END(Class)				\
+#define REFLECT_TYPE_END(Class)					\
 }												\
 template<>										\
 CClass<Class>::CClass() : m_name(#Class) {		\
