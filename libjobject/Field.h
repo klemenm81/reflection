@@ -60,6 +60,10 @@ public:
 		m_field.deserialize(obj, json);
 	}
 
+	Indirection getIndirection() {
+		return m_field.getIndirection();
+	}
+
 	template<typename Type>
 	bool isType() {
 		if (std::to_string(typeid(Type).hash_code()) == m_field.getTypeSignature()) {

@@ -19,4 +19,21 @@ public:
 		static Class clasz(reflection);
 		return clasz;
 	}
+
+	Json::Value serialize() const {
+		Json::Value ret;
+		std::vector<Field> fields = getClass().getFields();
+		for (Field field : fields) {
+			ret[field.getName()] = field.serialize(*this);
+		}
+		return ret;
+	}
+
+	void deserialize(Json::Value value) {
+		Json::Value::Members members = value.getMemberNames();
+		for (std::string memberName : members) {
+			Field field = getClass().getField(memberName.c_str());
+			field.deserialize(*this, value[memberName].asString());
+		}
+	}
 };

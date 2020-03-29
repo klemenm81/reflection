@@ -13,7 +13,7 @@ class Serialization {
 public:
 	static Json::Value Serialize(Type val) {
 		if (std::is_base_of_v<Object, Type>) {
-
+			return val.serialize();
 		}
 		else {
 			throw SerializationException(typeid(Type).name());
@@ -22,7 +22,10 @@ public:
 
 	static Type Deserialize(Json::Value val) {
 		if (std::is_base_of_v<Object, Type>) {
-
+			static_assert(std::is_default_constructible_v<Type>, "Type is not default constructible");
+			Type v;
+			v.deserialize(val);
+			return v;
 		}
 		else {
 			throw DeserializationException(typeid(Type).name());

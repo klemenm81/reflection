@@ -15,6 +15,7 @@ public:
 	virtual Json::Value serialize(const Object& obj) const = 0;
 	virtual void deserialize(Object& obj, Json::Value value) const = 0;
 
+	virtual Indirection getIndirection() const = 0;
 	virtual const char* getTypeSignature() const = 0;
 	virtual const char* getTypeName() const = 0;
 	virtual bool isOptional() const = 0;

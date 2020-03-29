@@ -20,10 +20,6 @@ public:
 		return Value;
 	}
 
-	static bool IsOptional() {
-		return false;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(Type).hash_code());
 		return signature.c_str();
@@ -34,6 +30,10 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return false;
+	}
+
 	CAdaptor(const Type &value) : m_value(value) {
 	}
 	
@@ -41,6 +41,10 @@ public:
 	}
 
 	CAdaptor(Json::Value value) : m_value(Serialization<Type>::Deserialize(value)) {
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 	
 	const Type &getValue() {
@@ -70,10 +74,6 @@ public:
 		return Pointer;
 	}
 
-	static bool IsOptional() {
-		return false;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(Type*).hash_code());
 		return signature.c_str();
@@ -84,11 +84,19 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return false;
+	}
+
 	CAdaptor(Type *value) : m_value(value) {
 	}
 
 	CAdaptor(Json::Value value) {
 		throw MarshallingException("Pointers cannot be unmarshalled");;
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 
 	Type *getValue() {
@@ -119,10 +127,6 @@ public:
 		return LValueReference;
 	}
 
-	static bool IsOptional() {
-		return false;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(Type&).hash_code());
 		return signature.c_str();
@@ -133,11 +137,19 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return false;
+	}
+
 	CAdaptor(Type &value) : m_value(&value) {
 	}
 
 	CAdaptor(Json::Value value) {
 		throw MarshallingException("LValue references cannot be unmarshalled");;
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 
 	Type& getValue() {
@@ -167,10 +179,6 @@ public:
 		return RValueReference;
 	}
 
-	static bool IsOptional() {
-		return false;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(Type&&).hash_code());
 		return signature.c_str();
@@ -181,11 +189,19 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return false;
+	}
+
 	CAdaptor(Type &&value) : m_value(std::forward<Type>(value)) {
 	}
 
 	CAdaptor(Json::Value value) {
 		MarshallingException("RValue references cannot be unmarshalled");
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 
 	Type&& getValue() {
@@ -215,10 +231,6 @@ public:
 		return Value;
 	}
 
-	static bool IsOptional() {
-		return true;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(std::optional<Type>).hash_code());
 		return signature.c_str();
@@ -229,6 +241,10 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return true;
+	}
+
 	CAdaptor(const std::optional<Type>& value) : m_value(value) {
 	}
 
@@ -236,6 +252,10 @@ public:
 	}
 
 	CAdaptor(Json::Value value) : m_value(Serialization<std::optional<Type>>::Deserialize(value)) {
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 
 	const std::optional<Type>& getValue() {
@@ -263,10 +283,6 @@ public:
 		return Value;
 	}
 
-	static bool IsOptional() {
-		return false;
-	}
-
 	static const char* GetSignature() {
 		static const std::string signature = std::to_string(typeid(void).hash_code());
 		return signature.c_str();
@@ -277,10 +293,18 @@ public:
 		return name.c_str();
 	}
 
+	static bool IsOptional() {
+		return false;
+	}
+
 	CAdaptor() {
 	}
 
 	CAdaptor(Json::Value value) {
+	}
+
+	Indirection getIndirection() const {
+		return GetIndirection();
 	}
 	
 	const char* getSignature() const {

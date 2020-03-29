@@ -12,6 +12,7 @@
 
 #include "ParseStruct.h"
 
+#include <iostream>
 
 void example1(int argc, char** argv) {
 	try {
@@ -21,6 +22,15 @@ void example1(int argc, char** argv) {
 		IParser& parser = parserClass.upcast<IParser>(*obj);							// Acquire IParser interface from the created instance
 		ParseStruct parseStruct;		
 		parser.parse(argc, argv, parseStruct);											// Parse argc/argv pair and store the values in parseStruct
+
+		Json::StreamWriterBuilder wbuilder;
+		wbuilder["indentation"] = "\t";
+
+		Json::Value serialized = parseStruct.serialize();
+
+		std::cout << Json::writeString(wbuilder, serialized) << "\n";
+
+		parseStruct.deserialize(serialized);
 	}
 	catch (const Exception & e) {
 		printf("Exception occured during parse of options: %s\n", e.Message());

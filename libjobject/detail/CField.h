@@ -41,6 +41,10 @@ public:
 		setValue(obj, *adaptor);
 	}
 
+	Indirection getIndirection() const {
+		return CAdaptor<Type>::GetIndirection();
+	}
+
 	const char* getTypeSignature() const {
 		return CAdaptor<Type>::GetSignature();
 	}
