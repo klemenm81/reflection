@@ -30,32 +30,14 @@ public:
 	virtual IAdaptor* invoke(const Object&& obj, IAdaptor** args) const = 0;
 	virtual IAdaptor* invoke(volatile Object&& obj, IAdaptor** args) const = 0;
 	virtual IAdaptor* invoke(const volatile Object&& obj, IAdaptor** args) const = 0;
-
-	virtual Json::Value invokeMarshalled(Object& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(const Object& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(volatile Object& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(const volatile Object& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(Object&& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(const Object&& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(volatile Object&& obj, Json::Value args) const {
-		throw;
-	}
-	virtual Json::Value invokeMarshalled(const volatile Object&& obj, Json::Value args) const {
-		throw;
-	}
-
+	virtual Json::Value invokeMarshalled(Object& obj, Json::Value args) const = 0; 
+	virtual Json::Value invokeMarshalled(const Object& obj, Json::Value args) const = 0; 
+	virtual Json::Value invokeMarshalled(volatile Object& obj, Json::Value args) const = 0;
+	virtual Json::Value invokeMarshalled(const volatile Object& obj, Json::Value args) const = 0;
+	virtual Json::Value invokeMarshalled(Object&& obj, Json::Value args) const = 0;
+	virtual Json::Value invokeMarshalled(const Object&& obj, Json::Value args) const = 0;
+	virtual Json::Value invokeMarshalled(volatile Object&& obj, Json::Value args) const = 0;
+	virtual Json::Value invokeMarshalled(const volatile Object&& obj, Json::Value args) const = 0;
 	virtual ~IMethodInvoker() {
 	}
 };
