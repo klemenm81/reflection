@@ -90,23 +90,6 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
-		if constexpr (std::is_same<Return, void>()) {
-			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
-				CAdaptor<Args>(args[(int)Index]).getValue()...
-			);
-			return CAdaptor<void>().marshall();
-		}
-		else {
-			return CAdaptor<Return>(
-				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
-					CAdaptor<Args>(args[(int)Index]).getValue()...
-				)
-			).marshall();
-		}
-	}
-
-	template<typename Method, std::size_t... Index>
 	IAdaptor* invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
@@ -247,6 +230,142 @@ protected:
 					static_cast<CAdaptor<Args>&>(*args[Index]).getValue()...
 				)
 			);
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, const Object& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&>(static_cast<const Reflectable<Class>&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&>(static_cast<const Reflectable<Class>&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, volatile Object& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&>(static_cast<volatile Reflectable<Class>&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&>(static_cast<volatile Reflectable<Class>&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, const volatile Object& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&>(static_cast<const volatile Reflectable<Class>&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&>(static_cast<const volatile Reflectable<Class>&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, const Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, volatile Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
+		}
+	}
+
+	template<typename Method, std::size_t... Index>
+	Json::Value invoke(Method method, const volatile Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+		if constexpr (std::is_same<Return, void>()) {
+			(static_cast<Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
+				CAdaptor<Args>(args[(int)Index]).getValue()...
+			);
+			return CAdaptor<void>().marshall();
+		}
+		else {
+			return CAdaptor<Return>(
+				(static_cast<Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
+					CAdaptor<Args>(args[(int)Index]).getValue()...
+				)
+			).marshall();
 		}
 	}
 };

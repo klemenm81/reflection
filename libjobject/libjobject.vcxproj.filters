@@ -106,5 +106,8 @@
       <Filter>exceptions</Filter>
     </ClInclude>
     <ClInclude Include="Indirection.h" />
+    <ClInclude Include="exceptions\MethodsWithNArgumentsNotMatchingInputArguments.h">
+      <Filter>exceptions</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

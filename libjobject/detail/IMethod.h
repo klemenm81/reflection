@@ -34,6 +34,28 @@ public:
 	virtual Json::Value invokeMarshalled(Object& obj, Json::Value args) const {
 		throw;
 	}
+	virtual Json::Value invokeMarshalled(const Object& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(volatile Object& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(const volatile Object& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(Object&& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(const Object&& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(volatile Object&& obj, Json::Value args) const {
+		throw;
+	}
+	virtual Json::Value invokeMarshalled(const volatile Object&& obj, Json::Value args) const {
+		throw;
+	}
+
 	virtual ~IMethodInvoker() {
 	}
 };
