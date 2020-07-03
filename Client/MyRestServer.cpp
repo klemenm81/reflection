@@ -1,5 +1,3 @@
-#pragma once
-
 #include "MyRestServer.h"
 
 int MyRestServer::GET_method1() {

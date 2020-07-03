@@ -246,7 +246,7 @@ template <>
 class Serialization<long long> {
 public:
 	static Json::Value Serialize(long long value) {
-		Json::Value json(value);
+		Json::Value json((Json::Int64)value);
 		return json;
 	}
 
@@ -259,7 +259,7 @@ template <>
 class Serialization<unsigned long long> {
 public:
 	static Json::Value Serialize(unsigned long long value) {
-		Json::Value json(value);
+		Json::Value json((Json::UInt64)value);
 		return json;
 	}
 
