@@ -9,8 +9,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="metadata.cpp" />
+    <ClCompile Include="MyRestServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParseStruct.h" />
+    <ClInclude Include="MyRestServer.h" />
   </ItemGroup>
 </Project>

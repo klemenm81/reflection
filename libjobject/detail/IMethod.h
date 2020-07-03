@@ -101,7 +101,7 @@ public:
 			return methods->second.data();
 		}
 		else {
-			throw MethodWithNArgumentsNotFound(nArgs);
+			throw MethodWithNArgumentsNotFound(m_name.c_str(), nArgs);
 		}
 	}
 };

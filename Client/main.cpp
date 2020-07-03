@@ -9,10 +9,32 @@
 #include "../libjobject/Reflectable.h"
 
 #include "../components/CLIParser/IParser.h"
+#include "../components/RESTServer/IRESTController.h"
 
 #include "ParseStruct.h"
+#include "MyRestServer.h"
 
 #include <iostream>
+#include <signal.h>
+
+#include <condition_variable>
+#include <mutex>
+
+std::condition_variable m_condition;
+std::mutex m_mutex;
+
+void handleUserInterrupt(int signal) {
+	if (signal == SIGINT) {
+		m_condition.notify_one();
+	}
+}
+
+void waitUntilUserInterrupt() {
+	std::unique_lock<std::mutex> lock{ m_mutex };
+	m_condition.wait(lock);
+	lock.unlock();
+}
+
 
 void example1(int argc, char** argv) {
 	try {
@@ -34,6 +56,28 @@ void example1(int argc, char** argv) {
 
 
 void example2() {
+	try {
+		MyRestServer myRestServer;
+		ClassRegistry parserRegistry = ClassRegistry::GetClassRegistry("RESTServer.dll");
+		Class parserClass = parserRegistry.getClass("RESTController");
+		std::unique_ptr<Object> obj(parserClass.newInstance<std::wstring, Object&>(L"http://localhost:6502/v1/reflection/api", myRestServer));
+		IRESTController& restController = parserClass.upcast<IRESTController>(*obj);
+
+		signal(SIGINT, handleUserInterrupt);
+
+		restController.start();
+
+		waitUntilUserInterrupt();
+
+		restController.shutdown();
+	}
+	catch (const Exception & e) {
+		printf("Exception occured during parse of options: %s\n", e.Message());
+	}
+}
+
+
+void example3() {
 	try {
 		ClassRegistry classRegistry = ClassRegistry::GetClassRegistry("Test.dll");	// Load Test.dll and acquire its class registry
 		std::vector<Class> classes = classRegistry.getClasses();					// Get vector of all classes in Test.dll
@@ -99,5 +143,6 @@ void example2() {
 
 int main(int argc, char **argv) {
 	example1(argc, argv);
-	example2();	
+	//example2();
+	example3();
 }

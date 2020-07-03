@@ -12,7 +12,7 @@ template <typename Type>
 class Serialization {
 public:
 	static Json::Value Serialize(Type val) {
-		if (std::is_base_of_v<Object, Type>) {
+		if constexpr (std::is_base_of_v<Object, Type>) {
 			return val.serialize();
 		}
 		else {
@@ -21,7 +21,7 @@ public:
 	}
 
 	static Type Deserialize(Json::Value val) {
-		if (std::is_base_of_v<Object, Type>) {
+		if constexpr (std::is_base_of_v<Object, Type>) {
 			static_assert(std::is_default_constructible_v<Type>, "Type is not default constructible");
 			Type v;
 			v.deserialize(val);
@@ -72,6 +72,33 @@ public:
 		std::list<Type> ret;
 		for (auto it = val.begin(); it != val.end(); it++) {
 			ret.push_back(Serialization<Type>::Deserialize(*it));
+		}
+		return ret;
+	}
+};
+
+template <typename KeyType, typename ValueType>
+class Serialization<std::map<KeyType, ValueType>> {
+public:
+	static Json::Value Serialize(std::map<KeyType, ValueType> m) {
+		Json::Value::ArrayIndex index = 0;
+		Json::Value ret;
+		for (auto it = m.begin(); it != m.end(); it++) {
+			Json::Value item;
+			item["key"] = Serialization<KeyType>::Serialize(it->first);
+			item["value"] = Serialization<ValueType>::Serialize(it->second);
+			ret.insert(index++, item);
+		}
+		return ret;
+	}
+
+	static std::map<KeyType, ValueType> Deserialize(Json::Value val) {
+		size_t index = 0;
+		std::map<KeyType, ValueType> ret;
+		for (auto it = val.begin(); it != val.end(); it++) {
+			KeyType key = Serialization<KeyType>::Deserialize((*it)["key"]);
+			ValueType value = Serialization<ValueType>::Deserialize((*it)["value"]);
+			ret[key] = value;
 		}
 		return ret;
 	}

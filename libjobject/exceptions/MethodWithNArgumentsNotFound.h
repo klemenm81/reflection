@@ -7,15 +7,19 @@ class MethodWithNArgumentsNotFound : public Exception {
 private:
 	std::string m_errorMsg;
 public:
-	MethodWithNArgumentsNotFound(size_t nArguments) : m_errorMsg(
-		std::string("Method with ") +
+	MethodWithNArgumentsNotFound(const char *methodName, size_t nArguments) : m_errorMsg(
+		std::string("Method '") +
+		std::string(methodName) +
+		std::string("' with ") +
 		std::to_string(nArguments) +
 		std::string(" arguments not found.")
 	) {
 	}
 
-	MethodWithNArgumentsNotFound(size_t nArguments, const Exception& other) : m_errorMsg(
-		std::string("Method with ") +
+	MethodWithNArgumentsNotFound(const char* methodName, size_t nArguments, const Exception& other) : m_errorMsg(
+		std::string("Method '") +
+		std::string(methodName) +
+		std::string("' with ") +
 		std::to_string(nArguments) +
 		std::string(" arguments not found: \n") +
 		std::string(other.Message())
