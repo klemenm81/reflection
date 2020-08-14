@@ -2,7 +2,7 @@
 #include "../../libjobject/Metadata.h"
 
 REFLECT_TYPE_START(Parser, IParser)
-REFLECT_TYPE_END(Parser)
+REFLECT_TYPE_END
 
 REFLECT_CLASS_REGISTRY_START
 	REFLECT_REGISTER_CLASS(Parser)

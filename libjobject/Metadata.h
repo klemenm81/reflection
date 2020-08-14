@@ -63,6 +63,10 @@ IConstructor& newConstructor() {
 
 #define REFLECT_TYPE_START(Class, ...)											\
 template<>																		\
+CClass<Class>::CClass() : m_name(#Class) {										\
+	registerMetadata<Class>();													\
+}																				\
+template<>																		\
 template <typename ReflectedClass>												\
 void CClass<Class>::registerMetadata()											\
 {																				\
@@ -77,12 +81,9 @@ void CClass<Class>::registerMetadata()											\
 		addConstructor(newConstructor<Class, Class &&>());						\
 	}
 
-#define REFLECT_TYPE_END(Class)					\
-}												\
-template<>										\
-CClass<Class>::CClass() : m_name(#Class) {		\
-	registerMetadata<Class>();					\
-}	
+#define REFLECT_TYPE_END														\
+}												
+
 
 #define REFLECT_FIELD(Field)																			\
 	addField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
