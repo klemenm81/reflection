@@ -4,6 +4,7 @@
 #include "Field.h"
 #include "Method.h"
 #include "Object.h"
+#include "TypeInfo.h"
 
 class Class {
 private:
@@ -38,7 +39,7 @@ public:
 
 	template <typename Cast>
 	Cast& upcast(Object& obj) const {
-		const ICast& cast = m_class.getCast(std::to_string(typeid(Cast).hash_code()).c_str(), typeid(Cast).name());
+		const ICast& cast = m_class.getCast(std::to_string(TypeInfo<Cast>::getUniqueId()).c_str(), TypeInfo<Cast>::getName());
 		CAdaptor<Cast&> *adaptor = static_cast<CAdaptor<Cast&> *>(cast.castClass(obj));
 		return adaptor->getValue();
 	}
@@ -75,14 +76,14 @@ public:
 	std::unique_ptr<Object> newInstance(Args... args) const {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
-			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
+			argsSignature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
 		}
 		else {
 			argsSignature = ";";
 		}
 		std::string argsName;
 		if constexpr (sizeof...(Args) > 0) {
-			argsName = ((std::string(";") + std::string(typeid(Args).name())) + ...);
+			argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
 		}
 		else {
 			argsName = ";";

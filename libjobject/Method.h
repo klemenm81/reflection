@@ -6,6 +6,7 @@
 #include "detail/CAdaptor.h"
 #include "exceptions/MethodsWithNArgumentsNotMatchingInputArguments.h"
 #include "Object.h"
+#include "TypeInfo.h"
 #include <vector>
 
 class Method {
@@ -30,7 +31,7 @@ protected:
 	static std::string GetArgsSignature() {
 		std::string argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
-			argsSignature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
+			argsSignature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
 		}
 		else {
 			argsSignature = ";";
@@ -42,7 +43,7 @@ protected:
 	static std::string GetArgsName() {
 		std::string argsName;
 		if constexpr (sizeof...(Args) > 0) {
-			argsName = ((std::string(";") + std::string(typeid(Args).name())) + ...);
+			argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
 		}
 		else {
 			argsName = ";";
@@ -118,8 +119,8 @@ public:
 	void pushArg(Type value) {
 		std::string argsSignature = m_argsSignature;
 		std::string argsName = m_argsName;
-		argsSignature += std::string(";") + std::to_string(typeid(Type).hash_code());
-		argsName += std::string(";") + std::string(typeid(Type).name());
+		argsSignature += std::string(";") + std::to_string(TypeInfo<Type>::getUniqueId());
+		argsName += std::string(";") + std::string(TypeInfo<Type>::getName());
 		const IMethodInvoker& methodInvoker = m_method.getMethodContainingSignature(argsSignature.c_str() + 1, argsName.c_str() + 1);
 		m_args.push_back(new(methodInvoker.getArgBuffer(m_args.size())) CAdaptor<Type>(value));
 		m_argsSignature = argsSignature;

@@ -3,6 +3,7 @@
 #include "CAdaptor.h"
 #include "IConstructor.h"
 #include "../Object.h"
+#include "../TypeInfo.h"
 #include "../Reflectable.h"
 #include "../exceptions/ArgumentOutOfBoundsException.h"
 
@@ -46,7 +47,7 @@ public:
 
 	const char* getArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
-			static const std::string signature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
+			static const std::string signature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
 			return signature.c_str() + 1;
 		}
 		else {
@@ -57,7 +58,7 @@ public:
 
 	const char* getArgsName() const {
 		if constexpr (sizeof...(Args) > 0) {
-			static const std::string name = ((std::string(";") + std::string(typeid(Args).name())) + ...);
+			static const std::string name = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
 			return name.c_str() + 1;
 		}
 		else {

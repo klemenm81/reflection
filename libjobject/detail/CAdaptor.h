@@ -4,11 +4,11 @@
 #include "IAdaptor.h"
 #include "../Serialization.h"
 #include "../exceptions/MarshallingException.h"
+#include "../TypeInfo.h"
 #include <optional>
 #include <string>
 #include <vector>
 #include <forward_list>
-#include <typeinfo>
 
 template <typename Type>
 class CAdaptor : public IAdaptor {
@@ -21,12 +21,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(Type).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<Type>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(Type).name();
+		static const std::string name = TypeInfo<Type>::getName();
 		return name.c_str();
 	}
 
@@ -75,12 +75,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(Type*).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<Type*>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(Type*).name();
+		static const std::string name = TypeInfo<Type*>::getName();
 		return name.c_str();
 	}
 
@@ -128,12 +128,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(Type&).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<Type&>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(Type&).name();
+		static const std::string name = TypeInfo<Type&>::getName();
 		return name.c_str();
 	}
 
@@ -180,12 +180,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(Type&&).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<Type&&>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(Type&&).name();
+		static const std::string name = TypeInfo<Type&&>::getName();
 		return name.c_str();
 	}
 
@@ -232,12 +232,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(std::optional<Type>).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<std::optional<Type>>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(std::optional<Type>).name();
+		static const std::string name = TypeInfo<std::optional<Type>>::getName();
 		return name.c_str();
 	}
 
@@ -284,12 +284,12 @@ public:
 	}
 
 	static const char* GetSignature() {
-		static const std::string signature = std::to_string(typeid(void).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<void>::getUniqueId());
 		return signature.c_str();
 	}
 
 	static const char* GetName() {
-		static const std::string name = typeid(void).name();
+		static const std::string name = TypeInfo<void>::getName();
 		return name.c_str();
 	}
 

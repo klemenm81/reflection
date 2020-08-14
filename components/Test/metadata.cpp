@@ -77,6 +77,7 @@ REFLECT_TYPE_START(Test)
 	REFLECT_METHOD(bar24)
 	REFLECT_METHOD(overload, void, int)
 	REFLECT_METHOD(overloadEx, void, int) 
+	REFLECT_METHOD(testPerformance)
 REFLECT_TYPE_END(Test)
 
 REFLECT_TYPE_START(TestDerived, Test)

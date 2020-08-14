@@ -141,8 +141,28 @@ void example3() {
 	}
 }
 
+void testPerformance() {
+	try {
+		ClassRegistry classRegistry = ClassRegistry::GetClassRegistry("Test.dll");
+		std::vector<Class> classes = classRegistry.getClasses();
+		Class clasz = classRegistry.getClass("Test");
+
+		std::unique_ptr<Object> test = clasz.newInstance<int>(5);
+
+		Method m = clasz.getMethod("testPerformance");
+
+		for (int i = 0; i < 10000000; i++) {
+			m.invokeInline<std::string, std::string, int, double>(*test, "test", 5, 3.14);
+		}
+	}
+	catch (const Exception & e) {
+		printf("ERROR: Exception caught: %s\n", e.Message());
+	}
+}
+
 int main(int argc, char **argv) {
 	example1(argc, argv);
 	//example2();
 	example3();
+	testPerformance();
 }

@@ -6,6 +6,7 @@
 #include "detail/CField.h"
 #include "detail/CMethodInvoker.h"
 #include "detail/CClassRegistry.h"
+#include "TypeInfo.h"
 
 #ifdef _WIN32
     #define EXPORT_API _declspec(dllexport)
@@ -39,7 +40,8 @@ constexpr auto inline_sfinae(nothing<Ts>&&, Lambda lambda) -> decltype(lambda(st
 template <typename Class, typename... Casts>
 std::vector<ICast*> newCasts() {
 	std::vector<ICast*> ret;
-	int dummy[] = { (ret.push_back(new CCast<Class, Casts>(std::to_string(typeid(Casts).hash_code()).c_str(), typeid(Casts).name())), 0)... };
+	int dummy[] = { (ret.push_back(
+		new CCast<Class, Casts>(std::to_string(TypeInfo<Casts>::getUniqueId()).c_str(), TypeInfo<Casts>::getName())), 0)... };
 	return ret;
 }
 

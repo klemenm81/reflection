@@ -3,8 +3,10 @@
 #include "detail/CAdaptor.h"
 #include "detail/IField.h"
 #include "Object.h"
+#include "TypeInfo.h"
 #include "../libjson/include/json/json.h"
 #include <sstream>
+
 
 class Field {
 private:
@@ -76,7 +78,7 @@ public:
 
 	template<typename Type>
 	bool isType() {
-		if (std::to_string(typeid(Type).hash_code()) == m_field.getTypeSignature()) {
+		if (std::to_string(TypeInfo<Type>::getUniqueId()) == m_field.getTypeSignature()) {
 			return true;
 		}
 		else {

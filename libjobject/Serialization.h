@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Object.h"
+#include "TypeInfo.h"
 #include "../libjson/include/json/json.h"
 #include "exceptions/SerializationException.h"
 #include "exceptions/DeserializationException.h"
@@ -16,7 +17,7 @@ public:
 			return val.serialize();
 		}
 		else {
-			throw SerializationException(typeid(Type).name());
+			throw SerializationException(TypeInfo<Type>::getName());
 		}
 	}
 
@@ -28,7 +29,7 @@ public:
 			return v;
 		}
 		else {
-			throw DeserializationException(typeid(Type).name());
+			throw DeserializationException(TypeInfo<Type>::getName());
 		}
 	}
 };

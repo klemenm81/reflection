@@ -6,8 +6,8 @@
 #include "../Reflectable.h"
 #include "../exceptions/ArgumentOutOfBoundsException.h"
 #include "../../libjson/include/json/json.h"
+#include "../TypeInfo.h"
 #include <string>
-#include <typeinfo>
 #include <cstddef>
 
 template <typename Class, typename Return, typename... Args>
@@ -59,7 +59,7 @@ protected:
 
 	const char* getArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
-			static const std::string signature = ((std::string(";") + std::to_string(typeid(Args).hash_code())) + ...);
+			static const std::string signature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
 			return signature.c_str() + 1;
 		}
 		else {
@@ -70,7 +70,7 @@ protected:
 
 	const char* getArgsName() const {
 		if constexpr (sizeof...(Args) > 0) {
-			static const std::string name = ((std::string(";") + std::string(typeid(Args).name())) + ...);
+			static const std::string name = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
 			return name.c_str() + 1;
 		}
 		else {
@@ -80,12 +80,12 @@ protected:
 	}
 
 	const char *getRetValSignature() const {
-		static const std::string signature = std::to_string(typeid(Return).hash_code());
+		static const std::string signature = std::to_string(TypeInfo<Return>::getUniqueId());
 		return signature.c_str();
 	}
 
 	const char *getRetValName() const {
-		static const std::string name = typeid(Return).name();
+		static const std::string name = TypeInfo<Return>::getName();
 		return name.c_str();
 	}
 

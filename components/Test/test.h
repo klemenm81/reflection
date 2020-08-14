@@ -177,7 +177,9 @@ public:
 	{
 	}
 
-
+	std::string testPerformance(std::string s, int i, double f) {
+		return "test";
+	}
 };
 
 class TestDerived : public Test, public Reflectable<TestDerived> {
