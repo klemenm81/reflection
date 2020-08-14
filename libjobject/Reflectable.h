@@ -14,9 +14,9 @@ class Reflectable : public Object {
 protected:
 	typedef ClassType ReflectedClass;
 public:
-	Class &getClass() const {
-		static CClass<ClassType> reflection;
-		static Class clasz(reflection);
+	const Class &getClass() const {
+		static const CClass<ClassType> reflection;
+		static const Class clasz(reflection);
 		return clasz;
 	}
 
