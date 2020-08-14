@@ -19,42 +19,12 @@ protected:
 	CMethodInvokerBase(const char* name) : m_name(name) {
 	}
 
-	static constexpr size_t ArgsSize() {
-		if constexpr (sizeof...(Args) > 0) {
-			return (sizeof(CAdaptor<Args>) + ...);
-		}
-		else {
-			return 0;
-		}
-	}
-
-	template <size_t... Index>
-	static constexpr size_t ArgOffset(int iArg, std::index_sequence<Index...>) {
-		return (((Index < iArg) ? sizeof(CAdaptor<Args>) : 0) + ...);
-	}
-
-	template <size_t... Index>
-	static std::byte *GetArgBuffer(size_t iArg, std::index_sequence<Index...>) {
-		if constexpr (sizeof...(Args) > 0) {
-			static thread_local std::byte argsBuffer[ArgsSize()];
-			static size_t offsets[sizeof...(Args)] = { ArgOffset(Index, std::index_sequence_for<Args...>{})... };
-			return argsBuffer + offsets[iArg];
-		}
-		else {
-			throw ArgumentOutOfBoundsException(iArg, sizeof...(Args));
-		}
-	}
-
 	const char* getName() const {
 		return m_name.c_str();
 	}
 
 	size_t getNArgs() const {
 		return sizeof...(Args);
-	}
-
-	std::byte* getArgBuffer(size_t iArg) const {
-		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}
 
 	size_t getArgsSignature() const {
@@ -78,9 +48,9 @@ protected:
 		}
 	}
 
-	const char *getRetValSignature() const {
-		static const std::string signature = std::to_string(TypeInfo<Return>::getUniqueId());
-		return signature.c_str();
+	size_t getRetValSignature() const {
+		static const size_t retValSignature = TypeInfo<Return>::getUniqueId();
+		return retValSignature;
 	}
 
 	const char *getRetValName() const {

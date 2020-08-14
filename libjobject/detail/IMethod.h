@@ -16,10 +16,9 @@ class IMethodInvoker {
 public:
 	virtual const char* getName() const = 0;
 	virtual size_t getNArgs() const = 0;
-	virtual std::byte* getArgBuffer(size_t iArg) const = 0;
 	virtual size_t getArgsSignature() const = 0;
 	virtual const char* getArgsName() const = 0;
-	virtual const char* getRetValSignature() const = 0;
+	virtual size_t getRetValSignature() const = 0;
 	virtual const char* getRetValName() const = 0;
 	virtual Qualifier getQualifier() const = 0;
 	virtual IAdaptor* invoke(Object &obj, IAdaptor **args) const = 0;
