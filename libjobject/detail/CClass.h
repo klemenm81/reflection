@@ -19,7 +19,7 @@ private:
 	std::map<std::string, ICast*> m_castMap;
 	std::map<std::string, IField*> m_fieldMap;
 	std::map<std::string, IMethod*> m_methodMap;
-	std::map<std::string, IConstructor*> m_constructorMap;
+	std::map<size_t, IConstructor*> m_constructorMap;
 	std::vector<ICast*> m_castVector;
 	std::vector<IField*> m_fieldVector;
 	std::vector<IMethod*> m_methodVector;
@@ -103,7 +103,7 @@ public:
 		m_constructorVector.push_back(&constructor);
 	}
 
-	const IConstructor& getConstructor(const char* argsSignature, const char* argsName) const {
+	const IConstructor& getConstructor(size_t argsSignature, const char* argsName) const {
 		auto constructor = m_constructorMap.find(argsSignature);
 		if (constructor != m_constructorMap.end()) {
 			return *(constructor->second);

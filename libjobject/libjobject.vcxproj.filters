@@ -109,5 +109,6 @@
     <ClInclude Include="exceptions\MethodsWithNArgumentsNotMatchingInputArguments.h">
       <Filter>exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="TypeInfo.h" />
   </ItemGroup>
 </Project>

@@ -17,7 +17,7 @@ public:
 	virtual const char* getName() const = 0;
 	virtual size_t getNArgs() const = 0;
 	virtual std::byte* getArgBuffer(size_t iArg) const = 0;
-	virtual const char* getArgsSignature() const = 0;
+	virtual size_t getArgsSignature() const = 0;
 	virtual const char* getArgsName() const = 0;
 	virtual const char* getRetValSignature() const = 0;
 	virtual const char* getRetValName() const = 0;
@@ -46,7 +46,7 @@ public:
 class IMethod {
 private:
 	std::string m_name;
-	std::map<std::string, std::map<Qualifier, IMethodInvoker*>> m_methodOverloadMap;
+	std::map<size_t, std::map<Qualifier, IMethodInvoker*>> m_methodOverloadMap;
 	std::map<size_t, std::vector<IMethodInvoker*>> m_methodOverloadMapByNArgs;
 
 public:
@@ -63,7 +63,7 @@ public:
 		m_methodOverloadMapByNArgs[methodInvoker.getNArgs()].push_back(&methodInvoker);
 	}
 
-	const IMethodInvoker& getMethod(const char* argsSignature, const char *argsName, Qualifier qualifier) const {
+	const IMethodInvoker& getMethod(size_t argsSignature, const char *argsName, Qualifier qualifier) const {
 		auto methodInvokers = m_methodOverloadMap.find(argsSignature);
 		if (methodInvokers != m_methodOverloadMap.end()) {
 			auto invoker = methodInvokers->second.find(qualifier);
@@ -77,21 +77,6 @@ public:
 		else {
 			throw MethodWithSignatureNotFoundException(argsName);
 		}
-	}
-
-	const IMethodInvoker& getMethodContainingSignature(const char* argsSignature, const char* argsName) const {
-		for (auto it = m_methodOverloadMap.begin(); it != m_methodOverloadMap.end(); it++) {
-			if (!strncmp(it->first.c_str(), argsSignature, strlen(argsSignature))) {
-				const std::map<Qualifier, IMethodInvoker*>& methodInvokers = it->second;
-				for (auto it = methodInvokers.begin(); it != methodInvokers.end(); it++) {
-					if (it->second != nullptr) {
-						return *it->second;
-					}
-				}
-			}
-		}
-
-		throw MethodContainingSignatureNotFoundException(argsName);
 	}
 
 	IMethodInvoker* const* getMethodsByNArgs(size_t nArgs, size_t& nMethods) const {

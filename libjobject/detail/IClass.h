@@ -13,7 +13,7 @@ public:
 	virtual IField* const* getFields(size_t& nFields) const = 0;
 	virtual const IMethod& getMethod(const char* name) const = 0;
 	virtual IMethod* const* getMethods(size_t& nMethods) const = 0;
-	virtual const IConstructor& getConstructor(const char* argsSignature, const char* argsName) const = 0;
+	virtual const IConstructor& getConstructor(size_t argsSignature, const char* argsName) const = 0;
 	virtual IConstructor* const* getConstructors(size_t& nConstructors) const = 0;
 	virtual ~IClass() {
 	}

@@ -45,14 +45,13 @@ public:
 		return GetArgBuffer(iArg, std::index_sequence_for<Args...>{});
 	}
 
-	const char* getArgsSignature() const {
+	size_t getArgsSignature() const {
 		if constexpr (sizeof...(Args) > 0) {
-			static const std::string signature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
-			return signature.c_str() + 1;
+			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			return argsSignature;
 		}
 		else {
-			static const std::string signature = ";";
-			return signature.c_str() + 1;
+			return 0;
 		}
 	}
 

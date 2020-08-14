@@ -74,12 +74,12 @@ public:
 
 	template <typename... Args>
 	std::unique_ptr<Object> newInstance(Args... args) const {
-		std::string argsSignature;
+		size_t argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
-			argsSignature = ((std::string(";") + std::to_string(TypeInfo<Args>::getUniqueId())) + ...);
+			argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
 		}
 		else {
-			argsSignature = ";";
+			argsSignature = 0;
 		}
 		std::string argsName;
 		if constexpr (sizeof...(Args) > 0) {
@@ -88,7 +88,7 @@ public:
 		else {
 			argsName = ";";
 		}
-		const IConstructor& constructor = m_class.getConstructor(argsSignature.c_str() + 1, argsName.c_str() + 1);
+		const IConstructor& constructor = m_class.getConstructor(argsSignature, argsName.c_str() + 1);
 		return std::unique_ptr<Object>(&constructor.newInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data()));
 	}
 };

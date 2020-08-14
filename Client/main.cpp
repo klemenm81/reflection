@@ -19,6 +19,7 @@
 
 #include <condition_variable>
 #include <mutex>
+#include <chrono>
 
 std::condition_variable m_condition;
 std::mutex m_mutex;
@@ -111,27 +112,15 @@ void example3() {
 
 		std::string str = "PI = ";
 
-		method1.invokeInline<void, std::string&, float>(*test, str, 3.14f);			// Invoke method foo1 with parameters of type string& and float and void return
-		int ret = method2.invokeInline<int, const char*>(*test, "Hello Reflected");	// Invoke method foo2 with parameters of type const char* and return of type int
+		method1.invoke<void, std::string&, float>(*test, str, 3.14f);			// Invoke method foo1 with parameters of type string& and float and void return
+		int ret = method2.invoke<int, const char*>(*test, "Hello Reflected");	// Invoke method foo2 with parameters of type const char* and return of type int
 		printf("Main(): Return from Foo2 = %d\n", ret);
 		printf("Main(): str = %s\n", str.c_str());
-
-		method1.pushArg<std::string&>(str);											// Invoke method foo1 by dynamically adding parameters of type std::string& and float 
-		method1.pushArg<float>(3.14f);
-		method1.invoke(*test);
-
-		method2.pushArg<const char*>("Hello Reflected");							// Invoke method foo2 by dynamically adding parameters of type const char *
-		method2.invoke(*test);														// and acquiring return value of type int
-		int ret2 = method2.getRetVal<int>();
 
 		std::string retStr = overloadedMethod.invokeMarshalled(						// Invoke method foo1 by not being aware of its input type and type of the return value
 			*test,																	
 			std::vector<std::string> { "[3, 5, 4]", "5" }							// Parameters are represented as strings in json form
 		);
-
-		//constMethod.invoke(test);
-		//printf("Main(): Return from FooConst = %s\n", constMethod.GetRetVal<std::string>().c_str());
-		//rvalMethod.invoke(Test());
 
 		Class testDerivedClass = classRegistry.getClass("TestDerived");				// Get metaobject of class TestDerived, which is a derived class from Test
 		std::unique_ptr<Object> testDerived = testDerivedClass.newInstance();		// Create an instance of class TestDerived
@@ -151,9 +140,15 @@ void testPerformance() {
 
 		Method m = clasz.getMethod("testPerformance");
 
+		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+
 		for (int i = 0; i < 10000000; i++) {
-			m.invokeInline<std::string, std::string, int, double>(*test, "test", 5, 3.14);
+			std::string str = m.invoke<std::string, std::string, int, double>(*test, "test", 5, 3.14);
 		}
+
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+
+		std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::nanoseconds> (end - begin).count() << "[ns]" << std::endl;
 	}
 	catch (const Exception & e) {
 		printf("ERROR: Exception caught: %s\n", e.Message());

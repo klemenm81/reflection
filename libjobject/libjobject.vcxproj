@@ -184,6 +184,7 @@
     <ClInclude Include="Qualifier.h" />
     <ClInclude Include="Reflectable.h" />
     <ClInclude Include="Serialization.h" />
+    <ClInclude Include="TypeInfo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

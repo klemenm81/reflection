@@ -98,6 +98,12 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/experimental:preprocessor %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(SolutionDir)\libcpprest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <Optimization>MaxSpeed</Optimization>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <OmitFramePointers>true</OmitFramePointers>
+      <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

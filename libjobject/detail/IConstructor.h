@@ -9,7 +9,7 @@ class IConstructor {
 public:
 	virtual size_t getNArgs() const = 0;
 	virtual std::byte* getArgBuffer(size_t iArg) const = 0;
-	virtual const char* getArgsSignature() const = 0;
+	virtual size_t getArgsSignature() const = 0;
 	virtual const char* getArgsName() const = 0;
 	virtual Object& newInstance(IAdaptor** args) const = 0;
 	virtual ~IConstructor() {
