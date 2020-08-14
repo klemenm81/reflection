@@ -155,7 +155,7 @@ void CClass<Class>::registerMetadata()											\
 	CAT2(REFLECT_METHOD_, NARG16(dummy, ##__VA_ARGS__))(Method, ##__VA_ARGS__)
 
 #define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
-#define REFLECT_METHOD_2(Method, Return, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)
+#define REFLECT_METHOD_2(Return, Method, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)
 
 #define REFLECT_CONSTRUCTOR(Class, ...)																				\
 	static_assert(																									\
