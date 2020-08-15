@@ -39,12 +39,12 @@ void waitUntilUserInterrupt() {
 
 void example1(int argc, char** argv) {
 	try {
-		ClassRegistry parserRegistry = ClassRegistry::GetClassRegistry("CLIParser.dll");// Load CLIParser.dll and acquire its class registry
-		Class parserClass = parserRegistry.getClass("Parser");							// Get metaobject of class Parser
-		std::unique_ptr<Object> obj(parserClass.newInstance());							// Create instance of Parser and store its pointer to unique_ptr
-		IParser& parser = parserClass.upcast<IParser>(*obj);							// Acquire IParser interface from the created instance
+		ClassRegistry parserRegistry("CLIParser.dll");						// Load CLIParser.dll and acquire its class registry
+		Class parserClass = parserRegistry.getClass("Parser");				// Get metaobject of class Parser
+		std::unique_ptr<Object> obj(parserClass.newInstance());				// Create instance of Parser and store its pointer to unique_ptr
+		IParser& parser = parserClass.upcast<IParser>(*obj);				// Acquire IParser interface from the created instance
 		ParseStruct parseStruct;		
-		parser.parse(argc, argv, parseStruct);											// Parse argc/argv pair and store the values in parseStruct
+		parser.parse(argc, argv, parseStruct);								// Parse argc/argv pair and store the values in parseStruct
 
 		const char *serialized = parseStruct.toString();
 		std::cout << serialized << "\n";
@@ -59,9 +59,11 @@ void example1(int argc, char** argv) {
 void example2() {
 	try {
 		MyRestServer myRestServer;
-		ClassRegistry parserRegistry = ClassRegistry::GetClassRegistry("RESTServer.dll");
-		Class parserClass = parserRegistry.getClass("RESTController");
-		std::unique_ptr<Object> obj(parserClass.newInstance<std::wstring, Object&>(L"http://localhost:6502/v1/reflection/api", myRestServer));
+		ClassRegistry restServerRegistry("RESTServer.dll");
+		Class parserClass = restServerRegistry.getClass("RESTController");
+		std::unique_ptr<Object> obj(
+			parserClass.newInstance<std::wstring, Object&>(L"http://localhost:6502/v1/reflection/api", myRestServer)
+		);
 		IRESTController& restController = parserClass.upcast<IRESTController>(*obj);
 
 		signal(SIGINT, handleUserInterrupt);
@@ -80,7 +82,7 @@ void example2() {
 
 void example3() {
 	try {
-		ClassRegistry classRegistry = ClassRegistry::GetClassRegistry("Test.dll");	// Load Test.dll and acquire its class registry
+		ClassRegistry classRegistry("Test.dll");									// Load Test.dll and acquire its class registry
 		std::vector<Class> classes = classRegistry.getClasses();					// Get vector of all classes in Test.dll
 
 		Class clasz = classRegistry.getClass("Test");								// Get metaobject of class Test
@@ -132,7 +134,7 @@ void example3() {
 
 void testPerformance() {
 	try {
-		ClassRegistry classRegistry = ClassRegistry::GetClassRegistry("Test.dll");
+		ClassRegistry classRegistry("Test.dll");
 		std::vector<Class> classes = classRegistry.getClasses();
 		Class clasz = classRegistry.getClass("Test");
 
@@ -154,6 +156,9 @@ void testPerformance() {
 		printf("ERROR: Exception caught: %s\n", e.Message());
 	}
 }
+
+
+
 
 int main(int argc, char **argv) {
 	example1(argc, argv);

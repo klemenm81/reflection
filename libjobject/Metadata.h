@@ -60,8 +60,11 @@ IConstructor& newConstructor() {
 	return *new CConstructor<ReflectedClass, Args...>();
 }
 
-
 #define REFLECT_TYPE_START(Class, ...)											\
+extern "C" EXPORT_API const IClass& Factory_##Class() {							\
+	static const CClass<Class> clasz;											\
+	return clasz;																\
+}																				\
 template<>																		\
 CClass<Class>::CClass() : m_name(#Class) {										\
 	registerMetadata<Class>();													\

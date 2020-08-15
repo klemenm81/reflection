@@ -111,4 +111,7 @@
     </ClInclude>
     <ClInclude Include="TypeInfo.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ClassRegistry.cpp" />
+  </ItemGroup>
 </Project>

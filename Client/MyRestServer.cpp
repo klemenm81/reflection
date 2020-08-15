@@ -13,6 +13,8 @@ std::map<std::string, double> MyRestServer::GET_method2() {
     return myMap;
 }
 
-std::vector<std::string> MyRestServer::GET_method3(std::vector<std::string> pathParameters, std::map<std::string, std::string> queryParameters) {
+std::vector<std::string> MyRestServer::GET_method3(
+    std::vector<std::string> pathParameters, 
+    std::map<std::string, std::string> queryParameters) {
     return pathParameters;
 }

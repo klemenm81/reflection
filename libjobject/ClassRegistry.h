@@ -8,12 +8,21 @@
 
 #include "detail/IClassRegistry.h"
 #include "Class.h"
+#include "exceptions/ClassNotFoundException.h"
+#include <atomic>
+
 
 class ClassRegistry {
 private:
-	const IClassRegistry& m_classRegistry;
+	static std::atomic<int> m_counter;
+	std::string m_libraryName;
+	std::map<std::string, Class> m_classes;
+	HMODULE m_libraryHandle;
 
 public:
+	void Initialize();
+	void Uninitialize();
+/*
 	static ClassRegistry GetClassRegistry(const char* name) {
 #ifdef _WIN32
 		HMODULE hModule = LoadLibraryA(name);
@@ -35,29 +44,38 @@ public:
 		ClassRegistry classRegistry = ClassRegistryFcn();
 		return classRegistry;
 	}
-
-	ClassRegistry(const IClassRegistry& classRegistry) : m_classRegistry(classRegistry) {
+*/
+/*	ClassRegistry() {
+		Initialize();
+	}
+*/
+	ClassRegistry(std::string libraryName) : m_libraryName(libraryName) {
+		Initialize();
 	}
 
-	ClassRegistry(ClassRegistry&& other) noexcept : m_classRegistry(other.m_classRegistry) {
+	ClassRegistry(const ClassRegistry& other) : m_classes(other.m_classes) {
+		Initialize();
 	}
 
-	ClassRegistry(const ClassRegistry& other) : m_classRegistry(other.m_classRegistry) {
+	~ClassRegistry() {
+		Uninitialize();
 	}
 
 	ClassRegistry& operator=(ClassRegistry&&) = delete;
 	ClassRegistry& operator=(const ClassRegistry&) = delete;
 
 	Class getClass(const char* name) const {
-		return m_classRegistry.getClass(name);
+		auto it = m_classes.find(name);
+		if (it != m_classes.end()) {
+			return it->second;
+		}
+		throw ClassNotFoundException(name);
 	}
 
 	std::vector<Class> getClasses() const {
-		std::vector<Class> ret;
-		size_t nClasses = 0;
-		IClass* const* classes = m_classRegistry.getClasses(nClasses);
-		for (size_t iClass = 0; iClass < nClasses; iClass++) {
-			ret.push_back(Class(*classes[iClass]));
+		std::vector<Class> ret;		
+		for (auto it = m_classes.begin(); it != m_classes.end(); it++) {
+			ret.push_back(it->second);
 		}
 		return ret;
 	}
