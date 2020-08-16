@@ -189,7 +189,7 @@
     <ClInclude Include="TypeInfo.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ClassRegistry.cpp" />
+    <ClCompile Include="ClassRegistryWindows.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

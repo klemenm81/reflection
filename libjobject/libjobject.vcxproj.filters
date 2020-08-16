@@ -112,6 +112,6 @@
     <ClInclude Include="TypeInfo.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ClassRegistry.cpp" />
+    <ClCompile Include="ClassRegistryWindows.cpp" />
   </ItemGroup>
 </Project>

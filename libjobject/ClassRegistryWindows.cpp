@@ -22,10 +22,9 @@ void ClassRegistry::Initialize() {
 			NULL,
 			FALSE
 		)) {
-			std::string error = 
-				std::string("SymInitialize() failed. Error code: ") + 
-				std::to_string(::GetLastError()) + 
-				std::string("\n");
+			std::string error =
+				std::string("SymInitialize() failed. Error code: ") +
+				std::to_string(::GetLastError());
 			throw InternalErrorException(error.c_str());
 		}
 
@@ -45,8 +44,7 @@ void ClassRegistry::Initialize() {
 	)) == 0) {
 		std::string error =
 			std::string("SymLoadModuleEx() failed. Error code: ") +
-			std::to_string(::GetLastError()) +
-			std::string("\n");
+			std::to_string(::GetLastError());
 		throw InternalErrorException(error.c_str());
 	}
 
@@ -61,16 +59,14 @@ void ClassRegistry::Initialize() {
 	)) {
 		std::string error =
 			std::string("SymEnumSymbols() failed. Error code: ") +
-			std::to_string(::GetLastError()) +
-			std::string("\n");
+			std::to_string(::GetLastError());
 		throw InternalErrorException(error.c_str());
 	}
 
 	if (!::SymUnloadModule(GetCurrentProcess(), modBase)) {
 		std::string error =
 			std::string("SymUnloadModule() failed. Error code: ") +
-			std::to_string(::GetLastError()) +
-			std::string("\n");
+			std::to_string(::GetLastError());
 		throw InternalErrorException(error.c_str());
 	}
 
@@ -78,8 +74,7 @@ void ClassRegistry::Initialize() {
 	if (m_libraryHandle == nullptr) {
 		std::string error =
 			std::string("LoadLibraryA() failed. Error code: ") +
-			std::to_string(::GetLastError()) +
-			std::string("\n");
+			std::to_string(::GetLastError());
 		throw InternalErrorException(error.c_str());
 	}
 	
