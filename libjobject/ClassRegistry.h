@@ -17,7 +17,7 @@ private:
 	static std::atomic<int> m_counter;
 	std::string m_libraryName;
 	std::map<std::string, Class> m_classes;
-	HMODULE m_libraryHandle;
+	void *m_libraryHandle;
 
 public:
 	void Initialize();

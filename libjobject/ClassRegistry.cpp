@@ -7,7 +7,8 @@
 #include <stdio.h>
 
 BOOL CALLBACK MyEnumSymbolsCallback(SYMBOL_INFO* pSymInfo, ULONG SymbolSize, PVOID UserContext) {
-	std::vector<std::string>& classFactoryNames = *(reinterpret_cast<std::vector<std::string>*>(UserContext));
+	std::vector<std::string>& classFactoryNames = 
+		*(reinterpret_cast<std::vector<std::string>*>(UserContext));
 	classFactoryNames.push_back(pSymInfo->Name);
 	return TRUE;
 }
@@ -85,14 +86,14 @@ void ClassRegistry::Initialize() {
 	for (std::string classFactoryName : classFactoryNames) {
 		if (classFactoryName.compare(0, std::string("Factory_").length(), "Factory_") == 0) {
 			const IClass& (*ClassFactoryFcn)() =
-				(const IClass & (*)())GetProcAddress(m_libraryHandle, classFactoryName.c_str());
+				(const IClass & (*)())GetProcAddress(reinterpret_cast<HMODULE>(m_libraryHandle), classFactoryName.c_str());
 			m_classes.emplace(classFactoryName.substr(std::string("Factory_").length()), Class(ClassFactoryFcn()));
 		}
 	}
 }
 
 void ClassRegistry::Uninitialize() {
-	FreeLibrary(m_libraryHandle);
+	FreeLibrary(reinterpret_cast<HMODULE>(m_libraryHandle));
 	m_counter--;
 	if (m_counter == 0) {
 		::SymCleanup(GetCurrentProcess());
