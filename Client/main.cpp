@@ -11,6 +11,8 @@
 #include "../components/CLIParser/IParser.h"
 #include "../components/RESTServer/IRESTController.h"
 
+#include "example.h"
+
 #include "ParseStruct.h"
 #include "MyRestServer.h"
 
@@ -34,6 +36,29 @@ void waitUntilUserInterrupt() {
 	std::unique_lock<std::mutex> lock{ m_mutex };
 	m_condition.wait(lock);
 	lock.unlock();
+}
+
+
+void example0() {
+	try {
+		ClassRegistry registry;
+		ExampleStruct exampleStructInstance;
+		exampleStructInstance.mainValue = 5;
+		exampleStructInstance.values["B"] = { 4, 5, 6 };
+
+		Class exampleClass = registry.getClass("ExampleClass");
+
+		std::unique_ptr<Object> exampleClassInstance =
+			exampleClass.newInstance(std::string("A"), std::vector<int>{1, 2, 3});
+
+		Method addMethod = exampleClass.getMethod("add");
+		addMethod.invoke<void, const ExampleStruct&>(*exampleClassInstance, exampleStructInstance);
+
+		std::cout << exampleClassInstance->toString() << std::endl;
+	}
+	catch (Exception &e) {
+		std::cout << e.Message() << std::endl;
+	}
 }
 
 
@@ -161,6 +186,7 @@ void testPerformance() {
 
 
 int main(int argc, char **argv) {
+	example0();
 	example1(argc, argv);
 	//example2();
 	example3();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../libjobject/Reflectable.h"
+#include "Reflectable.h"
 #include <vector>
 
 class Test : public Reflectable<Test> {

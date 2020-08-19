@@ -18,6 +18,7 @@ private:
 	std::string m_libraryName;
 	std::map<std::string, Class> m_classes;
 	void *m_libraryHandle;
+	bool m_isLibrary;
 
 public:
 	void Initialize();
@@ -49,6 +50,10 @@ public:
 		Initialize();
 	}
 */
+	ClassRegistry() {
+		Initialize();
+	}
+
 	ClassRegistry(std::string libraryName) : m_libraryName(libraryName) {
 		Initialize();
 	}

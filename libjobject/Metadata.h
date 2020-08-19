@@ -88,7 +88,7 @@ void CClass<Class>::registerMetadata()											\
 }												
 
 
-#define REFLECT_FIELD(Field)																			\
+#define FIELD(Field)																			\
 	addField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
 
 #define REFLECT_METHOD_NO_OVERLOAD(Method)																\
@@ -154,13 +154,13 @@ void CClass<Class>::registerMetadata()											\
 #define _ARG16(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, ...) _15
 #define NARG16(...) _ARG16(__VA_ARGS__, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 0)
 
-#define REFLECT_METHOD(Method, ...) \
+#define METHOD(Method, ...) \
 	CAT2(REFLECT_METHOD_, NARG16(dummy, ##__VA_ARGS__))(Method, ##__VA_ARGS__)
 
 #define REFLECT_METHOD_1(Method) REFLECT_METHOD_NO_OVERLOAD(Method)
 #define REFLECT_METHOD_2(Return, Method, ...) REFLECT_METHOD_OVERLOAD(Method, Return, ##__VA_ARGS__)
 
-#define REFLECT_CONSTRUCTOR(Class, ...)																				\
+#define CONSTRUCTOR(Class, ...)																						\
 	static_assert(																									\
 		parameter_pack_counter<__VA_ARGS__>::getN() != 0,															\
 		"Default constructor does not have to be specified. It gets registered automatically if it exists."			\

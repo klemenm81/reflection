@@ -16,6 +16,9 @@ BOOL CALLBACK MyEnumSymbolsCallback(SYMBOL_INFO* pSymInfo, ULONG SymbolSize, PVO
 std::atomic<int> ClassRegistry::m_counter = 0;
 
 void ClassRegistry::Initialize() {
+	char executableName[MAX_PATH];
+	GetModuleFileNameA(NULL, executableName, MAX_PATH);
+
 	if (m_counter == 0) {
 		if (!::SymInitialize(
 			GetCurrentProcess(),
@@ -35,7 +38,7 @@ void ClassRegistry::Initialize() {
 	if ((modBase = ::SymLoadModuleEx(
 		GetCurrentProcess(),
 		NULL,
-		m_libraryName.c_str(),
+		!m_libraryName.empty() ? m_libraryName.c_str() : executableName,
 		NULL,
 		0,
 		0,
@@ -70,12 +73,23 @@ void ClassRegistry::Initialize() {
 		throw InternalErrorException(error.c_str());
 	}
 
-	m_libraryHandle = LoadLibraryA(m_libraryName.c_str());
-	if (m_libraryHandle == nullptr) {
-		std::string error =
-			std::string("LoadLibraryA() failed. Error code: ") +
-			std::to_string(::GetLastError());
-		throw InternalErrorException(error.c_str());
+	if (!m_libraryName.empty()) {
+		m_libraryHandle = LoadLibraryA(m_libraryName.c_str());
+		if (m_libraryHandle == nullptr) {
+			std::string error =
+				std::string("LoadLibraryA() failed. Error code: ") +
+				std::to_string(::GetLastError());
+			throw InternalErrorException(error.c_str());
+		}
+	}
+	else {
+		m_libraryHandle = GetModuleHandleA(nullptr);
+		if (m_libraryHandle == nullptr) {
+			std::string error =
+				std::string("LoadLibraryA() failed. Error code: ") +
+				std::to_string(::GetLastError());
+			throw InternalErrorException(error.c_str());
+		}
 	}
 	
 	for (std::string classFactoryName : classFactoryNames) {
@@ -88,7 +102,9 @@ void ClassRegistry::Initialize() {
 }
 
 void ClassRegistry::Uninitialize() {
-	FreeLibrary(reinterpret_cast<HMODULE>(m_libraryHandle));
+	if (!m_libraryName.empty()) {
+		FreeLibrary(reinterpret_cast<HMODULE>(m_libraryHandle));
+	}
 	m_counter--;
 	if (m_counter == 0) {
 		::SymCleanup(GetCurrentProcess());
