@@ -20,6 +20,29 @@ protected:
 		return result;
 	}
 
+	template <typename... Args>
+	static size_t GetArgsSignature() {
+		if constexpr (sizeof...(Args) > 0) {
+			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			return argsSignature;
+		}
+		else {
+			return 0;
+		}
+	}
+
+	template <typename... Args>
+	static std::string GetArgsName() {
+		if constexpr (sizeof...(Args) > 0) {
+			static const std::string argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
+			return argsName;
+		}
+		else {
+			static const std::string argsName = ";";
+			return argsName;
+		}
+	}
+
 public:
 	Class(const IClass& clasz) : m_class(clasz) {
 	}
@@ -74,20 +97,8 @@ public:
 
 	template <typename... Args>
 	std::unique_ptr<Object> newInstance(Args... args) const {
-		size_t argsSignature;
-		if constexpr (sizeof...(Args) > 0) {
-			argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
-		}
-		else {
-			argsSignature = 0;
-		}
-		std::string argsName;
-		if constexpr (sizeof...(Args) > 0) {
-			argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
-		}
-		else {
-			argsName = ";";
-		}
+		static const size_t argsSignature = GetArgsSignature<Args...>();		
+		static const std::string argsName = GetArgsName<Args...>();
 		const IConstructor& constructor = m_class.getConstructor(argsSignature, argsName.c_str() + 1);
 		return std::unique_ptr<Object>(&constructor.newInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data()));
 	}

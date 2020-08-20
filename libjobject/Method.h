@@ -25,26 +25,25 @@ protected:
 
 	template <typename... Args>
 	static size_t GetArgsSignature() {
-		size_t argsSignature;
 		if constexpr (sizeof...(Args) > 0) {
-			argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			return argsSignature;
 		}
 		else {
-			argsSignature = 0;
+			 return 0;
 		}
-		return argsSignature;
 	}
 
 	template <typename... Args>
 	static std::string GetArgsName() {
-		std::string argsName;
 		if constexpr (sizeof...(Args) > 0) {
-			argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
+			static const std::string argsName = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
+			return argsName;
 		}
 		else {
-			argsName = ";";
+			static const std::string argsName = ";";
+			return argsName;
 		}
-		return argsName;
 	}
 
 	static Json::Value PackArgsToJson(std::vector<std::string> args) {
@@ -87,8 +86,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(Object& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).getValue());
@@ -97,8 +97,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -107,8 +108,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -117,8 +119,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -127,8 +130,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(Object&& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -137,8 +141,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object&& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -147,8 +152,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object&& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
@@ -157,8 +163,9 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object&& obj, Args... args) const {
-		std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(GetArgsSignature<Args...>(), argsName.c_str() + 1, LValueRef);
+		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());

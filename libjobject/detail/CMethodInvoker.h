@@ -16,18 +16,11 @@ private:
 	std::string m_name;
 
 protected:
-	CMethodInvokerBase(const char* name) : m_name(name) {
-	}
-
-	const char* getName() const {
-		return m_name.c_str();
-	}
-
-	size_t getNArgs() const {
+	static size_t GetNArgs() {
 		return sizeof...(Args);
 	}
 
-	size_t getArgsSignature() const {
+	static size_t GetArgsSignature() {
 		if constexpr (sizeof...(Args) > 0) {
 			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
 			return argsSignature;
@@ -37,7 +30,7 @@ protected:
 		}
 	}
 
-	const char* getArgsName() const {
+	static const char* GetArgsName() {
 		if constexpr (sizeof...(Args) > 0) {
 			static const std::string name = ((std::string(";") + std::string(TypeInfo<Args>::getName())) + ...);
 			return name.c_str() + 1;
@@ -48,18 +41,18 @@ protected:
 		}
 	}
 
-	size_t getRetValSignature() const {
+	static size_t GetRetValSignature() {
 		static const size_t retValSignature = TypeInfo<Return>::getUniqueId();
 		return retValSignature;
 	}
 
-	const char *getRetValName() const {
+	static const char* GetRetValName() {
 		static const std::string name = TypeInfo<Return>::getName();
 		return name.c_str();
 	}
-
+	
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, Object& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class> &>(object)).*method)(
@@ -77,7 +70,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, const Object& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&>(static_cast<const Reflectable<Class> &>(object)).*method)(
@@ -95,7 +88,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class> &>(object)).*method)(
@@ -113,7 +106,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, const volatile Object& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class> &>(object)).*method)(
@@ -131,7 +124,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
@@ -149,7 +142,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, const Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
@@ -167,7 +160,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
@@ -185,7 +178,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	IAdaptor* invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) const {
+	static IAdaptor* Invoke(Method method, const volatile Object&& object, IAdaptor** args, std::index_sequence<Index...>) {
 		static thread_local std::byte retValBuffer[sizeof(CAdaptor<Return>)];
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
@@ -203,7 +196,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, Object& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&>(static_cast<Reflectable<Class>&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -220,7 +213,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, const Object& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, const Object& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&>(static_cast<const Reflectable<Class>&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -237,7 +230,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, volatile Object& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, volatile Object& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&>(static_cast<volatile Reflectable<Class>&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -254,7 +247,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, const volatile Object& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, const volatile Object& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&>(static_cast<const volatile Reflectable<Class>&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -271,7 +264,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, Object&& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<Class&&>(static_cast<Reflectable<Class>&&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -288,7 +281,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, const Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, const Object&& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const Class&&>(static_cast<const Reflectable<Class>&&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -305,7 +298,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, volatile Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, volatile Object&& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<volatile Class&&>(static_cast<volatile Reflectable<Class>&&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -322,7 +315,7 @@ protected:
 	}
 
 	template<typename Method, std::size_t... Index>
-	Json::Value invoke(Method method, const volatile Object&& object, Json::Value args, std::index_sequence<Index...>) const {
+	static Json::Value Invoke(Method method, const volatile Object&& object, Json::Value args, std::index_sequence<Index...>) {
 		if constexpr (std::is_same<Return, void>()) {
 			(static_cast<const volatile Class&&>(static_cast<const volatile Reflectable<Class>&&>(object)).*method)(
 				CAdaptor<Args>(args[(int)Index]).getValue()...
@@ -336,6 +329,33 @@ protected:
 				)
 			).marshall();
 		}
+	}
+
+	CMethodInvokerBase(const char* name) : m_name(name) {
+	}
+
+	const char* getName() const {
+		return m_name.c_str();
+	}
+
+	size_t getNArgs() const {
+		return GetNArgs();
+	}
+
+	size_t getArgsSignature() const {
+		return GetArgsSignature();
+	}
+
+	const char* getArgsName() const {
+		return GetArgsName();
+	}
+
+	size_t getRetValSignature() const {
+		return GetRetValSignature();
+	}
+
+	const char* getRetValName() const {
+		return GetRetValName();
 	}
 };
 
@@ -357,7 +377,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor **args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -389,7 +409,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -436,11 +456,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
@@ -468,11 +488,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
@@ -515,7 +535,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -523,7 +543,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
@@ -547,7 +567,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -555,7 +575,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
@@ -594,19 +614,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
@@ -626,19 +646,19 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
@@ -673,7 +693,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -705,7 +725,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -752,11 +772,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
@@ -784,11 +804,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
@@ -831,7 +851,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -839,7 +859,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
@@ -863,7 +883,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -871,7 +891,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
@@ -910,19 +930,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
@@ -942,19 +962,19 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
@@ -998,7 +1018,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -1030,7 +1050,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -1077,11 +1097,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
@@ -1109,11 +1129,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
@@ -1156,7 +1176,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -1164,7 +1184,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
@@ -1188,7 +1208,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -1196,7 +1216,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
@@ -1235,19 +1255,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
@@ -1267,19 +1287,19 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
@@ -1314,7 +1334,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -1346,7 +1366,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -1393,11 +1413,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
@@ -1425,11 +1445,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
@@ -1472,7 +1492,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
@@ -1480,7 +1500,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
@@ -1504,7 +1524,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
@@ -1512,7 +1532,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
@@ -1551,19 +1571,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
@@ -1583,19 +1603,19 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, object, args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
@@ -1651,7 +1671,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
@@ -1683,7 +1703,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
@@ -1730,11 +1750,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
@@ -1762,11 +1782,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
@@ -1809,7 +1829,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
@@ -1817,7 +1837,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
@@ -1841,7 +1861,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
@@ -1849,7 +1869,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
@@ -1888,19 +1908,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
@@ -1920,19 +1940,19 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
 
@@ -1967,7 +1987,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
@@ -1999,7 +2019,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
@@ -2046,11 +2066,11 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
@@ -2078,11 +2098,11 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
@@ -2125,7 +2145,7 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
@@ -2133,7 +2153,7 @@ public:
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
@@ -2157,7 +2177,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
@@ -2165,7 +2185,7 @@ public:
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
@@ -2204,19 +2224,19 @@ public:
 	}
 
 	IAdaptor* invoke(Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	IAdaptor* invoke(const volatile Object&& object, IAdaptor** args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
@@ -2236,18 +2256,18 @@ public:
 	}
 
 	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
 	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
-		return CMethodInvokerBase<Class, Return, Args...>::invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
+		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
