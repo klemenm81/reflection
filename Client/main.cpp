@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <errno.h>
 
-#include "../libjobject/Object.h"
-#include "../libjobject/Field.h"
-#include "../libjobject/Method.h"
-#include "../libjobject/Class.h"
-#include "../libjobject/ClassRegistry.h"
-#include "../libjobject/Reflectable.h"
+#include "Object.h"
+#include "Field.h"
+#include "Method.h"
+#include "Class.h"
+#include "ClassRegistry.h"
+#include "Reflectable.h"
 
 #include "../components/CLIParser/IParser.h"
 #include "../components/RESTServer/IRESTController.h"
@@ -42,17 +42,38 @@ void waitUntilUserInterrupt() {
 void example0() {
 	try {
 		ClassRegistry registry;
+
+		for (Class clasz : registry.getClasses()) {
+			std::cout << clasz.getName() << std::endl;
+		}
+
 		ExampleStruct exampleStructInstance;
-		exampleStructInstance.mainValue = 5;
-		exampleStructInstance.values["B"] = { 4, 5, 6 };
+		exampleStructInstance.mainValue = 1;
+		exampleStructInstance.values["A"] = { 1, 2, 3 };
 
 		Class exampleClass = registry.getClass("ExampleClass");
 
+		for (Field field : exampleStructInstance.getClass().getFields()) {
+			std::cout << field.getName() << std::endl;
+		}
+		for (Method method : exampleClass.getMethods()) {
+			std::cout << method.getName() << std::endl;
+		}
+
+		exampleStructInstance.getClass().getField("mainValue").set(exampleStructInstance, 2);
+
 		std::unique_ptr<Object> exampleClassInstance =
-			exampleClass.newInstance(std::string("A"), std::vector<int>{1, 2, 3});
+			exampleClass.newInstance(std::string("B"), std::vector<int>{4, 5, 6});
+
+		Method setFactorMethod = exampleClass.getMethod("setFactor");
+		setFactorMethod.invoke<void>(*exampleClassInstance, 2.0f);
 
 		Method addMethod = exampleClass.getMethod("add");
+		addMethod.invoke<void>(*exampleClassInstance, std::string("C"), std::vector<int>{7, 8, 9});
 		addMethod.invoke<void, const ExampleStruct&>(*exampleClassInstance, exampleStructInstance);
+
+		Method getValuesMethod = exampleClass.getMethod("getValues");
+		std::vector<float> result = getValuesMethod.invoke<std::vector<float>>(*exampleClassInstance, "A");
 
 		std::cout << exampleClassInstance->toString() << std::endl;
 	}
