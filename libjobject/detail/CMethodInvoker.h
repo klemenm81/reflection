@@ -20,9 +20,10 @@ protected:
 		return sizeof...(Args);
 	}
 
-	static size_t GetArgsSignature() {
+	template <size_t... Index>
+	static size_t GetArgsSignature(std::index_sequence<Index...>) {
 		if constexpr (sizeof...(Args) > 0) {
-			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			static const size_t argsSignature = ((TypeInfo<Args>::getUniqueId() << Index) + ...);
 			return argsSignature;
 		}
 		else {
@@ -343,7 +344,7 @@ protected:
 	}
 
 	size_t getArgsSignature() const {
-		return GetArgsSignature();
+		return GetArgsSignature(std::index_sequence_for<Args...>{});
 	}
 
 	const char* getArgsName() const {

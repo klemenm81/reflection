@@ -91,7 +91,7 @@ void CClass<Class>::registerMetadata()											\
 #define FIELD(Field)																			\
 	addField(newField<ReflectedClass>(#Field, &ReflectedClass::Field));
 
-#define REFLECT_METHOD_NO_OVERLOAD(Method)																\
+#define REFLECT_METHOD_NO_OVERLOAD(Method)														\
 	addMethodInvoker(newMethod<ReflectedClass>(#Method, &ReflectedClass::Method));
 
 #define REFLECT_METHOD_OVERLOAD_CHECK_NO_CVREF(Method, Return, ...)																\

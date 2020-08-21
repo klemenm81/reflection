@@ -113,5 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClassRegistryWindows.cpp" />
+    <ClCompile Include="ClassRegistryLinux.cpp" />
   </ItemGroup>
 </Project>

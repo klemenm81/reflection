@@ -23,10 +23,10 @@ protected:
 		return result;
 	}
 
-	template <typename... Args>
-	static size_t GetArgsSignature() {
+	template <typename... Args, size_t... Index>
+	static size_t GetArgsSignature(std::index_sequence<Index...>) {
 		if constexpr (sizeof...(Args) > 0) {
-			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			static const size_t argsSignature = ((TypeInfo<Args>::getUniqueId() << Index) + ...);
 			return argsSignature;
 		}
 		else {
@@ -86,7 +86,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -97,7 +97,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -108,7 +108,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -119,7 +119,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -130,7 +130,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -141,7 +141,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -152,7 +152,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
@@ -163,7 +163,7 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
 		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());

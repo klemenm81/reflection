@@ -23,33 +23,7 @@ private:
 public:
 	void Initialize();
 	void Uninitialize();
-/*
-	static ClassRegistry GetClassRegistry(const char* name) {
-#ifdef _WIN32
-		HMODULE hModule = LoadLibraryA(name);
-		const IClassRegistry& (*ClassRegistryFcn)() =
-			(const IClassRegistry & (*)())GetProcAddress(hModule, "ClassRegistry");
-#else
-		void* hModule = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
-		if (hModule == NULL) {
-			perror("dlopen");
-			exit(1);
-		}
-		const IClassRegistry& (*ClassRegistryFcn)() =
-			(const IClassRegistry & (*)())dlsym(hModule, "ClassRegistry");
-		if (ClassRegistryFcn == NULL) {
-			printf("ClassRegistry not found\n");
-			exit(1);
-		}
-#endif
-		ClassRegistry classRegistry = ClassRegistryFcn();
-		return classRegistry;
-	}
-*/
-/*	ClassRegistry() {
-		Initialize();
-	}
-*/
+
 	ClassRegistry() {
 		Initialize();
 	}

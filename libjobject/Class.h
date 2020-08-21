@@ -20,10 +20,10 @@ protected:
 		return result;
 	}
 
-	template <typename... Args>
-	static size_t GetArgsSignature() {
+	template <typename... Args, size_t... Index>
+	static size_t GetArgsSignature(std::index_sequence<Index...>) {
 		if constexpr (sizeof...(Args) > 0) {
-			static const size_t argsSignature = (TypeInfo<Args>::getUniqueId() - ...);
+			static const size_t argsSignature = ((TypeInfo<Args>::getUniqueId()<<Index) + ...);
 			return argsSignature;
 		}
 		else {
@@ -97,7 +97,7 @@ public:
 
 	template <typename... Args>
 	std::unique_ptr<Object> newInstance(Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>();		
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IConstructor& constructor = m_class.getConstructor(argsSignature, argsName.c_str() + 1);
 		return std::unique_ptr<Object>(&constructor.newInstance(BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data()));
