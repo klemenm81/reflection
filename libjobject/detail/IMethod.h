@@ -5,7 +5,6 @@
 #include "../Object.h"
 #include "../exceptions/MethodWithSignatureNotFoundException.h"
 #include "../exceptions/MethodWithQualifierNotFoundException.h"
-#include "../exceptions/MethodContainingSignatureNotFoundException.h"
 #include "../exceptions/MethodWithNArgumentsNotFound.h"
 #include "../exceptions/InternalErrorException.h"
 #include <map>
@@ -70,11 +69,11 @@ public:
 				return *(invoker->second);
 			}
 			else {
-				throw MethodWithQualifierNotFoundException(qualifier);
+				throw MethodWithQualifierNotFoundException(m_name.c_str(), argsName, qualifier);
 			}
 		}
 		else {
-			throw MethodWithSignatureNotFoundException(argsName);
+			throw MethodWithSignatureNotFoundException(m_name.c_str(), argsName);
 		}
 	}
 

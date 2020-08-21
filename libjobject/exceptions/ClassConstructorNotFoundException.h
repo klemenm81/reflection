@@ -7,18 +7,12 @@ class ClassConstructorNotFoundException : public Exception {
 private:
 	std::string m_errorMsg;
 public:
-	ClassConstructorNotFoundException(const char *argsName) : m_errorMsg(
+	ClassConstructorNotFoundException(const char *argsName, const char *className) : m_errorMsg(
 		std::string("Class constructor with args ") +
 		std::string(argsName) +
-		std::string(" not found.")
-	) {
-	}
-
-	ClassConstructorNotFoundException(const char * argsName, const Exception& other) : m_errorMsg(
-		std::string("Class constructor with args ") +
-		std::string(argsName) +
-		std::string(" not found: \n") +
-		std::string(other.Message())
+		std::string(" not found for class ") +
+		std::string(className) +
+		std::string(".")
 	) {
 	}
 

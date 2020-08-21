@@ -45,7 +45,7 @@ public:
 			return *(cast->second);
 		}
 		else {
-			throw CastNotFoundException(name);
+			throw CastNotFoundException(name, m_name.c_str());
 		}
 	}
 
@@ -60,7 +60,7 @@ public:
 			return *(field->second);
 		}
 		else {
-			throw FieldNotFoundException(name);
+			throw FieldNotFoundException(name, m_name.c_str());
 		}
 	}
 
@@ -75,7 +75,8 @@ public:
 			nullptr;
 
 		if (methodOverloads == nullptr) {
-			methodOverloads = new IMethod(method.getName());
+			std::string fullMethodName = m_name + std::string("::") + std::string(method.getName());
+			methodOverloads = new IMethod(fullMethodName.c_str());
 			m_methodMap[method.getName()] = methodOverloads;
 			m_methodVector.push_back(methodOverloads);
 		}
@@ -89,7 +90,7 @@ public:
 			return *(method->second);
 		}
 		else {
-			throw MethodNotFoundException(name);
+			throw MethodNotFoundException(name, m_name.c_str());
 		}
 	}
 
@@ -109,7 +110,7 @@ public:
 			return *(constructor->second);
 		}
 		else {
-			throw ClassConstructorNotFoundException(argsName);
+			throw ClassConstructorNotFoundException(argsName, m_name.c_str());
 		}
 	}
 

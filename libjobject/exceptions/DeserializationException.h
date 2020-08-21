@@ -14,14 +14,6 @@ public:
 	) {
 	}
 
-	DeserializationException(const char* name, const Exception& other) : m_errorMsg(
-		std::string("Failed to deserialize ") +
-		std::string(name) +
-		std::string(": \n") +
-		std::string(other.Message())
-	) {
-	}
-
 	const char* Message() const {
 		return m_errorMsg.c_str();
 	}

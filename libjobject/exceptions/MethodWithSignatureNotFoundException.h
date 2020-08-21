@@ -7,18 +7,12 @@ class MethodWithSignatureNotFoundException : public Exception {
 private:
 	std::string m_errorMsg;
 public:
-	MethodWithSignatureNotFoundException(const char* argsName) : m_errorMsg(
-		std::string("Method with signature ") + 
+	MethodWithSignatureNotFoundException(const char *methodName, const char* argsName) : m_errorMsg(
+		std::string("Method ") + 
+		std::string(methodName) +
+		std::string("(") +
 		std::string(argsName) +
-		std::string(" not found.")
-	) {
-	}
-
-	MethodWithSignatureNotFoundException(const char* argsName, const Exception& other) : m_errorMsg(
-		std::string("Method with signature ") + 
-		std::string(argsName) +
-		std::string(" not found: \n") + 
-		std::string(other.Message())
+		std::string(") not found.") 
 	) {
 	}
 

@@ -188,7 +188,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -209,7 +209,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -230,7 +230,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -251,7 +251,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -272,7 +272,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -293,7 +293,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -314,7 +314,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
@@ -335,7 +335,7 @@ public:
 			}
 		}
 		if (iMethod == nMethods) {
-			throw MethodsWithNArgumentsNotMatchingInputArguments(args.size());
+			throw MethodsWithNArgumentsNotMatchingInputArguments(m_method.getName(), args.size());
 		}
 		return UnpackRetvalFromJson(jsonRetVal);
 	}

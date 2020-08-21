@@ -7,18 +7,12 @@ class FieldNotFoundException : public Exception {
 private:
 	std::string m_errorMsg;
 public:
-	FieldNotFoundException(const char *name) : m_errorMsg(
+	FieldNotFoundException(const char *fieldName, const char *className) : m_errorMsg(
 		std::string("Field ") +
-		std::string(name) +
-		std::string(" not found.")
-	) {
-	}
-
-	FieldNotFoundException(const char *name, const Exception& other) : m_errorMsg(
-		std::string("Field ") +
-		std::string(name) +
-		std::string(" not found: \n") +
-		std::string(other.Message())
+		std::string(fieldName) +
+		std::string(" not found in class ") +
+		std::string(className) + 
+		std::string(".")
 	) {
 	}
 

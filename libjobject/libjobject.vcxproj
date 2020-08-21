@@ -171,7 +171,6 @@
     <ClInclude Include="exceptions\FieldNotFoundException.h" />
     <ClInclude Include="exceptions\InternalErrorException.h" />
     <ClInclude Include="exceptions\MarshallingException.h" />
-    <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h" />
     <ClInclude Include="exceptions\MethodNotFoundException.h" />
     <ClInclude Include="exceptions\MethodsWithNArgumentsNotMatchingInputArguments.h" />
     <ClInclude Include="exceptions\MethodWithNArgumentsNotFound.h" />

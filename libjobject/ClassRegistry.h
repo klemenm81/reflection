@@ -6,7 +6,6 @@
 #include <dlfcn.h>
 #endif
 
-#include "detail/IClassRegistry.h"
 #include "Class.h"
 #include "exceptions/ClassNotFoundException.h"
 #include <atomic>
@@ -48,7 +47,7 @@ public:
 		if (it != m_classes.end()) {
 			return it->second;
 		}
-		throw ClassNotFoundException(name);
+		throw ClassNotFoundException(name, m_libraryName.c_str());
 	}
 
 	std::vector<Class> getClasses() const {

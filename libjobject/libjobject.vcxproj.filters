@@ -84,9 +84,6 @@
     <ClInclude Include="exceptions\InternalErrorException.h">
       <Filter>exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="exceptions\MethodContainingSignatureNotFoundException.h">
-      <Filter>exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="exceptions\MethodNotFoundException.h">
       <Filter>exceptions</Filter>
     </ClInclude>

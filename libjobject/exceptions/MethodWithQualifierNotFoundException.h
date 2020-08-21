@@ -10,18 +10,15 @@ class MethodWithQualifierNotFoundException : public Exception {
 private:
 	std::string m_errorMsg;
 public:
-	MethodWithQualifierNotFoundException(Qualifier qualifier) : m_errorMsg(
-		std::string("Method with qualifier ") +
+	MethodWithQualifierNotFoundException(const char *methodName, const char *argsName, Qualifier qualifier) : m_errorMsg(
+		std::string("Method ") +
+		std::string(methodName) +
+		std::string("(") +
+		std::string(argsName) +
+		std::string(") ") +
+		std::string(" with qualifier ") +
 		std::to_string(qualifier) +
 		std::string(" not found.")
-	) {
-	}
-
-	MethodWithQualifierNotFoundException(Qualifier qualifier, const Exception& other) : m_errorMsg(
-		std::string("Method with qualifier ") +
-		std::to_string(qualifier) +
-		std::string(" not found: \n") +
-		std::string(other.Message())
 	) {
 	}
 

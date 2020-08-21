@@ -5,7 +5,6 @@
 #include "detail/CCast.h"
 #include "detail/CField.h"
 #include "detail/CMethodInvoker.h"
-#include "detail/CClassRegistry.h"
 #include "TypeInfo.h"
 
 #ifdef _WIN32
@@ -178,18 +177,6 @@ void CClass<Class>::registerMetadata()											\
 	static_assert(std::is_constructible<Class, ##__VA_ARGS__>::value, "The specified constructor does not exist.");	\
 	addConstructor(newConstructor<Class, ##__VA_ARGS__>());												
 
-#define REFLECT_CLASS_REGISTRY_START											\
-extern "C" EXPORT_API const IClassRegistry& ClassRegistry() {					\
-	static const CClassRegistry classRegistry;									\
-	return classRegistry;														\
-}																				\
-CClassRegistry::CClassRegistry() {
-
-#define REFLECT_CLASS_REGISTRY_END												\
-}
-
-#define REFLECT_REGISTER_CLASS(Class)											\
-	addClass(*new CClass<Class>());
 
 
 
