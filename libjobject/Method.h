@@ -8,19 +8,26 @@
 #include "Object.h"
 #include "TypeInfo.h"
 #include <vector>
+#include <array>
 
 class Method {
 private:
 	const IMethod& m_method;
 
 protected:
-	template <typename... Adaptors>
-	static std::vector<IAdaptor*> BuildAdaptorVectorFromArgs(Adaptors&&... adaptors) {
-		std::vector<IAdaptor*> result;
+	template <size_t... Index, typename... Adaptors>
+	static std::array<IAdaptor*, sizeof...(Adaptors)> BuildAdaptorArrayFromArgs(
+		std::index_sequence<Index...>,
+		Adaptors&&... adaptors
+	) {
 		if constexpr (sizeof...(Adaptors) > 0) {
-			int dummy[] = { (result.push_back(&adaptors), 0)... };
+			std::array<IAdaptor*, sizeof...(Adaptors)> result = { &adaptors... };
+			return result;
 		}
-		return result;
+		else {
+			std::array<IAdaptor*, 0> result = { 0 };
+			return result;
+		}
 	}
 
 	template <typename... Args, size_t... Index>
@@ -55,7 +62,11 @@ protected:
 			std::string errs;
 			std::stringstream s(arg);
 			Json::Value json;
-			Json::parseFromStream(rbuilder, s, &json, &errs);
+			if (!Json::parseFromStream(rbuilder, s, &json, &errs)) {
+				arg = "\"" + arg + "\"";
+				std::stringstream s(arg);
+				Json::parseFromStream(rbuilder, s, &json, &errs);
+			}
 			jsonArgs.insert(index++, json);
 		}
 		return jsonArgs;
@@ -89,7 +100,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return> &>(*retVal).getValue());
 		}
@@ -100,7 +114,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -111,7 +128,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -122,7 +142,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -133,7 +156,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -144,7 +170,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -155,7 +184,10 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
@@ -166,13 +198,16 @@ public:
 		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
 		static const std::string argsName = GetArgsName<Args...>();
 		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorVectorFromArgs(CAdaptor<Args>(args)...).data());
+		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
 		if constexpr (!std::is_same<Return, void>()) {
 			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
 		}
 	}
 
-	std::string invokeMarshalled(Object& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(Object& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -180,7 +215,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(obj, jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(obj, jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -193,7 +228,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(const Object& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(const Object& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -201,7 +236,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(obj, jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(obj, jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -214,7 +249,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(volatile Object& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(volatile Object& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -222,7 +257,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(obj, jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(obj, jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -235,7 +270,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(const volatile Object& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(const volatile Object& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -243,7 +278,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(obj, jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(obj, jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -256,7 +291,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(Object&& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(Object&& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -264,7 +299,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(std::move(obj), jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(std::move(obj), jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -277,7 +312,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(const Object&& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(const Object&& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -285,7 +320,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(std::move(obj), jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(std::move(obj), jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -298,7 +333,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(volatile Object&& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(volatile Object&& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -306,7 +341,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(std::move(obj), jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(std::move(obj), jsonArgs);
 				break;
 			}
 			catch (Exception&) {
@@ -319,7 +354,7 @@ public:
 		return UnpackRetvalFromJson(jsonRetVal);
 	}
 
-	std::string invokeMarshalled(const volatile Object&& obj, std::vector<std::string> args) const {
+	std::string invokeSerialized(const volatile Object&& obj, std::vector<std::string> args) const {
 		Json::Value jsonArgs = PackArgsToJson(args);
 		Json::Value jsonRetVal;
 		size_t nMethods = 0;
@@ -327,7 +362,7 @@ public:
 		IMethodInvoker* const* methods = m_method.getMethodsByNArgs(args.size(), nMethods);
 		for (iMethod = 0; iMethod < nMethods; iMethod++) {
 			try {
-				jsonRetVal = methods[iMethod]->invokeMarshalled(std::move(obj), jsonArgs);
+				jsonRetVal = methods[iMethod]->invokeSerialized(std::move(obj), jsonArgs);
 				break;
 			}
 			catch (Exception&) {

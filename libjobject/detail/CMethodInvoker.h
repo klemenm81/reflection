@@ -408,35 +408,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -487,35 +487,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -566,35 +566,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -645,35 +645,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -724,35 +724,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -803,35 +803,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -882,35 +882,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -961,35 +961,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1049,35 +1049,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1128,35 +1128,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1207,35 +1207,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1286,35 +1286,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1365,35 +1365,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1444,35 +1444,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1523,35 +1523,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1602,35 +1602,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, object, args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1686,35 +1686,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1765,35 +1765,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1844,35 +1844,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -1923,35 +1923,35 @@ public:
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };
@@ -2002,35 +2002,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -2081,35 +2081,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -2160,35 +2160,35 @@ public:
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return nullptr;
 	}
 };
@@ -2239,35 +2239,35 @@ public:
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(const volatile Object& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object& object, Json::Value args) const {
 		return nullptr;
 	}
 
-	Json::Value invokeMarshalled(Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 
-	Json::Value invokeMarshalled(const volatile Object&& object, Json::Value args) const {
+	Json::Value invokeSerialized(const volatile Object&& object, Json::Value args) const {
 		return CMethodInvokerBase<Class, Return, Args...>::Invoke(m_method, std::move(object), args, std::index_sequence_for<Args...>{});
 	}
 };

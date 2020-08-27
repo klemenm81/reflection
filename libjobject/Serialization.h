@@ -135,7 +135,12 @@ public:
 	}
 
 	static bool Deserialize(Json::Value json) {
-		return json.asBool();
+		try {
+			return json.asBool();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<bool>::getName());
+		}
 	}
 };
 
@@ -148,7 +153,12 @@ public:
 	}
 
 	static char Deserialize(Json::Value json) {
-		return json.asInt();
+		try {
+			return json.asInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<char>::getName());
+		}
 	}
 };
 
@@ -161,7 +171,12 @@ public:
 	}
 
 	static unsigned char Deserialize(Json::Value json) {
-		return json.asUInt();
+		try {
+			return json.asUInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<unsigned char>::getName());
+		}
 	}
 };
 
@@ -174,7 +189,12 @@ public:
 	}
 
 	static short Deserialize(Json::Value json) {
-		return json.asInt();
+		try {
+			return json.asInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<short>::getName());
+		}
 	}
 };
 
@@ -187,7 +207,12 @@ public:
 	}
 
 	static unsigned short Deserialize(Json::Value json) {
-		return json.asUInt();
+		try {
+			return json.asUInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<unsigned short>::getName());
+		}
 	}
 };
 
@@ -200,7 +225,12 @@ public:
 	}
 
 	static int Deserialize(Json::Value json) {
-		return json.asInt();
+		try {
+			return json.asInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<int>::getName());
+		}
 	}
 };
 
@@ -213,7 +243,12 @@ public:
 	}
 
 	static unsigned int Deserialize(Json::Value json) {
-		return json.asUInt();
+		try {
+			return json.asUInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<unsigned int>::getName());
+		}
 	}
 };
 
@@ -226,7 +261,12 @@ public:
 	}
 
 	static long Deserialize(Json::Value json) {
-		return json.asInt();
+		try {
+			return json.asInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<long>::getName());
+		}
 	}
 };
 
@@ -239,7 +279,12 @@ public:
 	}
 
 	static unsigned long Deserialize(Json::Value json) {
-		return json.asUInt();
+		try {
+			return json.asUInt();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<unsigned long>::getName());
+		}
 	}
 };
 
@@ -252,7 +297,12 @@ public:
 	}
 
 	static long long Deserialize(Json::Value json) {
-		return json.asInt64();
+		try {
+			return json.asInt64();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<long long>::getName());
+		}
 	}
 };
 
@@ -265,7 +315,12 @@ public:
 	}
 
 	static unsigned long long Deserialize(Json::Value json) {
-		return json.asUInt64();
+		try {
+			return json.asUInt64();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<long long>::getName());
+		}
 	}
 };
 
@@ -278,7 +333,12 @@ public:
 	}
 
 	static float Deserialize(Json::Value json) {
-		return json.asFloat();
+		try {
+			return json.asFloat();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<float>::getName());
+		}
 	}
 };
 
@@ -291,7 +351,12 @@ public:
 	}
 
 	static double Deserialize(Json::Value json) {
-		return json.asDouble();
+		try {
+			return json.asDouble();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<double>::getName());
+		}
 	}
 };
 
@@ -304,6 +369,11 @@ public:
 	}
 
 	static std::string Deserialize(Json::Value json) {
-		return json.asString();
+		try {
+			return json.asString();
+		}
+		catch (const std::exception&) {
+			throw DeserializationException(TypeInfo<std::string>::getName());
+		}
 	}
 };

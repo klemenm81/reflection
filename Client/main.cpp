@@ -38,6 +38,61 @@ void waitUntilUserInterrupt() {
 	lock.unlock();
 }
 
+struct CustomType {
+	std::string strValue;
+	float floatValue;
+	int intValue;
+};
+
+template <typename T>
+struct CustomContainer : public std::vector<T>
+{
+};
+
+template <>
+class Serialization<CustomType> {
+public:
+	static Json::Value Serialize(CustomType customType) {
+		Json::Value::ArrayIndex index = 0;
+		Json::Value ret;
+		ret["strValue"] = Serialization<std::string>::Serialize(customType.strValue);
+		ret["floatValue"] = Serialization<float>::Serialize(customType.floatValue);
+		ret["intValue"] = Serialization<int>::Serialize(customType.intValue);
+		return ret;
+	}
+
+	static CustomType Deserialize(Json::Value val) {
+		size_t index = 0;
+		CustomType ret;
+		ret.strValue = Serialization<std::string>::Deserialize(val["strValue"]);
+		ret.floatValue = Serialization<float>::Deserialize(val["floatValue"]);
+		ret.intValue = Serialization<int>::Deserialize(val["intValue"]);
+		return ret;
+	}
+};
+
+template <typename Type>
+class Serialization<CustomContainer<Type>> {
+public:
+	static Json::Value Serialize(CustomContainer<Type> customContainer) {
+		Json::Value::ArrayIndex index = 0;
+		Json::Value ret;
+		for (Type type : customContainer) {
+			ret.insert(index++, Serialization<Type>::Serialize(type));
+		}
+		return ret;
+	}
+
+	static CustomContainer<Type> Deserialize(Json::Value val) {
+		size_t index = 0;
+		CustomContainer<Type> ret;
+		for (auto it = val.begin(); it != val.end(); it++) {
+			ret.push_back(Serialization<Type>::Deserialize(*it));
+		}
+		return ret;
+	}
+};
+
 
 void example0() {
 	try {
@@ -82,23 +137,50 @@ void example0() {
 	}
 }
 
-
-void example1(int argc, char** argv) {
+void example00() {
 	try {
-		ClassRegistry parserRegistry("CLIParser.dll");						// Load CLIParser.dll and acquire its class registry
-		Class parserClass = parserRegistry.getClass("Parser");				// Get metaobject of class Parser
-		std::unique_ptr<Object> obj(parserClass.newInstance());				// Create instance of Parser and store its pointer to unique_ptr
-		IParser& parser = parserClass.upcast<IParser>(*obj);				// Acquire IParser interface from the created instance
-		ParseStruct parseStruct;		
-		parser.parse(argc, argv, parseStruct);								// Parse argc/argv pair and store the values in parseStruct
+		ClassRegistry registry;
+		Class exampleClass = registry.getClass("ExampleClass");
+		std::unique_ptr<Object> exampleClassInstance = exampleClass.newInstance();
+		std::string retVal;
 
-		const char *serialized = parseStruct.toString();
-		std::cout << serialized << "\n";
-		parseStruct.fromString(serialized);
+		Method setFactorMethod = exampleClass.getMethod("setFactor");
+		retVal = setFactorMethod.invokeSerialized(*exampleClassInstance, { "3.14159" } );
+
+		Method addMethod = exampleClass.getMethod("add");
+		retVal = addMethod.invokeSerialized(*exampleClassInstance, { "D", "[ 10, 11, 12]" });
+
+		std::cout << exampleClassInstance->toString() << std::endl;
+	}
+	catch (Exception & e) {
+		std::cout << e.Message() << std::endl;
+	}
+}
+
+
+int example1(int argc, char** argv) {
+	try {
+		ClassRegistry parserRegistry("CLIParser.dll");
+		Class parserClass = parserRegistry.getClass("Parser");
+		std::unique_ptr<Object> obj = parserClass.newInstance();	
+		IParser& parser = parserClass.upcast<IParser>(*obj);
+		ParseStruct parseStruct;
+		try {
+			parser.parse(argc, argv, parseStruct);
+		}
+		catch (const IParseException & e) {
+			printf("Exception occurred: %s\n", e.Message());
+			parser.printUsage(parseStruct);
+			return 1;
+		}
+
+		std::cout << parseStruct.toString() << "\n";
 	}
 	catch (const Exception & e) {
-		printf("Exception occured during parse of options: %s\n", e.Message());
+		printf("Exception occurred: %s\n", e.Message());
 	}
+
+	return 0;
 }
 
 
@@ -106,18 +188,18 @@ void example2() {
 	try {
 		MyRestServer myRestServer;
 		ClassRegistry restServerRegistry("RESTServer.dll");
-		Class parserClass = restServerRegistry.getClass("RESTController");
-		std::unique_ptr<Object> obj(
-			parserClass.newInstance<std::wstring, Object&>(L"http://localhost:6502/v1/reflection/api", myRestServer)
-		);
-		IRESTController& restController = parserClass.upcast<IRESTController>(*obj);
+		Class restControllerClass = restServerRegistry.getClass("RESTController");
+		std::unique_ptr<Object> obj =
+			restControllerClass.newInstance<std::wstring, Object&>(
+				L"http://localhost:6502/v1/reflection/api", 
+				myRestServer
+			);
 
+		IRESTController& restController = restControllerClass.upcast<IRESTController>(*obj);
 		signal(SIGINT, handleUserInterrupt);
 
 		restController.start();
-
 		waitUntilUserInterrupt();
-
 		restController.shutdown();
 	}
 	catch (const Exception & e) {
@@ -165,7 +247,7 @@ void example3() {
 		printf("Main(): Return from Foo2 = %d\n", ret);
 		printf("Main(): str = %s\n", str.c_str());
 
-		std::string retStr = overloadedMethod.invokeMarshalled(						// Invoke method foo1 by not being aware of its input type and type of the return value
+		std::string retStr = overloadedMethod.invokeSerialized(						// Invoke method foo1 by not being aware of its input type and type of the return value
 			*test,																	
 			std::vector<std::string> { "[3, 5, 4]", "5" }							// Parameters are represented as strings in json form
 		);
@@ -180,18 +262,17 @@ void example3() {
 
 void testPerformance() {
 	try {
-		ClassRegistry classRegistry("Test.dll");
-		std::vector<Class> classes = classRegistry.getClasses();
-		Class clasz = classRegistry.getClass("Test");
+		ClassRegistry classRegistry;
+		Class clasz = classRegistry.getClass("ExampleClass");
 
-		std::unique_ptr<Object> test = clasz.newInstance<int>(5);
+		std::unique_ptr<Object> test = clasz.newInstance();
 
 		Method m = clasz.getMethod("testPerformance");
 
 		std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
 
 		for (int i = 0; i < 10000000; i++) {
-			std::string str = m.invoke<std::string, std::string, int, double>(*test, "test", 5, 3.14);
+			double ret = m.invoke<double, std::string, std::vector<int>>(*test, "test", {1, 2, 3});
 		}
 
 		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
@@ -205,9 +286,9 @@ void testPerformance() {
 
 
 
-
 int main(int argc, char **argv) {
 	example0();
+	example00();
 	example1(argc, argv);
 	//example2();
 	example3();

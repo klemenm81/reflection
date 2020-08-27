@@ -9,6 +9,7 @@
   <ItemGroup>
     <ClInclude Include="Parser.h" />
     <ClInclude Include="IParser.h" />
+    <ClInclude Include="ParseException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Parser.cpp" />

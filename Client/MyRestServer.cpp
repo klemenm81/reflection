@@ -1,20 +1,38 @@
 #include "MyRestServer.h"
 
-int MyRestServer::GET_method1() {
-    printf("Inside GET_method1\n");
-    return 0;
+MyRestServer::MyRestServer() {
+    char currentDir[MAX_PATH + 1] = { 0 };
+    GetCurrentDirectoryA(MAX_PATH + 1, currentDir);
+    currentDirectory = currentDir;
 }
 
-std::map<std::string, double> MyRestServer::GET_method2() {
-    printf("Inside GET_method2\n");
-    std::map<std::string, double> myMap;
-    myMap["PI"] = 3.14159;
-    myMap["radius"] = 4.0;
-    return myMap;
+void MyRestServer::POST_changeDir(std::string newDirectory) {
+    SetCurrentDirectoryA(newDirectory.c_str());
+    char currentDir[MAX_PATH + 1] = { 0 };
+    GetCurrentDirectoryA(MAX_PATH + 1, currentDir);
+    currentDirectory = currentDir;
 }
 
-std::vector<std::string> MyRestServer::GET_method3(
-    std::vector<std::string> pathParameters, 
-    std::map<std::string, std::string> queryParameters) {
-    return pathParameters;
+std::vector<FilesystemItem> MyRestServer::GET_listDir() const {
+    std::string searchQuery = currentDirectory + "\\*";
+    WIN32_FIND_DATAA findData = { 0 };
+    std::vector<FilesystemItem> ret;
+    HANDLE findHandle = FindFirstFileA(searchQuery.c_str(), &findData);
+    if (findHandle != INVALID_HANDLE_VALUE) {
+        do {
+            FilesystemItem item;
+            item.fileName = findData.cFileName;
+            item.size =
+                (((long long)findData.nFileSizeHigh) << 32) |
+                findData.nFileSizeLow;
+            item.type =
+                findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ?
+                "DIRECTORY" :
+                "FILE";
+            ret.push_back(item);
+        } while (FindNextFileA(findHandle, &findData));
+        FindClose(findHandle);
+        return ret;
+    }
+    throw;
 }

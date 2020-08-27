@@ -18,6 +18,17 @@ void example1()
 
 /*  example 2 */
 
+
+auto example2() {
+	int a = 5;
+	decltype(a) b = 10 + a;
+	auto c = 15 + b;
+	return c;
+}
+
+
+/*  example 3 */
+
 template<typename T>
 auto fooOrBar(T const& t) -> decltype(t.foo()) {
 	return t.foo();
@@ -28,7 +39,7 @@ auto fooOrBar(T const& t) -> decltype(t.bar()) {
 	return t.bar();
 }
 
-void example2() {
+void example3() {
 	struct HasFoo { void foo() const {} } f;
 	struct HasBar { void bar() const {} } b;
 	struct HasBoth : HasFoo, HasBar {} fb;
@@ -38,7 +49,7 @@ void example2() {
 	//fooOrBar(fb); // error
 }
 
-/* example 3 */
+/* example 4 */
 
 template<typename, typename = void>
 constexpr bool hasFoo = false;
@@ -56,7 +67,7 @@ template <typename T> void callFooIfItExists(T t) {
 	}
 }
 
-void example3() {
+void example4() {
 	struct HasFoo { void foo() const {} } f;
 	struct HasBar { void bar() const {} } b;
 	struct HasBoth : HasFoo, HasBar {} fb;
@@ -67,7 +78,7 @@ void example3() {
 }
 
 
-/* example 4 */
+/* example 5 */
 
 template <typename Class, typename Return, typename... Args>
 struct MyMethodTraits;
@@ -103,13 +114,8 @@ void printTypesHelper(std::tuple<Args...>) {
 	};
 }
 
-void example4() {
+void example5() {
 	Foo foo;
-
-	MyMethodTraits<
-		Foo, 
-		decltype(&Foo::Bar)
-	>::ReflectedReturnType retVal = foo.Bar(1, 12.5);  
 
 	std::cout <<
 		"Method Foo::Bar() " <<
@@ -118,13 +124,19 @@ void example4() {
 			"is not a const method") <<
 		std::endl;
 
+	std::cout <<
+		typeid(MyMethodTraits<Foo, decltype(
+			&Foo::Bar
+			)>::ReflectedReturnType).name() <<
+		std::endl;
+
 	printTypesHelper(
 		MyMethodTraits<Foo, decltype(&Foo::Bar)>::ReflectedArgs{}
 	);
 }
 
 
-/*  example 5 */
+/*  example 6 */
 
 template<typename R, typename... Args>
 auto print_default_result(R(*)(Args...)) -> void {
@@ -135,11 +147,11 @@ auto ret_double() -> double {
 	return 0.1;
 }
 
-auto example5() -> void {
+auto example6() -> void {
 	print_default_result(ret_double);
 }
 
-/* example 6 */
+/* example 7 */
 #include <vector>
 
 template <typename T>
@@ -167,33 +179,33 @@ struct MyTypeTrait<std::vector<T>> {
 	}
 };
 
-void example6() {
+void example7() {
 	MyTypeTrait<int>::what();
 	MyTypeTrait<double &&>::what();
 	MyTypeTrait<float *>::what();
 	MyTypeTrait<std::vector<bool>>::what();
 }
 
-/* example 7 */
+/* example 8 */
 
 template<typename Type>
 constexpr Type square(Type type) {
 	return(type * type);
 }
 
-void example7() {
+void example8() {
 	std::cout << square(5) << std::endl;
 	std::cout << square(3.14f) << std::endl;
 }
 
 
-/* example 8 */
+/* example 9 */
 
 class A {
 };
 class B : public A {
 };
-void example8(A& ref) {
+void example9(A& ref) {
 	if (typeid(ref) == typeid(A)) {
 		std::cout << "ref is instance of A" << std::endl;
 	}
@@ -213,4 +225,6 @@ int main(void) {
 	example5();
 	example6();
 	example7();
+	example8();
+	//example9();
 }

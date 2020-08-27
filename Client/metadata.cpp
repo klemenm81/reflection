@@ -8,10 +8,20 @@ REFLECT_TYPE_START(ParseStruct)
 	FIELD(is_new)
 	FIELD(name)
 	FIELD(address)
+	FIELD(age)
+	METHOD(help_is_new)
+	METHOD(help_name)
+	METHOD(help_address)
+	METHOD(help_age)
+REFLECT_TYPE_END
+
+REFLECT_TYPE_START(FilesystemItem)
+	FIELD(fileName)
+	FIELD(type)
+	FIELD(size)
 REFLECT_TYPE_END
 
 REFLECT_TYPE_START(MyRestServer)
-	METHOD(GET_method1)
-	METHOD(GET_method2)
-	METHOD(GET_method3)
+	METHOD(POST_changeDir)
+	METHOD(GET_listDir)
 REFLECT_TYPE_END

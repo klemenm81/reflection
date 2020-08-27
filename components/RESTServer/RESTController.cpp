@@ -83,14 +83,32 @@ void RESTController::handleHttpMessage(http_request message) {
         Json::StreamWriterBuilder wbuilder;
         wbuilder["indentation"] = "\t";
 
-        auto extractJsonTask = message.extract_json();
-        extractJsonTask.wait();
-        std::wstring inputArguments = extractJsonTask.get().serialize();
+        //auto extractJsonTask = message.extract_json();
+        //extractJsonTask.wait();
+        //std::wstring inputArguments = extractJsonTask.get().serialize();
+        auto extractStringTask = message.extract_string();
+        extractStringTask.wait();
+        std::wstring inputArguments = extractStringTask.get();
         std::string inputArgumentsNarrow = WideToMulti(inputArguments);
 
         Json::Value inputArgumentsJson;
         std::string errs;
         std::stringstream inputArgumentsNarrowStream(inputArgumentsNarrow);
+
+        Json::CharReaderBuilder rbuilder;
+        rbuilder["collectComments"] = false;
+
+        if (!inputArguments.empty()) {
+            if (!Json::parseFromStream(rbuilder, inputArgumentsNarrowStream, &inputArgumentsJson, &errs)) {
+                std::string inputArgumentsNarrowAsString = "\"" + inputArgumentsNarrow + "\"";
+                std::stringstream inputArgumentsNarrowStream(inputArgumentsNarrowAsString);
+                if (!Json::parseFromStream(rbuilder, inputArgumentsNarrowStream, &inputArgumentsJson, &errs)) {
+                    std::string inputArgumentsNarrowAsArray = "[" + inputArgumentsNarrow + "]";
+                    std::stringstream inputArgumentsNarrowStream(inputArgumentsNarrowAsArray);
+                    Json::parseFromStream(rbuilder, inputArgumentsNarrowStream, &inputArgumentsJson, &errs);
+                }
+            }
+        }
 
         std::vector<std::wstring> pathParameters = message.relative_uri().split_path(message.relative_uri().path());
         std::map<std::wstring, std::wstring> queryParameters = message.request_uri().split_query(message.request_uri().query());
@@ -98,9 +116,6 @@ void RESTController::handleHttpMessage(http_request message) {
         Json::Value pathParametersSerialized = Serialization<std::vector<std::wstring>>::Serialize(pathParameters);
         Json::Value queryParametersSerialized = Serialization<std::map<std::wstring, std::wstring>>::Serialize(queryParameters);
 
-        Json::CharReaderBuilder rbuilder;
-        rbuilder["collectComments"] = false;
-        Json::parseFromStream(rbuilder, inputArgumentsNarrowStream, &inputArgumentsJson, &errs);
         std::vector<std::string> inputArgumentsVector;
         std::vector<std::string> inputArgumentsVectorWithPathParameters;
         std::vector<std::string> inputArgumentsVectorWithPathAndQueryParameters;
@@ -118,9 +133,9 @@ void RESTController::handleHttpMessage(http_request message) {
                 }
             }
             else {
-                inputArgumentsVector.push_back(inputArgumentsNarrow);
-                inputArgumentsVectorWithPathParameters.push_back(inputArgumentsNarrow);
-                inputArgumentsVectorWithPathAndQueryParameters.push_back(inputArgumentsNarrow);
+                inputArgumentsVector.push_back(Json::writeString(wbuilder, inputArgumentsJson));
+                inputArgumentsVectorWithPathParameters.push_back(Json::writeString(wbuilder, inputArgumentsJson));
+                inputArgumentsVectorWithPathAndQueryParameters.push_back(Json::writeString(wbuilder, inputArgumentsJson));
             }
         }
 
@@ -145,19 +160,23 @@ void RESTController::handleHttpMessage(http_request message) {
         std::string returnValue;
 
         try {
-            returnValue = method.invokeMarshalled(m_object, inputArgumentsVectorWithPathAndQueryParameters);
+            returnValue = method.invokeSerialized(m_object, inputArgumentsVectorWithPathAndQueryParameters);
         }
         catch (const Exception & e)
         {
             try {
-                returnValue = method.invokeMarshalled(m_object, inputArgumentsVectorWithPathParameters);
+                returnValue = method.invokeSerialized(m_object, inputArgumentsVectorWithPathParameters);
             }
             catch (const Exception & e) {
-                returnValue = method.invokeMarshalled(m_object, inputArgumentsVector);
+                returnValue = method.invokeSerialized(m_object, inputArgumentsVector);
             }
         }
 
-        if (returnValue.find("{") == std::string::npos && returnValue.find("[") == std::string::npos) {
+        if (
+            returnValue.find("{") == std::string::npos && 
+            returnValue.find("[") == std::string::npos &&
+            returnValue.find("\"") == std::string::npos
+        ) {
             returnValue = std::string("\"") + returnValue + std::string("\"");
         }
 

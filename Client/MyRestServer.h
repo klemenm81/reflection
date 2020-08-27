@@ -1,13 +1,20 @@
 #pragma once
 
 #include "../libjobject/Reflectable.h"
+#include <Windows.h>
+
+struct FilesystemItem : public Reflectable<FilesystemItem> {
+    std::string fileName;
+    std::string type;
+    long long size;
+};
 
 class MyRestServer : public Reflectable<MyRestServer> {
+private:
+    std::string currentDirectory;
+
 public:
-    int GET_method1();
-    std::map<std::string, double> GET_method2();
-    std::vector<std::string> GET_method3(
-        std::vector<std::string> pathParameters, 
-        std::map<std::string, std::string> queryParameters
-    );
+    MyRestServer();
+    void POST_changeDir(std::string newDirectory);
+    std::vector<FilesystemItem> GET_listDir() const;
 };

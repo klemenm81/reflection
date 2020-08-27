@@ -5,8 +5,40 @@
 #include "../../libjobject/Object.h"
 #include <vector>
 #include <string>
+#include <iostream>
+
+#include "ParseException.h"
 
 void Parser::printUsage(Object& cliStructure) {
+	std::vector<Field> fields = cliStructure.getClass().getFields();
+	std::cout << "Usage:" << std::endl;
+	for (Field field : fields) {
+		std::cout << "\t";
+		if (field.isOptional() || field.isType<bool>()) {
+			std::cout << "[";
+		}
+		std::cout << "-" << field.getName();
+		if (!field.isType<bool>()) {
+			std::cout << " <" << field.getName() << ">";
+		}
+		if (field.isOptional() || field.isType<bool>()) {
+			std::cout << "]";
+		}
+
+		std::cout << "\t\t\t";
+
+		try {
+			std::string methodName = "help_";
+			methodName += field.getName();
+			Method helpMethod = cliStructure.getClass().getMethod(methodName.c_str());
+			std::string helpMsg = helpMethod.invoke<std::string>(cliStructure);
+			std::cout << " " << helpMsg;
+		}
+		catch (const Exception&) {
+		}
+
+		std::cout << std::endl;
+	}
 }
 
 void Parser::parse(int argc, char** argv, Object& cliStructure) {
@@ -24,21 +56,24 @@ void Parser::parse(int argc, char** argv, Object& cliStructure) {
 				}
 				else {
 					if (iArg + 1 < argc) {
-						field.deserialize(cliStructure, argv[iArg + 1]);
+						field.fromString(cliStructure, argv[iArg + 1]);
 						optionFound = true;
 						break;
 					}
 					else {
-						printUsage(cliStructure);
-						return;
+						std::string error = "Failed to parse option ";
+						error += field.getName();
+						throw ParseException(error.c_str());
 					}
 				}
 			}
 		}
 
 		if (!optionFound && (!(field.isType<bool>() || field.isOptional()))) {
-			printUsage(cliStructure);
-			return;
+			std::string error = "Option ";
+			error += field.getName();
+			error += " not specified";
+			throw ParseException(error.c_str());
 		}
 	}
 }
