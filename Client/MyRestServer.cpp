@@ -1,4 +1,5 @@
 #include "MyRestServer.h"
+#include <Windows.h>
 
 MyRestServer::MyRestServer() {
     char currentDir[MAX_PATH + 1] = { 0 };

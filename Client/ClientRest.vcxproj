@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{2E7508BA-6909-4093-A34F-7205C941E4F7}</ProjectGuid>
-    <RootNamespace>Client</RootNamespace>
+    <ProjectGuid>{26ABECF8-5582-47D6-9D53-72B04945906E}</ProjectGuid>
+    <RootNamespace>ClientRest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -158,12 +158,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="example.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="metadata.cpp" />
+    <ClCompile Include="mainRestServer.cpp" />
+    <ClCompile Include="metaataRestServer.cpp" />
+    <ClCompile Include="MyRestServer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="example.h" />
+    <ClInclude Include="MyRestServer.h" />
     <ClInclude Include="ParseStruct.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

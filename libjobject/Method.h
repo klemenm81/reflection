@@ -25,7 +25,7 @@ protected:
 			return result;
 		}
 		else {
-			std::array<IAdaptor*, 0> result;
+			std::array<IAdaptor*, 0> result = { };
 			return result;
 		}
 	}

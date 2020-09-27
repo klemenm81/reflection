@@ -19,6 +19,10 @@ void ClassRegistry::Initialize() {
 	char executableName[MAX_PATH];
 	GetModuleFileNameA(NULL, executableName, MAX_PATH);
 
+	if (!m_libraryName.empty()) {
+		m_libraryName = m_libraryName + ".dll";
+	}
+
 	if (m_counter == 0) {
 		if (!::SymInitialize(
 			GetCurrentProcess(),

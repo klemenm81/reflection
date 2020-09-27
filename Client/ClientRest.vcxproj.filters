@@ -7,12 +7,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="metadata.cpp" />
-    <ClCompile Include="example.cpp" />
+    <ClCompile Include="MyRestServer.cpp" />
+    <ClCompile Include="mainRestServer.cpp" />
+    <ClCompile Include="metaataRestServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ParseStruct.h" />
-    <ClInclude Include="example.h" />
+    <ClInclude Include="MyRestServer.h" />
   </ItemGroup>
 </Project>

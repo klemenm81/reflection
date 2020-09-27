@@ -266,16 +266,4 @@ int main(int argc, char **argv) {
 	example1(argc, argv);
 	example3();
 	testPerformance();
-
-
-    void *handle = dlopen("./CLIParser.so", RTLD_NOW  | RTLD_LOCAL);
-    if (handle == nullptr) { 
-        printf("error loading\n");
-    }
-
-    void *ptr = dlsym(handle, "Factory_Parser");
-    if (ptr == nullptr) {
-        printf("error locating Factory_Parser\n");
-    }
-    dlclose(handle);
 }
