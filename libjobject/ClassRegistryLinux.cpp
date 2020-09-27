@@ -9,15 +9,24 @@
 #include <vector>
 #include <string>
 
+#include <fstream>
+
 std::atomic<int> ClassRegistry::m_counter = 0;
 
 void ClassRegistry::Initialize() {
+    std::string executableName;
+    std::ifstream("/proc/self/comm") >> executableName;
+
+    if (!m_libraryName.empty()) {
+        m_libraryName = "./" + m_libraryName + ".so";
+    }
+
     asymbol *minisyms;
     long symcount;
     unsigned int size;
     char **matching;
 
-    bfd *file = bfd_openr("testsyms.so", nullptr);
+    bfd *file = bfd_openr(!m_libraryName.empty() ? m_libraryName.c_str() : executableName.c_str(), nullptr);
     if (file == nullptr) {
         std::string error = 
             std::string("bfd_openr() failed. Error message: ") + 
@@ -74,18 +83,29 @@ void ClassRegistry::Initialize() {
         throw InternalErrorException(error.c_str());
     }
 
-    m_libraryHandle = dlopen(NULL, RTLD_NOW | RTLD_LOCAL);
-    if (m_libraryHandle == NULL) {
+    m_libraryHandle = dlopen(!m_libraryName.empty() ? m_libraryName.c_str() : nullptr, RTLD_NOW | RTLD_LOCAL);
+    if (m_libraryHandle == nullptr) {
         std::string error =
-        std::string("dlopen() failed. Error code: ") +
-        std::to_string(errno);
+        std::string("dlopen() failed. Error: ") +
+        dlerror();
+        throw InternalErrorException(error.c_str());
     }
-
 
     for (std::string classFactoryName : classFactoryNames) {
         if (classFactoryName.compare(0, std::string("Factory_").length(), "Factory_") == 0) {
+            printf("trying to load %s in %p\n", classFactoryName.c_str(), m_libraryHandle);
             const IClass& (*ClassFactoryFcn)() =
                 (const IClass & (*)())dlsym(m_libraryHandle, classFactoryName.c_str());
+
+            if (ClassFactoryFcn == nullptr) {
+                std::string error =
+                    std::string("dlfcn() failed for ") + 
+                    classFactoryName + 
+                    std::string(" with error ") +
+                    dlerror();
+                throw InternalErrorException(error.c_str());
+            }
+
             m_classes.emplace(classFactoryName.substr(std::string("Factory_").length()), Class(ClassFactoryFcn()));
         }
     }

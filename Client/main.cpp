@@ -9,12 +9,10 @@
 #include "Reflectable.h"
 
 #include "../components/CLIParser/IParser.h"
-#include "../components/RESTServer/IRESTController.h"
 
 #include "example.h"
 
 #include "ParseStruct.h"
-#include "MyRestServer.h"
 
 #include <iostream>
 #include <signal.h>
@@ -160,7 +158,7 @@ void example00() {
 
 int example1(int argc, char** argv) {
 	try {
-		ClassRegistry parserRegistry("CLIParser.dll");
+		ClassRegistry parserRegistry("CLIParser");
 		Class parserClass = parserRegistry.getClass("Parser");
 		std::unique_ptr<Object> obj = parserClass.newInstance();	
 		IParser& parser = parserClass.upcast<IParser>(*obj);
@@ -184,33 +182,9 @@ int example1(int argc, char** argv) {
 }
 
 
-void example2() {
-	try {
-		MyRestServer myRestServer;
-		ClassRegistry restServerRegistry("RESTServer.dll");
-		Class restControllerClass = restServerRegistry.getClass("RESTController");
-		std::unique_ptr<Object> obj =
-			restControllerClass.newInstance<std::wstring, Object&>(
-				L"http://localhost:6502/v1/reflection/api", 
-				myRestServer
-			);
-
-		IRESTController& restController = restControllerClass.upcast<IRESTController>(*obj);
-		signal(SIGINT, handleUserInterrupt);
-
-		restController.start();
-		waitUntilUserInterrupt();
-		restController.shutdown();
-	}
-	catch (const Exception & e) {
-		printf("Exception occured during parse of options: %s\n", e.Message());
-	}
-}
-
-
 void example3() {
 	try {
-		ClassRegistry classRegistry("Test.dll");									// Load Test.dll and acquire its class registry
+		ClassRegistry classRegistry("Test");									// Load Test.dll and acquire its class registry
 		std::vector<Class> classes = classRegistry.getClasses();					// Get vector of all classes in Test.dll
 
 		Class clasz = classRegistry.getClass("Test");								// Get metaobject of class Test
@@ -290,7 +264,18 @@ int main(int argc, char **argv) {
 	example0();
 	example00();
 	example1(argc, argv);
-	//example2();
 	example3();
 	testPerformance();
+
+
+    void *handle = dlopen("./CLIParser.so", RTLD_NOW  | RTLD_LOCAL);
+    if (handle == nullptr) { 
+        printf("error loading\n");
+    }
+
+    void *ptr = dlsym(handle, "Factory_Parser");
+    if (ptr == nullptr) {
+        printf("error locating Factory_Parser\n");
+    }
+    dlclose(handle);
 }

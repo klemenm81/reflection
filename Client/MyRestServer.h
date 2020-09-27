@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../libjobject/Reflectable.h"
-#include <Windows.h>
 
 struct FilesystemItem : public Reflectable<FilesystemItem> {
     std::string fileName;

@@ -2,6 +2,8 @@
 
 #include "Metadata.h"
 
+#include <stdexcept>
+	
 class ExampleClass : public Reflectable<ExampleClass> {
     REFLECT_FULL_ACCESS;
 private:
@@ -45,7 +47,7 @@ public:
             for (int val : it->second) ret.push_back(m_factor * val);
             return ret;
         }
-        throw std::exception("Not found!");
+        throw std::runtime_error("Not found!");
     }
     std::vector<float> getValues(const char* key) {
         std::vector<float> ret;
