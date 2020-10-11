@@ -78,6 +78,25 @@ protected:
 		return Json::writeString(wbuilder, jsonRetVal);
 	}
 
+	template <typename Return>
+	static Return InvokeReturn(IAdaptor* retVal) {
+		if constexpr (!std::is_same<Return, void>()) {
+			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		}
+	}
+
+	template <typename Return, typename ObjectReference, typename... Args>
+	static IAdaptor* Invoke(const IMethod& method, Qualifier q, ObjectReference obj, Args... args) {
+		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
+		static const std::string argsName = GetArgsName<Args...>();
+		const IMethodInvoker& methodInvoker = method.getMethod(argsSignature, argsName.c_str() + 1, q);
+		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
+			std::index_sequence_for<Args...>{},
+			CAdaptor<Args>(args)...
+		).data());
+		return retVal;		
+	}
+
 public:
 	Method(const IMethod& method) : m_method(method) {
 	}
@@ -97,114 +116,132 @@ public:
 
 	template <typename Return, typename... Args>
 	Return invoke(Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return> &>(*retVal).getValue());
+		IAdaptor *retVal = Invoke<Return, Object&, Args...>(m_method, LValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&, Args...>(m_method, ConstLValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&, Args...>(m_method, VolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, const Object&, Args...>(m_method, ConstLValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, const Object&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, volatile Object&, Args...>(m_method, VolatileLValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, volatile Object&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(obj, BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, const volatile Object&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
+		if (retVal == nullptr) {
+			throw;
 		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, Object&&, Args...>(m_method, RValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, ConstRValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, VolatileRValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, ConstVolatileRValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, LValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, ConstLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&&, Args...>(m_method, VolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, Object&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(const Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, const Object&&, Args...>(m_method, ConstRValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, const Object&&, Args...>(m_method, ConstVolatileRValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, const Object&&, Args...>(m_method, ConstLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, const Object&&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(volatile Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, volatile Object&&, Args...>(m_method, VolatileRValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, volatile Object&&, Args...>(m_method, ConstVolatileRValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, volatile Object&&, Args...>(m_method, VolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, volatile Object&&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
+		}
+		if (retVal == nullptr) {
+			throw;
+		}
+		return InvokeReturn<Return>(retVal);
 	}
 
 	template <typename Return, typename... Args>
 	Return invoke(const volatile Object&& obj, Args... args) const {
-		static const size_t argsSignature = GetArgsSignature<Args...>(std::index_sequence_for<Args...>{});
-		static const std::string argsName = GetArgsName<Args...>();
-		const IMethodInvoker& methodInvoker = m_method.getMethod(argsSignature, argsName.c_str() + 1, LValueRef);
-		IAdaptor* retVal = methodInvoker.invoke(std::move(obj), BuildAdaptorArrayFromArgs(
-			std::index_sequence_for<Args...>{},
-			CAdaptor<Args>(args)...
-		).data());
-		if constexpr (!std::is_same<Return, void>()) {
-			return(static_cast<CAdaptor<Return>&>(*retVal).getValue());
+		IAdaptor* retVal = Invoke<Return, const volatile Object&&, Args...>(m_method, ConstVolatileRValueRef, obj, args...);
+		if (retVal == nullptr) {
+			retVal = Invoke<Return, const volatile Object&&, Args...>(m_method, ConstVolatileLValueRef, obj, args...);
 		}
+		if (retVal == nullptr) {
+			throw;
+		}
+
+		return InvokeReturn<Return>(retVal);
 	}
 
 	std::string invokeSerialized(Object& obj, std::vector<std::string> args) const {
