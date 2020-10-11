@@ -214,6 +214,33 @@ void example9(A& ref) {
 	}
 }
 
+/* example 10 */
+template <typename T>
+void overload(T *t) {
+}
+
+template <typename T>
+void overload(T &t) {
+}
+
+//void overload(int&* t) {} // error
+
+struct AA {
+	int a;
+};
+struct BB : public AA {
+	int b;
+};
+void example10() {
+	BB b1;
+	b1.a = 1;
+	b1.b = 1;
+	BB b2;
+	b2.a = 2;
+	b2.b = 2;
+	AA& a = b2;
+	a = b1;
+}
 
 /* main */
 
@@ -227,4 +254,5 @@ int main(void) {
 	example7();
 	example8();
 	//example9();
+	example10();
 }
