@@ -93,7 +93,6 @@ void ClassRegistry::Initialize() {
 
     for (std::string classFactoryName : classFactoryNames) {
         if (classFactoryName.compare(0, std::string("Factory_").length(), "Factory_") == 0) {
-            printf("trying to load %s in %p\n", classFactoryName.c_str(), m_libraryHandle);
             const IClass& (*ClassFactoryFcn)() =
                 (const IClass & (*)())dlsym(m_libraryHandle, classFactoryName.c_str());
 
