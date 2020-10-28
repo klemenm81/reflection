@@ -7,13 +7,19 @@
 #include <typeinfo>
 #include <tuple>
 
+using namespace std;
+
 class MyClass {};
+class MyClassEx : public MyClass {};
 
 void example1()
 {
-	std::cout << std::is_floating_point<MyClass>::value << '\n';
-	std::cout << std::is_floating_point<float>::value << '\n';
-	std::cout << std::is_floating_point<int>::value << '\n';
+	cout << is_floating_point<float>::value << '\n';
+	cout << is_integral<int>::value << '\n';
+	cout << is_object<MyClass>::value << '\n';
+	cout << is_polymorphic<MyClass>::value << '\n';
+	cout << is_base_of<MyClass, MyClassEx>::value << '\n';
+	cout << is_copy_constructible<MyClass>::value << '\n';
 }
 
 /*  example 2 */
@@ -55,15 +61,15 @@ template<typename, typename = void>
 constexpr bool hasFoo = false;
 
 template<typename T>
-constexpr bool hasFoo<T, std::void_t<decltype(std::declval<T>().foo())>> = true;
+constexpr bool hasFoo<T, void_t<decltype(declval<T>().foo())>> = true;
 
 template <typename T> void callFooIfItExists(T t) {
 	if constexpr (hasFoo<T>) {
-		std::cout << "T contains foo(), calling foo()" << std::endl;
+		cout << "T contains foo(), calling foo()" << endl;
 		t.foo();
 	}
 	else {
-		std::cout << "T does not contain foo()" << std::endl;
+		cout << "T does not contain foo()" << endl;
 	}
 }
 
@@ -87,7 +93,7 @@ template <typename Class, typename Return, typename... Args>
 struct MyMethodTraits<Class, Return(Class::*)(Args...)> {
 	using ReflectedClass = Class;
 	using ReflectedReturnType = Return;
-	using ReflectedArgs = std::tuple<Args...>;
+	using ReflectedArgs = tuple<Args...>;
 	static const bool isConst = false;
 };
 
@@ -95,7 +101,7 @@ template <typename Class, typename Return, typename... Args>
 struct MyMethodTraits<Class, Return(Class::*)(Args...) const> {
 	using ReflectedClass = Class;
 	using ReflectedReturnType = Return;
-	using ReflectedArgs = std::tuple<Args...>;
+	using ReflectedArgs = tuple<Args...>;
 	static const bool isConst = true;
 };
 
@@ -108,27 +114,27 @@ public:
 };
 
 template <typename... Args>
-void printTypesHelper(std::tuple<Args...>) {
+void printTypesHelper(tuple<Args...>) {
 	int dummy[] = { 
-		(std::cout << typeid(Args).name() << std::endl, 0)... 
+		(cout << typeid(Args).name() << endl, 0)... 
 	};
 }
 
 void example5() {
 	Foo foo;
 
-	std::cout <<
+	cout <<
 		"Method Foo::Bar() " <<
 		(MyMethodTraits<Foo, decltype(&Foo::Bar)>::isConst ?
 			"is a const method" :
 			"is not a const method") <<
-		std::endl;
+		endl;
 
-	std::cout <<
+	cout <<
 		typeid(MyMethodTraits<Foo, decltype(
 			&Foo::Bar
 			)>::ReflectedReturnType).name() <<
-		std::endl;
+		endl;
 
 	printTypesHelper(
 		MyMethodTraits<Foo, decltype(&Foo::Bar)>::ReflectedArgs{}
@@ -140,7 +146,7 @@ void example5() {
 
 template<typename R, typename... Args>
 auto print_default_result(R(*)(Args...)) -> void {
-	std::cout << R{} << '\n';
+	cout << R{} << '\n';
 }
 
 auto ret_double() -> double {
@@ -157,25 +163,25 @@ auto example6() -> void {
 template <typename T>
 struct MyTypeTrait {
 	static void what() {
-		std::cout << "T is a value" << std::endl;
+		cout << "T is a value" << endl;
 	}
 };
 template <typename T>
 struct MyTypeTrait<T*> {
 	static void what() {
-		std::cout << "T is a pointer" << std::endl;
+		cout << "T is a pointer" << endl;
 	}
 };
 template <typename T>
 struct MyTypeTrait<T&&> {
 	static void what() {
-		std::cout << "T is a rvalue reference" << std::endl;
+		cout << "T is a rvalue reference" << endl;
 	}
 }; 
 template <typename T>
-struct MyTypeTrait<std::vector<T>> {
+struct MyTypeTrait<vector<T>> {
 	static void what() {
-		std::cout << "T is a vector of values" << std::endl;
+		cout << "T is a vector of values" << endl;
 	}
 };
 
@@ -183,7 +189,7 @@ void example7() {
 	MyTypeTrait<int>::what();
 	MyTypeTrait<double &&>::what();
 	MyTypeTrait<float *>::what();
-	MyTypeTrait<std::vector<bool>>::what();
+	MyTypeTrait<vector<bool>>::what();
 }
 
 /* example 8 */
@@ -194,8 +200,8 @@ constexpr Type square(Type type) {
 }
 
 void example8() {
-	std::cout << square(5) << std::endl;
-	std::cout << square(3.14f) << std::endl;
+	cout << square(5) << endl;
+	cout << square(3.14f) << endl;
 }
 
 
@@ -207,10 +213,10 @@ class B : public A {
 };
 void example9(A& ref) {
 	if (typeid(ref) == typeid(A)) {
-		std::cout << "ref is instance of A" << std::endl;
+		cout << "ref is instance of A" << endl;
 	}
 	else if (typeid(ref) == typeid(B)) {
-		std::cout << "ref is instance of B" << std::endl;
+		cout << "ref is instance of B" << endl;
 	}
 }
 
